@@ -91,6 +91,8 @@ function showLead(id) {
     ["Email", lead.email], ["Phone", lead.phone], ["Business", lead.businessName],
     ["Service", lead.projectType], ["Budget", lead.budget], ["Contact method", lead.contactMethod],
     ["Timeline", lead.timeline], ["Submitted", formatDate(lead.createdAt)],
+    ["Meeting date", lead.meetingDate], ["Meeting time", lead.meetingTime],
+    ["Meeting review needed", lead.meetingNeedsReview ? "Yes — check the enquiry details" : "No"],
     ["Email notification", lead.emailStatus], ["Project details", lead.message]
   ];
   byId("leadDetails").innerHTML = fields.map(([name, value]) =>
