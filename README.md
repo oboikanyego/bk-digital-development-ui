@@ -1,23 +1,45 @@
 # BK Digital Development UI
 
-Responsive marketing website for BK Digital Development.
+Responsive multi-page website for BK Digital Development.
 
-## Local
+## Website routes
+
+- `/` — Home
+- `/services/` — Websites, online stores, mobile apps and business systems
+- `/portfolio/` — Selected projects
+- `/pricing/` — Pricing packages
+- `/process/` — Process and FAQs
+- `/contact/` — Client enquiries and meeting requests
+
+Each page has its own URL, accessible navigation, page title, canonical URL and a sitemap entry. The contact form still calls `/api/contact`.
+
+## Admin routes
+
+- `/admin/login/` — Admin sign-in (email/password)
+- `/admin/dashboard/` — Protected enquiry management
+- `/admin/` and `/admin.html` redirect to the new login screen
+
+Admin pages are separate from public marketing navigation and excluded from search indexes. The dashboard HTML may be loaded publicly, but no customer data is returned without an authenticated backend session.
+
+## Backend proxy
+
+`/api/*` calls a Netlify Function that forwards requests to Render using the site-scoped `BACKEND_URL` environment variable. It also forwards `Set-Cookie` for signed HttpOnly admin sessions.
+
+Do not put database credentials, admin password hashes or session secrets into the Netlify site. Configure them only in the Render backend (see backend README).
+
+## Install and test
 
 ```bash
 npm install
 npm test
 npm run build
-npm start
 ```
 
-## Netlify
+For end-to-end local API proxy testing, run `netlify dev` instead of the plain static file server.
+
+## Netlify settings
 
 - Build command: `npm run build`
 - Publish directory: `public`
 - Functions directory: `netlify/functions`
-- Environment variable: `BACKEND_URL=https://<render-service>.onrender.com`
-
-The browser calls `/api/contact`. Netlify proxies this request to the Render API so the backend URL is not hard-coded into the static frontend.
-
-Production URL: https://bk-digital-development.netlify.app
+- Environment: `BACKEND_URL=https://bk-digital-development-api.onrender.com`

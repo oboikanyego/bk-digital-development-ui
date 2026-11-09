@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0d1b23"><title>Admin sign in | BK Digital Development</title><link rel="stylesheet" href="/admin.css"><script src="/admin-login.js" defer></script></head><body><header class="topbar"><a class="brand" href="/" aria-label="Website home"><span class="logo">BK</span><span>BK Digital<br><small>Client workspace</small></span></a><div class="top-actions"><span class="private">Private workspace</span><a class="button secondary" href="/">View website</a></div></header><main><section class="login-panel" id="loginPanel"><span class="eyebrow">SECURE ADMIN SIGN IN</span><h1>Welcome back.</h1><p>Sign in to manage project enquiries and customer meeting requests.</p><form id="loginForm"><label for="email">Email address</label><input id="email" name="email" type="email" autocomplete="username" placeholder="you@yourbusiness.co.za" maxlength="254" required><label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" placeholder="Enter password" required><button id="loginButton" class="button primary" type="submit">Sign in securely →</button></form>
+<button type="button" class="legacy-toggle" id="showKeyLogin">Use existing admin access key instead</button>
+<form id="keyForm" hidden>
+  <label for="accessKey">Existing admin access key</label>
+  <input id="accessKey" type="password" autocomplete="off" minlength="32" spellcheck="false" required placeholder="Enter your current access key">
+  <button id="keyButton" class="button primary" type="submit">Access dashboard →</button>
+  <button id="showPasswordLogin" class="button secondary" type="button">Back to email sign in</button>
+</form>
+<p class="hint">Private workspace. Your authenticated session expires automatically after eight hours.</p><p id="loginError" class="message error" role="alert"></p></section></main></body></html>

@@ -1,32 +1,5 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <meta name="theme-color" content="#0d1b23">
-  <title>Lead management | BK Digital Development</title>
-  <link rel="stylesheet" href="/admin.css">
-  <script src="/admin.js" defer></script>
-</head>
-<body>
-  <header class="topbar">
-    <a class="brand" href="/" aria-label="BK Digital Development homepage"><span class="logo">BK</span><span>BK Digital<br><small>Lead management</small></span></a>
-    <div class="top-actions"><span class="private">Private workspace</span><button id="logout" class="button secondary" type="button" hidden>Lock dashboard</button></div>
-  </header>
-  <main>
-    <section class="login-panel" id="loginPanel">
-      <span class="eyebrow">OWNER ACCESS</span>
-      <h1>Welcome back.</h1>
-      <p>Manage your website leads and meeting requests in one place. Enter the private access key configured on Render.</p>
-      <form id="loginForm">
-        <label for="accessKey">Admin access key</label>
-        <input id="accessKey" type="password" minlength="32" required autocomplete="off" spellcheck="false" placeholder="Enter your secure key">
-        <button class="button primary" type="submit">Open dashboard <span>→</span></button>
-      </form>
-      <p class="hint">The key is used only while this page remains open. It is not saved to browser storage.</p>
-      <p id="loginError" class="message error" role="alert"></p>
-    </section>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#0d1b23"><title>Admin dashboard | BK Digital Development</title><link rel="stylesheet" href="/admin.css"><script src="/admin.js" defer></script></head><body><header class="topbar"><a class="brand" href="/" aria-label="Website home"><span class="logo">BK</span><span>BK Digital<br><small>Client workspace</small></span></a><div class="top-actions"><span class="private">Private workspace</span><button id="logout" class="button secondary" type="button">Sign out</button></div></header><main>
     <section id="dashboard" class="dashboard" hidden>
       <div class="page-heading">
         <div><span class="eyebrow">YOUR BUSINESS PIPELINE</span><h1>Client enquiries</h1><p>Follow up on new leads, record your progress and confirm meetings.</p></div>
@@ -56,7 +29,7 @@
       </section>
       <p id="dashboardStatus" class="message" role="status" aria-live="polite"></p>
     </section>
-  </main>
+</main>
   <dialog id="leadDialog">
     <form id="leadForm">
       <div class="dialog-header"><div><span class="eyebrow">LEAD DETAILS</span><h2 id="leadTitle">Enquiry</h2></div><button id="closeDialog" type="button" class="icon-button" aria-label="Close details">×</button></div>
@@ -66,5 +39,4 @@
       <div class="dialog-actions"><button type="button" id="cancelDialog" class="button secondary">Cancel</button><button class="button primary" type="submit">Save changes</button></div>
     </form>
   </dialog>
-</body>
-</html>
+</body></html>
