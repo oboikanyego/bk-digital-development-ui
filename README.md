@@ -1,12 +1,13 @@
-# BK Digital Development UI
+# Mzansi Digital Ventures (Pty) Ltd UI
 
-Responsive multi-page website for BK Digital Development.
+Responsive multi-page website for Mzansi Digital Ventures (Pty) Ltd.
 
 ## Website routes
 
 - `/` — Home
 - `/services/` — Websites, online stores, mobile apps and business systems
 - `/portfolio/` — Selected projects
+- `/about/` — Company purpose, location and values
 - `/pricing/` — Pricing packages
 - `/process/` — Process and FAQs
 - `/contact/` — Client enquiries and meeting requests
@@ -43,3 +44,5 @@ For end-to-end local API proxy testing, run `netlify dev` instead of the plain s
 - Publish directory: `public`
 - Functions directory: `netlify/functions`
 - Environment: `BACKEND_URL=https://bk-digital-development-api.onrender.com`
+
+Brand assets: `/brand-mark.svg` and `/brand-hero.svg` are lightweight vector adaptations of the supplied navy/cyan branding reference. Existing Netlify and GitHub repository identifiers are deliberately unchanged to avoid breaking deployments.

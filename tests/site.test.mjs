@@ -16,3 +16,15 @@ test("sitemap excludes admin routes",()=>{
  assert.match(sitemap,/\/contact\/<\/loc>/);
  assert.doesNotMatch(sitemap,/\/admin\//);
 });
+
+test("Mzansi Digital Ventures branding is present on all public pages",()=>{
+ for(const route of ["index.html","services/index.html","about/index.html","portfolio/index.html","pricing/index.html","process/index.html","contact/index.html","pricing-guide.html"]){
+  const html=read(route);
+  assert.match(html,/Mzansi Digital Ventures/);
+  assert.doesNotMatch(html,/BK Digital Development/);
+ }
+ assert.match(read("index.html"),/brand-hero.svg/);
+ assert.match(read("services/index.html"),/Database/);
+ assert.match(read("services/index.html"),/Hosting/);
+ assert.match(read("sitemap.xml"),/\/about\//);
+});
