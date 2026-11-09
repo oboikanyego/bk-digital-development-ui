@@ -28,3 +28,12 @@ test("Mzansi Digital Ventures branding is present on all public pages",()=>{
  assert.match(read("services/index.html"),/Hosting/);
  assert.match(read("sitemap.xml"),/\/about\//);
 });
+
+test("brand-domain cutover includes canonical host and legacy redirects",()=>{
+ const home=read("index.html"), sitemap=read("sitemap.xml");
+ const config=readFileSync("netlify.toml","utf8");
+ assert.match(home,/https:\/\/mzansi-digital-ventures\.netlify\.app\//);
+ assert.match(sitemap,/https:\/\/mzansi-digital-ventures\.netlify\.app\//);
+ assert.match(config,/from = "https:\/\/bk-digital-development\.netlify\.app\/\*"/);
+ assert.match(config,/to = "https:\/\/mzansi-digital-ventures\.netlify\.app\/:splat"/);
+});
