@@ -1,0 +1,1 @@
+import {access} from "node:fs/promises";const required=["public/index.html","public/styles.css","public/app.js","netlify.toml"];for(const file of required)await access(file);console.log("BK Digital Development frontend ready for Netlify.");
