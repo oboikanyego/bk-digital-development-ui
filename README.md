@@ -46,3 +46,15 @@ For end-to-end local API proxy testing, run `netlify dev` instead of the plain s
 - Environment: `BACKEND_URL=https://bk-digital-development-api.onrender.com`
 
 Brand assets: `/brand-mark.svg` and `/brand-hero.svg` are lightweight vector adaptations of the supplied navy/cyan branding reference. Existing Netlify and GitHub repository identifiers are deliberately unchanged to avoid breaking deployments.
+
+## Primary website address
+
+Primary site: https://mzansi-digital-ventures.netlify.app
+Netlify project: https://app.netlify.com/projects/mzansi-digital-ventures
+The GitHub repository name and Render API URL remain unchanged.
+
+The new Netlify project has a successful production build on main. The previous Netlify project (formerly at https://bk-digital-development.netlify.app) is no longer listed in the connected account, so legacy URL redirects are **not configured** by this repository. Netlify redirects require the original hostname to remain attached to an active site. A rule on the new site cannot redirect requests that never reach it.
+
+If legacy URL redirects are required later, restore/create a Netlify project that owns the old hostname, and publish a minimal redirect-only configuration there, rather than renaming or changing this branded site. Old links are not guaranteed to work unless that old hostname is recovered and a redirect deployment is confirmed.
+
+The website's canonical links, robots.txt and sitemap now reference the branded address. The API proxy uses BACKEND_URL if configured and otherwise falls back to the existing public Render API URL.

@@ -4,6 +4,8 @@
   functions = "netlify/functions"
 [functions]
   node_bundler = "esbuild"
+# This site serves the new branded hostname.
+# Old-host redirects must be hosted on the old Netlify site, if it is restored.
 [[redirects]]
   from = "/admin"
   to = "/admin/login/"

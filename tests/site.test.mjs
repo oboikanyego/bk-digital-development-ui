@@ -28,3 +28,17 @@ test("Mzansi Digital Ventures branding is present on all public pages",()=>{
  assert.match(read("services/index.html"),/Hosting/);
  assert.match(read("sitemap.xml"),/\/about\//);
 });
+
+test("brand-domain migration updates public canonical links and sitemap",()=>{
+ const pages=["index.html","services/index.html","about/index.html","portfolio/index.html","pricing/index.html","process/index.html","contact/index.html"];
+ for(const path of pages){
+  const html=read(path);
+  assert.match(html,/https:\/\/mzansi-digital-ventures\.netlify\.app/);
+  assert.doesNotMatch(html,/https:\/\/bk-digital-development\.netlify\.app/);
+ }
+ const sitemap=read("sitemap.xml");
+ const robots=read("robots.txt");
+ assert.match(sitemap,/https:\/\/mzansi-digital-ventures\.netlify\.app\//);
+ assert.match(robots,/mzansi-digital-ventures\.netlify\.app\/sitemap.xml/);
+ assert.doesNotMatch(sitemap,/bk-digital-development\.netlify\.app/);
+});
