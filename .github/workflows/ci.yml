@@ -1,7 +1,7 @@
 name: Frontend checks
 on:
   push:
-    branches: [main, feature/mongodb-lead-management]
+    branches: [main, 'feature/**']
   pull_request:
 jobs:
   test:
@@ -12,6 +12,6 @@ jobs:
         with:
           node-version: '22'
       - run: npm install --no-audit --no-fund
-      - run: node --check public/app.js && node --check public/admin.js
+      - run: node --check public/app.js && node --check public/admin.js && node --check public/admin-login.js && node --check netlify/functions/api-proxy.mjs
       - run: npm test
       - run: npm run build
