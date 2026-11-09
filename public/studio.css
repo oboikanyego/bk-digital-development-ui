@@ -348,3 +348,18 @@ footer{background:#102031;color:white;padding:67px 0 28px}
  .reveal-hidden{opacity:1;transform:none}
  .studio-showcase,.product-preview{transform:none}
 }
+
+
+/* Quiet, accessible service start-up indicator shared with the admin area. */
+.service-connection{position:fixed;right:22px;bottom:22px;z-index:100;background:#fff;color:#1b3042;border:1px solid #d6e2e7;box-shadow:0 12px 42px rgba(16,39,58,.16);border-radius:7px;padding:14px 16px;display:flex;align-items:center;gap:12px;max-width:min(390px,calc(100vw - 28px));font-size:12px;line-height:1.55}
+.service-connection[hidden],.service-retry[hidden]{display:none!important}
+.service-indicator{width:16px;height:16px;flex:0 0 16px;border:2px solid #d9e6ea;border-top-color:#0a7b96;border-radius:50%;animation:connection-spin .85s linear infinite}
+.service-message{flex:1}
+.service-retry{border:0;border-left:1px solid #dce6e9;padding:7px 0 7px 11px;background:none;color:#0c6d87;font-size:12px;font-weight:790;cursor:pointer}
+.service-connection[data-status="ready"] .service-indicator{border:none;background:#28886a;animation:none}
+.service-connection[data-status="offline"] .service-indicator{border:none;background:#b36f42;animation:none}
+@keyframes connection-spin{to{transform:rotate(360deg)}}
+.submit-btn.is-loading{opacity:.83;cursor:progress}
+.submit-btn.is-loading:before{content:"";width:13px;height:13px;border:2px solid #a4c9d4;border-top-color:white;border-radius:50%;animation:connection-spin .9s linear infinite}
+@media(max-width:540px){.service-connection{left:14px;right:14px;bottom:14px;max-width:none}}
+@media(prefers-reduced-motion:reduce){.service-indicator,.submit-btn.is-loading:before{animation:none!important}}

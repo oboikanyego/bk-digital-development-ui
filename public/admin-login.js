@@ -4,6 +4,7 @@ const submit=document.getElementById("loginButton");
 const home="/admin/dashboard/";
 async function checkSession(){
   try{
+    if(window.MDVService) await window.MDVService.ensureReady();
     const response=await fetch("/api/admin/auth/me",{credentials:"same-origin",cache:"no-store"});
     if(response.ok)location.replace(home);
   }catch{}
@@ -15,6 +16,7 @@ form.addEventListener("submit",async event=>{
   submit.disabled=true;
   submit.textContent="Signing in…";
   try{
+    if(window.MDVService) await window.MDVService.ensureReady();
     const response=await fetch("/api/admin/auth/login",{
       method:"POST",credentials:"same-origin",cache:"no-store",
       headers:{"content-type":"application/json"},
@@ -59,6 +61,7 @@ keyForm.addEventListener("submit",async event=>{
   button.textContent="Verifying…";
   status.textContent="";
   try{
+    if(window.MDVService) await window.MDVService.ensureReady();
     const response=await fetch("/api/admin/auth/login",{
       method:"POST",credentials:"same-origin",cache:"no-store",
       headers:{"content-type":"application/json"},
