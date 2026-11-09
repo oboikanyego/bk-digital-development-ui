@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#0d1b23">
+  <title>Lead management | BK Digital Development</title>
+  <link rel="stylesheet" href="/admin.css">
+  <script src="/admin.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="BK Digital Development homepage"><span class="logo">BK</span><span>BK Digital<br><small>Lead management</small></span></a>
+    <div class="top-actions"><span class="private">Private workspace</span><button id="logout" class="button secondary" type="button" hidden>Lock dashboard</button></div>
+  </header>
+  <main>
+    <section class="login-panel" id="loginPanel">
+      <span class="eyebrow">OWNER ACCESS</span>
+      <h1>Welcome back.</h1>
+      <p>Manage your website leads and meeting requests in one place. Enter the private access key configured on Render.</p>
+      <form id="loginForm">
+        <label for="accessKey">Admin access key</label>
+        <input id="accessKey" type="password" minlength="32" required autocomplete="off" spellcheck="false" placeholder="Enter your secure key">
+        <button class="button primary" type="submit">Open dashboard <span>→</span></button>
+      </form>
+      <p class="hint">The key is used only while this page remains open. It is not saved to browser storage.</p>
+      <p id="loginError" class="message error" role="alert"></p>
+    </section>
+    <section id="dashboard" class="dashboard" hidden>
+      <div class="page-heading">
+        <div><span class="eyebrow">YOUR BUSINESS PIPELINE</span><h1>Client enquiries</h1><p>Follow up on new leads, record your progress and confirm meetings.</p></div>
+        <button id="refresh" class="button secondary" type="button">↻ Refresh</button>
+      </div>
+      <div class="stats" id="stats" aria-label="Enquiry summary">
+        <article><span>All enquiries</span><strong id="statAll">—</strong></article>
+        <article><span>New leads</span><strong id="statNew">—</strong></article>
+        <article><span>Meeting requests</span><strong id="statMeetings">—</strong></article>
+        <article><span>Converted leads</span><strong id="statConverted">—</strong></article>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Management sections">
+        <button id="tabEnquiries" class="tab active" role="tab" aria-selected="true" type="button">Enquiries</button>
+        <button id="tabMeetings" class="tab" role="tab" aria-selected="false" type="button">Meetings</button>
+      </div>
+      <section id="enquiriesPanel">
+        <div class="filterbar"><label>Search leads<input id="search" type="search" placeholder="Name, business, email or service"></label>
+          <label>Status<select id="statusFilter"><option value="">All statuses</option><option value="new">New</option><option value="contacted">Contacted</option><option value="quoted">Quoted</option><option value="converted">Converted</option><option value="closed">Closed</option></select></label>
+          <button id="searchButton" class="button secondary" type="button">Search</button>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Client</th><th>Service</th><th>Submitted</th><th>Status</th><th></th></tr></thead><tbody id="enquiryRows"></tbody></table></div>
+        <div class="pager"><span id="pageInfo"></span><div><button id="prevPage" class="button secondary" type="button">Previous</button><button id="nextPage" class="button secondary" type="button">Next</button></div></div>
+      </section>
+      <section id="meetingsPanel" hidden>
+        <p class="subheading">Suggested times are requests, not confirmed bookings. Contact the client before changing the status to confirmed.</p>
+        <div class="table-wrap"><table><thead><tr><th>Client</th><th>Requested time (SAST)</th><th>Contact</th><th>Status</th></tr></thead><tbody id="meetingRows"></tbody></table></div>
+      </section>
+      <p id="dashboardStatus" class="message" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <dialog id="leadDialog">
+    <form id="leadForm">
+      <div class="dialog-header"><div><span class="eyebrow">LEAD DETAILS</span><h2 id="leadTitle">Enquiry</h2></div><button id="closeDialog" type="button" class="icon-button" aria-label="Close details">×</button></div>
+      <div id="leadDetails" class="lead-details"></div>
+      <label>Pipeline status<select id="leadStatus"><option>new</option><option>contacted</option><option>quoted</option><option>converted</option><option>closed</option></select></label>
+      <label>Internal notes<textarea id="leadNotes" rows="5" maxlength="2000" placeholder="Next steps, quote discussed, follow-up notes..."></textarea></label>
+      <div class="dialog-actions"><button type="button" id="cancelDialog" class="button secondary">Cancel</button><button class="button primary" type="submit">Save changes</button></div>
+    </form>
+  </dialog>
+</body>
+</html>
