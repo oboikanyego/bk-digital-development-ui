@@ -1,4 +1,3 @@
-let adminKey = "";
 let page = 1;
 let total = 0;
 let leadCache = [];
@@ -14,23 +13,16 @@ const message = (text, error = false) => {
 async function call(path, options = {}) {
   const response = await fetch("/api/admin" + path, {
     ...options,
-    headers: { "content-type": "application/json", Authorization: "Bearer " + adminKey, ...options.headers }
+    credentials: "same-origin", cache: "no-store",
+    headers: { "content-type": "application/json", ...options.headers }
   });
   const result = await response.json().catch(() => ({}));
-  if (response.status === 401 || response.status === 503 && /Admin access/.test(result.message || "")) {
-    lock();
-    throw new Error(result.message || "Your admin session ended.");
+  if (response.status === 401) {
+    location.replace("/admin/login/");
+    throw new Error("Session expired. Please sign in again.");
   }
   if (!response.ok) throw new Error(result.message || "Unable to load information.");
   return result;
-}
-function lock() {
-  adminKey = "";
-  byId("accessKey").value = "";
-  byId("dashboard").hidden = true;
-  byId("loginPanel").hidden = false;
-  byId("logout").hidden = true;
-  if (byId("leadDialog").open) byId("leadDialog").close();
 }
 async function refreshStats() {
   const data = await call("/stats");
@@ -107,22 +99,15 @@ async function refreshAll() {
   await Promise.all([refreshStats(), loadEnquiries(), loadMeetings()]);
   message("Information updated.");
 }
-byId("loginForm").addEventListener("submit", async event => {
-  event.preventDefault();
-  adminKey = byId("accessKey").value.trim();
-  byId("loginError").textContent = "";
+byId("logout").addEventListener("click", async () => {
+  const button = byId("logout");
+  button.disabled = true;
   try {
-    await call("/stats");
-    byId("loginPanel").hidden = true;
-    byId("dashboard").hidden = false;
-    byId("logout").hidden = false;
-    byId("accessKey").value = "";
-    await refreshAll();
-  } catch (error) {
-    byId("loginError").textContent = error.message;
+    await fetch("/api/admin/auth/logout", { method: "POST", credentials: "same-origin", cache: "no-store" });
+  } finally {
+    location.replace("/admin/login/");
   }
 });
-byId("logout").addEventListener("click", lock);
 byId("refresh").addEventListener("click", () => refreshAll().catch(error => message(error.message, true)));
 byId("searchButton").addEventListener("click", () => { page = 1; loadEnquiries().catch(error => message(error.message, true)); });
 byId("search").addEventListener("keydown", event => {
@@ -157,3 +142,15 @@ byId("leadForm").addEventListener("submit", async event => {
     message(error.message, true);
   }
 });
+
+async function initializeDashboard() {
+  try {
+    const user = await call("/auth/me");
+    if (!user.authenticated) throw new Error("Access denied.");
+    byId("dashboard").hidden = false;
+    await refreshAll();
+  } catch (error) {
+    message(error.message || "Unable to load the dashboard.", true);
+  }
+}
+initializeDashboard();
