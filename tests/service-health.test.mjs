@@ -56,7 +56,7 @@ function boot() {
   };
   runInNewContext(source, ctx);
   return {
-    clock, events, document, notice, retry, message, browser,
+    clock, events, document, notice, retry, message, browser, navigator: ctx.navigator,
     requests: () => requests, service: browser.MDVService,
     fireTimer(millis) {
       for (const [id, item] of timers) {
@@ -90,18 +90,18 @@ test("returning from 15+ minutes away automatically rechecks the service", async
   assert.equal(env.requests(), 2);
 });
 
-test("wake-up failure while offline shows a recovery action, not a blocking page", async () => {
+test("offline users see a recovery action instead of a blocking screen", async () => {
   const env = boot();
   await env.service.ensureReady();
-  env.clock.now += 16 * 60 * 1000;
-  env.document.visibilityState = "hidden";
-  env.events.visibilitychange();
-  env.document.visibilityState = "visible";
-  const original = env.service;
-  // Directly exercise the visible error by using the simulated navigator.
-  // The closure reads navigator.onLine from its environment; a separate vm
-  // would be unnecessary, because this harness also checks the public UI contract.
-  assert.equal(typeof original.wake, "function");
-  assert.equal(typeof original.ensureReady, "function");
-  assert.equal(env.notice.hidden, true);
+  env.navigator.onLine = false;
+  const ok = await env.service.wake({ force: true });
+  assert.equal(ok, false);
+  assert.equal(env.notice.hidden, false);
+  assert.equal(env.notice.dataset.status, "offline");
+  assert.equal(env.retry.hidden, false);
+  assert.match(env.message.textContent, /offline/i);
+
+  env.navigator.onLine = true;
+  assert.equal(await env.service.wake({ force: true }), true);
+  assert.equal(env.requests(), 2);
 });
