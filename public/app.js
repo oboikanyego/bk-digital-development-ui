@@ -19,6 +19,7 @@ document.addEventListener("pointerdown", event => {
   if (nav?.classList.contains("open") && !event.target.closest(".nav-wrap")) closeNavigation();
 });
 
+document.querySelectorAll(".price-tab").forEach(button => button.setAttribute("aria-pressed", String(button.classList.contains("active"))));
 document.querySelectorAll(".price-tab").forEach(tab => tab.addEventListener("click", () => {
   document.querySelectorAll(".price-tab").forEach(button => {
     const active = button === tab;
