@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Mzansi Digital Ventures M mark">
+<defs><linearGradient id="m" x1="0" x2="1" y1="1" y2="0"><stop stop-color="#007ce4"/><stop offset="1" stop-color="#12d7f2"/></linearGradient><linearGradient id="s" x1="0" x2="1"><stop stop-color="#00b9e8"/><stop offset="1" stop-color="#35e9f6"/></linearGradient></defs>
+<path fill="url(#m)" d="M27 104 47 32h20l20 32 20-32h22l-18 70h-23l8-35-20 28H66L53 70l-9 34Z"/>
+<rect x="109" y="11" width="14" height="14" rx="1" fill="#18cffa"/><rect x="128" y="28" width="14" height="14" rx="1" fill="#00a9e8"/><rect x="111" y="33" width="13" height="13" rx="1" fill="#38dbff"/><rect x="131" y="47" width="10" height="10" rx="1" fill="#74dfff"/>
+<path d="M15 104C39 138 95 136 148 94 120 137 66 153 30 131 16 122 12 113 15 104Z" fill="url(#s)"/>
+</svg>

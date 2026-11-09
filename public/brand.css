@@ -1,0 +1,93 @@
+
+/* Mzansi Digital Ventures identity — inspired by supplied navy/cyan branding banner */
+:root{--ink:#0a1930;--ink2:#0d2544;--cream:#f3f8fc;--paper:#fff;--lime:#13c9ed;--green:#0b4671;--muted:#5b7186;--line:#d9e7f2;--sand:#eaf2ff;--lilac:#e7edff;--mint:#e2f8fe;--danger:#a12a2a;--shadow:0 20px 55px rgba(4,23,51,.22)}
+body{background:var(--cream);color:var(--ink)}
+.site-header{background:rgba(6,19,38,.96);border-bottom:1px solid rgba(39,183,250,.2)}
+.nav-wrap{height:76px;gap:22px}
+.brand{gap:11px;flex-shrink:0}
+.brand img.brand-mark{display:block;width:43px;height:43px;object-fit:contain;background:transparent;border-radius:0}
+.brand strong{font-size:14px;font-weight:850;letter-spacing:-.02em}
+.brand small{font-size:10px;letter-spacing:.14em;opacity:.85;color:#9ee8ff}
+.nav-links{gap:19px;font-size:12px}
+.nav-links a{white-space:nowrap}
+.nav-links a:hover,.nav-links a[aria-current="page"]{color:#36d4ff}
+.nav-toggle{color:#b9eefd}
+.btn-primary{background:linear-gradient(135deg,#06bce9,#36dcfa);border-color:transparent;color:#062039;box-shadow:0 8px 22px rgba(0,189,229,.17)}
+.btn-primary:hover{box-shadow:0 12px 28px rgba(0,189,229,.28)}
+.hero,.work-section,.contact-section{background:radial-gradient(circle at 83% 19%,#14456c 0,transparent 50%),linear-gradient(135deg,#071328,#0a1d36 63%,#112e54);color:white}
+.hero-grid{grid-template-columns:1fr 1.04fr;min-height:590px;gap:24px;padding:80px 0}
+.hero h1{font-size:clamp(44px,5.4vw,76px);max-width:670px}
+.hero h1 span,.section h2 span,.contact-section h2 span{text-decoration-color:#1bbde9}
+.hero-lead{color:#c7dded;max-width:580px;line-height:1.7}
+.eyebrow{color:#42d8ff}
+.eyebrow.dark{color:#126da5}
+.hero-proof{color:#c2deeb}
+.mdv-hero-visual{min-height:440px;display:flex;justify-content:center;align-items:center}
+.mdv-hero-visual img{display:block;width:min(100%,620px);height:auto;filter:drop-shadow(0 24px 45px rgba(0,0,0,.32));transform:translateY(10px)}
+.hero-strip{background:linear-gradient(110deg,#007ac7,#1bc7ee);color:#f9ffff}
+.strip-inner span{color:#e4faff}
+.light-section,.pricing-section,.faq-section{background:#f8fbff}
+.section{scroll-margin-top:90px}
+.home-preview{background:#f8fbff}
+.home-preview-grid .home-preview-card{background:linear-gradient(145deg,#dff4fe,#edf8ff);border:1px solid #bfdef4;box-shadow:0 12px 38px rgba(9,56,99,.05)}
+.home-preview-grid .home-preview-card:nth-child(2){background:linear-gradient(145deg,#e6edff,#f6f9ff)}
+.home-preview-grid .home-preview-card:nth-child(3){background:linear-gradient(145deg,#dff8fb,#ecfbff)}
+.home-cta,.care-strip{background:linear-gradient(120deg,#07192e,#10406b);color:white}
+.home-cta p:not(.eyebrow){color:#bedef0}
+.service-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.service-card{min-height:340px;border:1px solid #cbdff1;background:linear-gradient(150deg,#eaf7ff,#eff6ff)!important;border-radius:14px;padding:22px}
+.service-card:nth-child(even){background:linear-gradient(150deg,#e9effe,#f3f8ff)!important}
+.service-card .service-visual{height:112px;background:linear-gradient(145deg,#0b2e56,#0869aa);color:#39dafb;border-radius:11px;margin-bottom:20px}
+.service-card:nth-child(3n) .service-visual{background:linear-gradient(145deg,#10395f,#068dba)}
+.service-card h3{font-size:19px;line-height:1.2}
+.service-card p:not(.card-no){font-size:13px;color:#506b83;line-height:1.65}
+.service-card a{font-size:12px;color:#086aaf}
+.card-no{color:#19658a}
+.service-footnote{margin:27px 0 0;color:var(--muted);font-size:14px}
+.service-footnote a{color:#0875ad;font-weight:800}
+.price-card.featured{background:#e5f5fe;border-color:#8dd6f2}
+.price-card small{color:#116ca1}
+.price-tab.active{background:#0e4674;border-color:#0e4674}
+.price-card li:before{color:#087bb4}
+.process-section{background:#f0f7fd}
+.process-grid article span{background:#0b5b92}
+.contact-copy blockquote{border-left-color:#25c9e9}
+.contact-links a>span{background:#21c5ed}
+.contact-form{box-shadow:0 24px 70px rgba(0,0,0,.15)}
+.contact-form input:focus,.contact-form select:focus,.contact-form textarea:focus{border-color:#028cc7;box-shadow:0 0 0 3px rgba(39,197,245,.15)}
+.pricing-note a,.work-card a{color:#0878ae}
+.work-card a{color:#2dcbff}
+footer{background:#061326}
+footer .brand small{color:#a4e1fa}
+footer .footer-grid>div strong{color:#56d9ff}
+footer .footer-bottom{color:#8c9fb8}
+.about-hero{background:linear-gradient(128deg,#071328,#102c53);color:#fff;padding:95px 0 75px}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:30px}
+.about-grid h1{font-size:clamp(40px,5vw,66px);line-height:1.04;letter-spacing:-.05em;margin:0}
+.about-grid h1 span{color:#3edcff}
+.about-grid p:not(.eyebrow){max-width:610px;font-size:17px;color:#c7dded;line-height:1.75;margin:22px 0 30px}
+.about-visual img{display:block;width:100%;height:auto}
+.mission-section{background:#f8fbff}
+.mission-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.mission-grid article{padding:28px;background:white;border:1px solid #dbeaf4;border-radius:12px;box-shadow:0 10px 34px rgba(5,36,69,.05)}
+.mission-grid article span{color:#097caf;font-weight:900;font-size:12px}
+.mission-grid h3{font-size:19px;margin:16px 0 9px}
+.mission-grid p{color:#54718a;font-size:14px;line-height:1.7}
+.about-serve{background:#0b2645;color:white}
+.about-serve-grid{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center}
+.about-serve h2{font-size:clamp(35px,4vw,55px);margin:0;line-height:1.05}
+.about-serve p:not(.eyebrow){color:#bed9ec;font-size:16px;line-height:1.75}
+.about-serve .btn{margin-top:20px}
+@media(max-width:1020px){.service-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav-links{gap:12px}.nav-wrap{gap:15px}}
+@media(max-width:960px){.hero-grid,.about-grid{grid-template-columns:1fr}.mdv-hero-visual{min-height:auto}.mdv-hero-visual img{max-width:620px}.about-serve-grid{grid-template-columns:1fr;gap:15px}.mission-grid{grid-template-columns:1fr}}
+@media(max-width:640px){.brand strong{font-size:12px}.brand img.brand-mark{width:37px;height:37px}.nav-wrap{height:68px}.hero-grid{padding:54px 0 36px}.hero h1{font-size:44px}.mdv-hero-visual{min-height:310px}.service-grid{grid-template-columns:1fr}.service-card{min-height:300px}.about-hero{padding:66px 0 44px}.about-grid h1{font-size:43px}.section-heading h2{font-size:35px}}
+/* Admin pages share the same branding but remain visually distinct from public pages. */
+body:has(.topbar){background:#f2f7fc}
+.topbar{background:#07172b}
+.topbar .logo{display:block;width:42px;height:42px;object-fit:contain;background:transparent;border-radius:0}
+.topbar .brand{color:#fff}
+.topbar .brand small{color:#8fdffe}
+.topbar+.login-panel{border-color:#bed9ef}
+.login-panel{border-color:#d8e7f3;box-shadow:0 18px 55px rgba(6,30,56,.09)}
+.login-panel .eyebrow,.page-heading .eyebrow{color:#067bb5}
+.login-panel .button.primary{background:linear-gradient(120deg,#0268a9,#08a8d3);color:#fff;border-color:transparent}
