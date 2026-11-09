@@ -1,3 +1,7 @@
+const meetingStyle = document.createElement("link");
+meetingStyle.rel = "stylesheet";
+meetingStyle.href = "/meeting.css";
+document.head.appendChild(meetingStyle);
 const navToggle = document.querySelector(".nav-toggle");
 const nav = document.querySelector(".nav-links");
 navToggle?.addEventListener("click", () => {
