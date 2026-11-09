@@ -1,0 +1,40 @@
+/* A clean, product-oriented admin interface that complements the studio site. */
+:root{--ink:#16283c;--deep:#11253a;--bg:#f5f7f8;--lime:#0d809f;--border:#dce5e9;--muted:#617386}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:#f5f7f8;color:#1b3043}
+.topbar{background:#11253a;border-bottom:1px solid #29445a}
+.topbar .logo{width:39px;height:39px}
+.topbar .brand{font-weight:730;font-size:14px;letter-spacing:-.02em}
+.topbar .brand small{font-size:10px;color:#b5d5e0}
+.topbar .button.secondary{background:transparent;border-color:#435d6f;color:#fff}
+.topbar .button.secondary:hover{background:#213e54}
+main{padding-top:53px}
+.login-panel{border:1px solid #dbe5ea;border-radius:7px;max-width:470px;padding:35px;box-shadow:0 16px 45px rgba(21,45,67,.07)}
+.login-panel h1{font-size:38px;line-height:1.13;letter-spacing:-.05em}
+.login-panel p{font-size:14px;line-height:1.7}
+.login-panel .eyebrow,.page-heading .eyebrow{color:#0a7893;font-size:10px;letter-spacing:.12em}
+.login-panel .button.primary,.button.primary{background:#14354c;color:white;border-color:#14354c}
+.login-panel .button.primary:hover,.button.primary:hover{background:#22506a}
+.login-panel input:focus,.login-panel select:focus,.login-panel textarea:focus{border-color:#0e83a2;box-shadow:0 0 0 3px #d7eff6}
+.legacy-toggle{color:#0c6e89;text-decoration:none}
+.legacy-toggle:hover{text-decoration:underline}
+.page-heading h1{font-size:43px}
+.stats article,.table-wrap{border-radius:7px;box-shadow:none;border:1px solid #dce5e9}
+.stats article strong{color:#19334a;font-weight:730}
+.tabs .tab.active{border-color:#087a98;color:#162b3e}
+th{background:#f8fafb;color:#738596}
+td{color:#334a5c}
+.row-action{background:#e8f3f6;color:#095f79}
+.row-action:hover{background:#d4eaf0}
+.pill.new,.pill.requested{background:#e0eff4;color:#0b6b87}
+.pill.converted,.pill.completed{background:#e0f3eb;color:#1d6a4e}
+.lead-details{background:#f3f7f8}
+.button{border-radius:5px}
+.service-connection{position:fixed;right:20px;bottom:20px;z-index:99;background:white;color:#1e3546;border:1px solid #d5e1e6;border-radius:7px;box-shadow:0 14px 45px #0a26371b;padding:14px 18px;max-width:min(365px,calc(100vw - 40px));display:flex;align-items:center;gap:12px;font-size:12px;line-height:1.5}
+.service-connection[hidden]{display:none!important}
+.service-indicator{width:13px;height:13px;flex:0 0 13px;border:2px solid #c7d7dd;border-top-color:#087f9f;border-radius:50%;animation:connection-spin .85s linear infinite}
+.service-connection[data-status="ready"] .service-indicator{border:none;background:#208a69;animation:none}
+.service-connection[data-status="offline"] .service-indicator{border:none;background:#b15a3d;animation:none}
+.service-connection button{border:0;background:none;color:#0b738c;font-size:12px;font-weight:750;cursor:pointer}
+@keyframes connection-spin{to{transform:rotate(360deg)}}
+@media(max-width:600px){main{padding:28px 16px 70px}.login-panel{padding:25px}.page-heading h1{font-size:34px}}
+@media(prefers-reduced-motion:reduce){.service-indicator{animation:none}}

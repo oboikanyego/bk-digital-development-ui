@@ -23,7 +23,7 @@ test("Mzansi Digital Ventures branding is present on all public pages",()=>{
   assert.match(html,/Mzansi Digital Ventures/);
   assert.doesNotMatch(html,/BK Digital Development/);
  }
- assert.match(read("index.html"),/brand-hero.svg/);
+ assert.match(read("index.html"),/class="product-preview"/);
  assert.match(read("services/index.html"),/Database/);
  assert.match(read("services/index.html"),/Hosting/);
  assert.match(read("sitemap.xml"),/\/about\//);
@@ -41,4 +41,38 @@ test("brand-domain migration updates public canonical links and sitemap",()=>{
  assert.match(sitemap,/https:\/\/mzansi-digital-ventures\.netlify\.app\//);
  assert.match(robots,/mzansi-digital-ventures\.netlify\.app\/sitemap.xml/);
  assert.doesNotMatch(sitemap,/bk-digital-development\.netlify\.app/);
+});
+
+
+test("a restrained, accessible software studio design replaces the previous hero",()=>{
+  const home=read("index.html"),css=read("studio.css");
+  assert.match(home,/Software that helps your business/);
+  assert.match(home,/class="product-preview"/);
+  assert.match(home,/Illustrative concept/);
+  assert.match(home,/class="case-grid"/);
+  assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
+  assert.doesNotMatch(home,/floating-note|browser-card/);
+});
+test("every page warms the service without blocking the marketing content",()=>{
+ const paths=["index.html","services/index.html","about/index.html","portfolio/index.html",
+   "pricing/index.html","process/index.html","contact/index.html",
+   "admin/login/index.html","admin/dashboard/index.html"];
+ for(const path of paths){
+   const html=read(path);
+   assert.match(html,/\/service-health\.js/);
+   assert.match(html,/\/studio(?:-admin)?\.css/);
+ }
+ const health=read("service-health.js");
+ assert.match(health,/\/api\/health/);
+ assert.match(health,/15 \* 60 \* 1000/);
+ assert.match(health,/visibilitychange/);
+ assert.match(health,/service-connection/);
+ assert.doesNotMatch(health,/setInterval/);
+});
+test("the contact form uses a wakeup preflight but does not replay enquiries",()=>{
+ const script=read("app.js");
+ assert.match(script,/MDVService\.ensureReady/);
+ assert.match(script,/submitting = true/);
+ assert.match(script,/fetch\("\/api\/contact"/);
+ assert.doesNotMatch(script,/fetch\("\/api\/contact"[\s\S]*?fetch\("\/api\/contact"/);
 });

@@ -11,6 +11,7 @@ const message = (text, error = false) => {
   el.className = error ? "message error" : "message";
 };
 async function call(path, options = {}) {
+  if (window.MDVService) await window.MDVService.ensureReady();
   const response = await fetch("/api/admin" + path, {
     ...options,
     credentials: "same-origin", cache: "no-store",
