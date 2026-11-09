@@ -47,18 +47,14 @@ For end-to-end local API proxy testing, run `netlify dev` instead of the plain s
 
 Brand assets: `/brand-mark.svg` and `/brand-hero.svg` are lightweight vector adaptations of the supplied navy/cyan branding reference. Existing Netlify and GitHub repository identifiers are deliberately unchanged to avoid breaking deployments.
 
-## Branded domain migration (hold until new Netlify site is deployed)
+## Primary website address
 
-New primary hostname: https://mzansi-digital-ventures.netlify.app. Old hostname: https://bk-digital-development.netlify.app.
+Primary site: https://mzansi-digital-ventures.netlify.app
+Netlify project: https://app.netlify.com/projects/mzansi-digital-ventures
+The GitHub repository name and Render API URL remain unchanged.
 
-The old Netlify site must remain active to redirect its original .netlify.app URL. Do NOT rename or delete it.
+The new Netlify project has a successful production build on main. The previous Netlify project (formerly at https://bk-digital-development.netlify.app) is no longer listed in the connected account, so legacy URL redirects are **not configured** by this repository. Netlify redirects require the original hostname to remain attached to an active site. A rule on the new site cannot redirect requests that never reach it.
 
-Migration sequence:
-1. In the [new Netlify project](https://app.netlify.com/projects/mzansi-digital-ventures), link Git repository `oboikanyego/bk-digital-development-ui` branch `main`.
-2. Build command: `npm run build`, publish directory: `public`, functions: `netlify/functions`.
-3. Set Netlify environment `BACKEND_URL=https://bk-digital-development-api.onrender.com` scoped to Functions, then deploy the branded site.
-4. Verify the new homepage, services, contact form proxy (/api/health), and /admin/login/.
-5. ONLY THEN merge this cutover PR. It switches canonical URLs, sitemap and robots.txt and enables a host-specific 301 redirect from the old .netlify.app hostname to the new one.
-6. Keep the original Netlify site intact permanently (or until old links no longer matter), so the old hostname continues resolving to the redirect.
+If legacy URL redirects are required later, restore/create a Netlify project that owns the old hostname, and publish a minimal redirect-only configuration there, rather than renaming or changing this branded site. Old links are not guaranteed to work unless that old hostname is recovered and a redirect deployment is confirmed.
 
-Netlify requires no separately purchased domain for this .netlify.app branded subdomain, but custom domains require separate DNS and domain ownership.
+The website's canonical links, robots.txt and sitemap now reference the branded address. The API proxy uses BACKEND_URL if configured and otherwise falls back to the existing public Render API URL.
