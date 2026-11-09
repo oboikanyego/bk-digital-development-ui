@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://bk-digital-development.netlify.app/sitemap.xml
