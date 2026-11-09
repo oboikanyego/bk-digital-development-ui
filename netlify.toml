@@ -4,13 +4,8 @@
   functions = "netlify/functions"
 [functions]
   node_bundler = "esbuild"
-# Migration: redirect only requests sent to the legacy hostname. Keep that Netlify site active.
-[[redirects]]
-  from = "https://bk-digital-development.netlify.app/*"
-  to = "https://mzansi-digital-ventures.netlify.app/:splat"
-  status = 301
-  force = true
-
+# This site serves the new branded hostname.
+# Old-host redirects must be hosted on the old Netlify site, if it is restored.
 [[redirects]]
   from = "/admin"
   to = "/admin/login/"
