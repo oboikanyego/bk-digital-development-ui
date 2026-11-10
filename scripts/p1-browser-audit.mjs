@@ -108,7 +108,13 @@ try{
  await axe(desktop,"desktop-crm");
  console.log("PASS client CRM profile and keyboard-accessible dialog");
  await desktop.goto(base+"/admin/documents/",{waitUntil:"domcontentloaded",timeout:85000});
- await desktop.locator("#docClient option").nth(1).waitFor();
+ await desktop.waitForTimeout(1200);
+ const docOptions=await desktop.locator("#docClient option").count();
+ console.log("DOCUMENT LOAD DIAGNOSTICS",JSON.stringify({
+   options:docOptions,feedback:await desktop.locator("#bizFeedback").innerText(),
+   errors:messages.slice(-5)
+ }));
+ assert.ok(docOptions>=2,"Document builder must load the available CRM clients");
  await desktop.locator("#docClient").selectOption(sampleEmail);
  await desktop.locator("[data-line-description]").first().fill("Website development");
  await desktop.locator("[data-line-price]").first().fill("123.45");

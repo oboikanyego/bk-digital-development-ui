@@ -59,3 +59,8 @@ body.cms-managed .btn,body.cms-managed .button{border-radius:var(--cms-radius)}
 @media(prefers-reduced-motion:reduce){
   .reveal-hidden,.reveal-visible{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}
 }
+
+/* WCAG AA text contrast for editable accent colours on light backgrounds. */
+body.cms-managed .eyebrow.dark,body.cms-managed .text-link{color:#075773}
+.method-grid>div:first-child>p:not(.eyebrow){color:#4f6476}
+.method-steps>div p{color:#4c6071}

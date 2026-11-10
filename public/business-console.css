@@ -50,3 +50,8 @@
 .business-status.rejected,.business-status.void,.business-status.failed{background:#fae2e0;color:#943a43}
 .business-status.draft{background:#f2f1e2;color:#766328}
 @media(max-width:760px){.business-form-grid{grid-template-columns:1fr}.topbar{align-items:start;flex-wrap:wrap}.top-actions{flex-wrap:wrap;gap:7px}.top-actions .button{font-size:11px}.business-card{padding:15px}.business-main{padding:25px 13px 80px}.business-card-head{align-items:start;flex-direction:column}}
+
+/* Minimum 4.5:1 contrast for small admin labels and table headings. */
+.business-stats article span{color:#4b6070}
+.business-table-wrap th{color:#455d70}
+.business-subtle{color:#506879}
