@@ -162,6 +162,143 @@
     const casesSection = $(".portfolio-cases");
     if (casesSection) casesSection.hidden=featured.length===0;
   }
+  function updateExtendedSettings(site){
+    const cfg=site.siteConfig;
+    if(!cfg)return;
+    const safePath=value=>["/","/services/","/portfolio/","/about/","/pricing/","/process/","/contact/"].includes(value)?value:"";
+    const d=cfg.design||{};
+    if(/^#[a-f0-9]{6}$/i.test(d.accentColor||""))
+      document.documentElement.style.setProperty("--cms-accent",d.accentColor);
+    if(/^#[a-f0-9]{6}$/i.test(d.backgroundColor||""))
+      document.documentElement.style.setProperty("--cms-background",d.backgroundColor);
+    if(/^#[a-f0-9]{6}$/i.test(d.textColor||""))
+      document.documentElement.style.setProperty("--cms-text",d.textColor);
+    if(Number.isInteger(d.buttonRadius)&&d.buttonRadius>=0&&d.buttonRadius<=30)
+      document.documentElement.style.setProperty("--cms-radius",d.buttonRadius+"px");
+    const pageKey=({"/":"home","/services/":"services","/portfolio/":"portfolio","/pricing/":"pricing",
+      "/process/":"process","/about/":"about","/contact/":"contact"})[location.pathname]||"home";
+    const seo=cfg.seo?.[pageKey];
+    if(seo){
+      if(typeof seo.title==="string")document.title=seo.title;
+      const setMeta=(name,value,property=false)=>{
+        if(typeof value!=="string")return;
+        const attr=property?"property":"name";
+        let node=document.head.querySelector('meta['+attr+'="'+name+'"]');
+        if(!node){node=document.createElement("meta");node.setAttribute(attr,name);document.head.append(node);}
+        node.content=value;
+      };
+      setMeta("description",seo.description);
+      setMeta("robots",seo.robots||"index,follow");
+      setMeta("og:title",seo.title,true);
+      setMeta("og:description",seo.description,true);
+      setMeta("og:type","website",true);
+      const image=safeUrl(seo.imageUrl,true);
+      if(image)setMeta("og:image",image,true);
+      const canonical="https://mzansi-digital-ventures.netlify.app"+location.pathname;
+      let link=document.head.querySelector('link[rel="canonical"]');
+      if(!link){link=document.createElement("link");link.rel="canonical";document.head.append(link);}
+      link.href=canonical;
+    }
+    const nav=$("#primaryNav");
+    if(nav&&Array.isArray(cfg.navigation)){
+      all("#primaryNav > a:not(.mobile-admin-access)").forEach(a=>a.remove());
+      for(const item of cfg.navigation){
+        const link=safePath(item.href);
+        if(!link||item.visible===false||site.sections?.[link.slice(1,-1)]===false)continue;
+        const a=document.createElement("a");a.href=link;a.textContent=item.label;nav.append(a);
+        a.addEventListener("click",()=>{
+          nav.classList.remove("open");
+          const toggle=$(".nav-toggle");
+          if(toggle){toggle.setAttribute("aria-expanded","false");toggle.setAttribute("aria-label","Open navigation");}
+        });
+      }
+    }
+    const footer=cfg.footer||{};
+    const footerDescription=$(".footer-grid > p");
+    if(footerDescription)footerDescription.textContent=footer.description||"";
+    const footerColumns=all(".footer-grid > div");
+    if(footerColumns[0]){
+      const explore=footerColumns[0];
+      explore.replaceChildren();
+      const header=document.createElement("strong");header.textContent="Explore";explore.append(header);
+      for(const item of cfg.navigation||[]){
+        const target=safePath(item.href);
+        if(!target||item.visible===false||site.sections?.[target.slice(1,-1)]===false)continue;
+        const a=document.createElement("a");a.href=target;a.textContent=item.label;explore.append(a);
+      }
+    }
+    if(footerColumns[1]){
+      const contact=footerColumns[1];
+      contact.replaceChildren();
+      const heading=document.createElement("strong");heading.textContent=footer.contactHeading||"Contact";contact.append(heading);
+      const admin=document.createElement("a");admin.href="/admin/login/";
+      admin.className="footer-admin-access";admin.textContent="Admin sign in";contact.append(admin);
+      for(const item of footer.links||[]){
+        const target=safePath(item.href);if(!target||item.visible===false)continue;
+        const link=document.createElement("a");link.href=target;link.textContent=item.label;contact.append(link);
+      }
+      if(footer.showEmail!==false){
+        const a=document.createElement("a");a.href="mailto:"+site.company.email;a.textContent="Business email";contact.append(a);
+      }
+    }
+    const homepage=$(".studio-hero");
+    if(homepage){
+      const main=$("main");
+      if(main){
+        all(".cms-advanced").forEach(x=>x.remove());
+        const sections=[];
+        if(Array.isArray(cfg.homepageSections)){
+          for(const content of cfg.homepageSections.filter(x=>x.visible!==false)){
+            const section=document.createElement("section");section.className="cms-advanced cms-promo";
+            const container=document.createElement("div");container.className="container";
+            const h=document.createElement("h2");h.textContent=content.heading;container.append(h);
+            const p=document.createElement("p");p.textContent=content.description;container.append(p);
+            const href=safePath(content.href);
+            if(href&&content.ctaText){const a=document.createElement("a");a.href=href;a.className="btn btn-primary";
+              a.textContent=content.ctaText;container.append(a);}
+            section.append(container);sections.push(section);
+          }
+        }
+        const testimonials=(cfg.testimonials||[]).filter(x=>x.visible!==false);
+        if(testimonials.length){
+          const section=document.createElement("section");section.className="cms-advanced cms-testimonials";
+          const container=document.createElement("div");container.className="container";
+          const heading=document.createElement("h2");heading.textContent="What our clients say";container.append(heading);
+          const grid=document.createElement("div");grid.className="cms-testimonial-grid";
+          for(const item of testimonials){
+            const card=document.createElement("blockquote");
+            const quote=document.createElement("p");quote.textContent=item.quote;
+            const by=document.createElement("footer");by.textContent=item.name+(item.role?" · "+item.role:"");
+            card.append(quote,by);grid.append(card);
+          }
+          container.append(grid);section.append(container);sections.push(section);
+        }
+        const faqs=(cfg.faqs||[]).filter(x=>x.visible!==false);
+        if(faqs.length){
+          const section=document.createElement("section");section.className="cms-advanced cms-faqs";
+          const container=document.createElement("div");container.className="container";
+          const h=document.createElement("h2");h.textContent="Frequently asked questions";container.append(h);
+          for(const item of faqs){
+            const details=document.createElement("details");
+            const summary=document.createElement("summary");summary.textContent=item.question;
+            const p=document.createElement("p");p.textContent=item.answer;details.append(summary,p);container.append(details);
+          }
+          section.append(container);sections.push(section);
+        }
+        main.append(...sections);
+      }
+    }
+    const structured=document.getElementById("cms-structured-data")||document.createElement("script");
+    structured.id="cms-structured-data";structured.type="application/ld+json";
+    structured.textContent=JSON.stringify({
+      "@context":"https://schema.org","@type":"Organization",name:site.company.name,
+      url:"https://mzansi-digital-ventures.netlify.app/",
+      email:site.company.email,
+      description:cfg.footer?.description||""
+    }).replace(/</g,"\\u003c");
+    document.head.append(structured);
+  }
+
   function applyVisibility(sections) {
     const links = {services:"/services/",portfolio:"/portfolio/",pricing:"/pricing/",process:"/process/",about:"/about/",contact:"/contact/"};
     for (const [key,path] of Object.entries(links)) {
@@ -187,6 +324,7 @@
       const {site}=await response.json();
       if (!site?.company || !Array.isArray(site.projects) || !Array.isArray(site.services) || !Array.isArray(site.pricing)) return;
       updateCompany(site);
+      updateExtendedSettings(site);
       applyVisibility(site.sections || {});
       updateHome(site);
       updateAbout(site);
