@@ -42,4 +42,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git add public/images/projects/royal-treats-live.webp public/images/projects/mobile/royal-treats-live.webp public/images/projects/royal-treats-capture.json
           git diff --cached --quiet || git commit -m "assets: capture Royal Treats public website"
+          git pull --rebase origin feature/royal-treats-portfolio
           git push origin HEAD:refs/heads/feature/royal-treats-portfolio
