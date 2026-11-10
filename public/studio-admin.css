@@ -38,3 +38,12 @@ td{color:#334a5c}
 @keyframes connection-spin{to{transform:rotate(360deg)}}
 @media(max-width:600px){main{padding:28px 16px 70px}.login-panel{padding:25px}.page-heading h1{font-size:34px}}
 @media(prefers-reduced-motion:reduce){.service-indicator{animation:none}}
+
+/* Email notification health and recovery controls. */
+.email-alert-status{padding:13px 16px;margin:0 0 22px;border:1px solid #ead5bd;border-radius:7px;background:#fff8e8;color:#815625;font-size:12px;line-height:1.65}
+.email-alert-status[data-configured="true"]{background:#e8f5f0;border-color:#c6e7d8;color:#226c4f}
+.email-pill{display:inline-block;padding:4px 10px;border-radius:40px;background:#e9eef0;font-weight:750;color:#647789;font-size:11px;text-transform:capitalize}
+.email-pill.sent{background:#ddf3e8;color:#196348}.email-pill.pending,.email-pill.sending{background:#fff0d9;color:#865a21}.email-pill.failed{background:#fae2df;color:#994137}
+#retryEmail{color:#0b6c89;border-color:#bfdbe4}
+#retryEmailStatus:empty{display:none}
+@media(max-width:760px){.dialog-actions{flex-wrap:wrap}#retryEmail{margin-right:auto}}
