@@ -1,0 +1,46 @@
+name: Capture Royal Treats live website
+on:
+  push:
+    branches: [feature/royal-treats-portfolio]
+    paths:
+      - .github/workflows/capture-royal-treats.yml
+      - scripts/capture-royal-treats.mjs
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/royal-treats-portfolio
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --no-audit --no-fund playwright sharp
+      - run: npx playwright install --with-deps chromium
+      - name: Capture and verify public desktop and mobile site
+        run: node scripts/capture-royal-treats.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: royal-treats-live-screenshots
+          path: |
+            public/images/projects/royal-treats-live.webp
+            public/images/projects/mobile/royal-treats-live.webp
+            public/images/projects/royal-treats-capture.json
+          if-no-files-found: warn
+      - name: Commit screenshots to this feature branch
+        if: success()
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add public/images/projects/royal-treats-live.webp public/images/projects/mobile/royal-treats-live.webp public/images/projects/royal-treats-capture.json
+          git diff --cached --quiet || git commit -m "assets: capture Royal Treats public website"
+          git pull --rebase origin feature/royal-treats-portfolio
+          git push origin HEAD:refs/heads/feature/royal-treats-portfolio

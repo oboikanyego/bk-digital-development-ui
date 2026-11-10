@@ -126,3 +126,23 @@ test("KasiDrop, Mzansi Rent Lite and Genesis cards use real browser screenshots"
  }
  assert.match(html,/genesis-kiddies-corner2\.netlify\.app/);
 });
+
+test("Royal Treats is included with a verified desktop and mobile browser capture",()=>{
+ const html=read("portfolio/index.html");
+ assert.match(html,/Royal Treats/);
+ assert.match(html,/https:\/\/royal-treats\.netlify\.app\//);
+ assert.match(html,/images\/projects\/royal-treats-live\.webp/);
+ assert.match(html,/images\/projects\/mobile\/royal-treats-live\.webp/);
+ const manifest=JSON.parse(read("images/projects/royal-treats-capture.json"));
+ assert.equal(manifest.projects.length,1);
+ assert.equal(manifest.projects[0].id,"royal-treats");
+ for(const type of ["desktop","mobile"]){
+   const result=manifest.projects[0][type];
+   assert.equal(result.status,200);
+   assert.ok(result.bodyTextLength>75);
+   const image=readFileSync("public/images/projects/"+(type==="mobile"?"mobile/":"")+"royal-treats-live.webp");
+   assert.equal(image.toString("ascii",0,4),"RIFF");
+   assert.equal(image.toString("ascii",8,12),"WEBP");
+   assert.ok(image.length>9000);
+ }
+});

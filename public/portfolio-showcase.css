@@ -107,3 +107,6 @@
 @media(max-width:780px){.more-project-art.screenshot{height:245px}}
 @media(max-width:560px){.more-project-art.screenshot{height:295px}.more-project-art.screenshot img{object-fit:cover;object-position:top center}}
 @media(prefers-reduced-motion:reduce){.more-project-art.screenshot img{transition:none;transform:none!important}}
+
+/* Four live product cards now form a balanced two-by-two gallery on desktop. */
+@media(min-width:781px){.more-projects-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.more-project-art.screenshot{height:285px}}
