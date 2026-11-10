@@ -1,21 +1,25 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#07172b"><title>Admin dashboard | Mzansi Digital Ventures (Pty) Ltd</title><link rel="stylesheet" href="/admin.css"><link rel="stylesheet" href="/brand.css"><link rel="stylesheet" href="/studio-admin.css"><script src="/service-health.js" defer></script><script src="/admin.js" defer></script><link rel="icon" type="image/svg+xml" href="/brand-mark.svg"><meta name="color-scheme" content="light"></head><body><header class="topbar"><a class="brand" href="/" aria-label="Website home"><img class="logo" src="/brand-mark.svg" alt="" width="40" height="40"><span>Mzansi Digital<br><small>Ventures · Admin</small></span></a><div class="top-actions"><span class="private">Private workspace</span><a href="/admin/content/" class="button secondary">Edit website</a><a href="/admin/email-templates/" class="button secondary">Email templates</a><button id="logout" class="button secondary" type="button">Sign out</button></div></header><main>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#07172b"><title>Admin dashboard | Mzansi Digital Ventures (Pty) Ltd</title><link rel="stylesheet" href="/admin.css"><link rel="stylesheet" href="/brand.css"><link rel="stylesheet" href="/studio-admin.css"><script src="/service-health.js" defer></script><script src="/admin.js" defer></script><link rel="icon" type="image/svg+xml" href="/brand-mark.svg"><meta name="color-scheme" content="light"></head><body><header class="topbar"><a class="brand" href="/" aria-label="Website home"><img class="logo" src="/brand-mark.svg" alt="" width="40" height="40"><span>Mzansi Digital<br><small>Ventures · Admin</small></span></a><div class="top-actions"><span class="private">Private workspace</span><a href="/admin/crm/" class="button secondary">Clients CRM</a><a href="/admin/documents/" class="button secondary">Quotes &amp; invoices</a><a href="/admin/site-settings/" class="button secondary">Site settings</a><a href="/admin/content/" class="button secondary">Edit website</a><a href="/admin/email-templates/" class="button secondary">Email templates</a><button id="logout" class="button secondary" type="button">Sign out</button></div></header><main>
     <section id="dashboard" class="dashboard" hidden>
       <div class="page-heading">
         <div><span class="eyebrow">YOUR BUSINESS PIPELINE</span><h1>Client enquiries</h1><p>Follow up on new leads, record your progress and confirm meetings.</p></div>
-        <div class="cms-dash-actions"><a class="button primary" href="/admin/content/">Manage website content ↗</a><a class="button secondary" href="/admin/email-templates/">Manage email templates ↗</a><button id="refresh" class="button secondary" type="button">↻ Refresh</button></div>
+        <div class="cms-dash-actions"><a class="button secondary" href="/admin/crm/">Client CRM ↗</a><a class="button secondary" href="/admin/documents/">Quotations &amp; invoices ↗</a><a class="button primary" href="/admin/content/">Manage website content ↗</a><a class="button secondary" href="/admin/email-templates/">Manage email templates ↗</a><button id="refresh" class="button secondary" type="button">↻ Refresh</button></div>
       </div>
       <div id="emailAlertStatus" class="email-alert-status" role="status" aria-live="polite" hidden></div>
       <div class="stats" id="stats" aria-label="Enquiry summary">
         <article><span>All enquiries</span><strong id="statAll">—</strong></article>
         <article><span>New leads</span><strong id="statNew">—</strong></article>
         <article><span>Meeting requests</span><strong id="statMeetings">—</strong></article>
-        <article><span>Converted leads</span><strong id="statConverted">—</strong></article>
+        <article><span>Converted leads</span><strong id="statConverted">—</strong></article><article><span>CRM clients</span><strong id="statClients">—</strong></article><article><span>Follow-ups due</span><strong id="statFollowUps">—</strong></article>
       </div>
       <section class="delivery-overview" aria-labelledby="deliveryOverviewTitle">
         <div class="delivery-overview-header"><div><h2 id="deliveryOverviewTitle">Email delivery health</h2><p>Resend provider status for admin alerts, customer acknowledgements and meeting requests.</p></div></div>
         <div class="delivery-metrics" id="deliveryMetrics" aria-label="Email delivery totals"></div>
         <div class="table-wrap"><table><thead><tr><th>Message type</th><th>Current status</th><th>Attempts</th><th>Last update</th><th>Details</th></tr></thead><tbody id="deliveryRows"></tbody></table></div>
+      </section>
+      <section class="operations-health" aria-labelledby="opsHeading">
+        <div><h2 id="opsHeading">Production operations</h2><p>MongoDB, email configuration, Cloudinary media and background delivery worker readiness.</p></div>
+        <div id="opsHealth" class="operations-health-items" role="status" aria-live="polite"><p>Checking service health…</p></div>
       </section>
       <div class="tabs" role="tablist" aria-label="Management sections">
         <button id="tabEnquiries" class="tab active" role="tab" aria-selected="true" type="button">Enquiries</button>

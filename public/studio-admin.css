@@ -67,3 +67,16 @@ td{color:#334a5c}
 .lead-notifications small{color:#708697;font-size:10px}
 @media(max-width:850px){.delivery-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:400px){.delivery-overview{padding:15px}}
+
+@media(min-width:800px){.dashboard .stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:800px){.dashboard .stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.operations-health{margin:23px 0;background:#fff;border:1px solid #dde8ec;padding:22px;border-radius:9px}
+.operations-health h2{font-size:20px;letter-spacing:-.035em;margin:0 0 6px}
+.operations-health p{font-size:12px;margin:0 0 15px}
+.operations-health-items{display:flex;flex-wrap:wrap;gap:10px}
+.ops-check{border:1px solid #dfe8ec;border-radius:6px;padding:10px 13px;min-width:135px;background:#f6faf9}
+.ops-check b,.ops-check small{display:block}
+.ops-check b{font-size:12px}
+.ops-check small{font-size:10px;font-weight:690;margin-top:4px}
+.ops-check.ready small{color:#196749}.ops-check.warning{background:#fff5e9}.ops-check.warning small{color:#a45c24}

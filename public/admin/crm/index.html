@@ -1,0 +1,24 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="color-scheme" content="light"><title>Client CRM | Mzansi Digital Ventures</title><link rel="icon" href="/brand-mark.svg" type="image/svg+xml"><link rel="stylesheet" href="/admin.css"><link rel="stylesheet" href="/studio-admin.css"><link rel="stylesheet" href="/business-console.css"><script src="/service-health.js" defer></script><script src="/business-console.js" defer></script></head><body data-business-screen="crm"><header class="topbar"><a class="brand" href="/admin/dashboard/"><img class="logo" src="/brand-mark.svg" alt="" width="40" height="40"><span>Mzansi Digital<br><small>Ventures · Private workspace</small></span></a><nav class="top-actions" aria-label="Admin pages"><a href="/admin/dashboard/" class="button secondary">Enquiries</a><a href="/admin/crm/" class="button secondary">Clients</a><a href="/admin/documents/" class="button secondary">Documents</a><a href="/admin/content/" class="button secondary">Website CMS</a><button id="bizLogout" type="button" class="button secondary">Sign out</button></nav></header>
+<main class="business-main">
+  <section class="business-heading"><span class="eyebrow">CLIENT RELATIONSHIPS</span><h1>Your client CRM.</h1><p>Customer profiles, previous enquiries, follow-up reminders and project progress in one place.</p></section>
+  <div id="bizFeedback" class="business-feedback" role="status" aria-live="polite"></div>
+  <div class="business-stats" id="crmStats"><article><span>Clients</span><strong id="crmClientTotal">—</strong></article><article><span>Follow-ups due</span><strong id="crmDueTotal">—</strong></article></div>
+  <section class="business-card"><div class="business-card-head"><div><h2>Customers</h2><p>Existing enquiries are matched to client profiles using their email address.</p></div><button id="crmRefresh" type="button" class="button secondary">Refresh</button></div>
+    <form id="crmFilters" class="business-filters"><label>Search clients<input id="crmSearch" type="search" placeholder="Name, business or email"></label><label>Project stage<select id="crmStage"><option value="">All stages</option><option>lead</option><option>qualified</option><option>proposal</option><option>active</option><option>on_hold</option><option>completed</option><option>closed</option></select></label><button type="submit" class="button primary">Filter</button></form>
+    <div class="business-table-wrap"><table><thead><tr><th>Client</th><th>Business</th><th>Project stage</th><th>Follow-up</th><th></th></tr></thead><tbody id="crmRows"></tbody></table></div>
+    <div class="business-page-controls"><span id="crmPageLabel"></span><button type="button" id="crmPrev" class="button secondary">Previous</button><button type="button" id="crmNext" class="button secondary">Next</button></div>
+  </section>
+  <section class="business-card"><h2>Follow-ups needing attention</h2><p>Dates are shown in South African local time.</p><div id="crmDueList" class="business-due-list"></div></section>
+</main>
+<dialog id="clientDialog" class="business-dialog"><form id="clientForm">
+  <div class="business-dialog-head"><div><span class="eyebrow">CLIENT PROFILE</span><h2 id="clientHeading">Customer details</h2></div><button id="clientClose" type="button" class="button secondary">Close</button></div>
+  <p id="clientEmailLabel" class="business-subtle"></p>
+  <div class="business-form-grid"><label>Contact name<input name="name" maxlength="120" required></label><label>Phone<input name="phone" maxlength="60"></label><label>Business<input name="businessName" maxlength="160"></label>
+    <label>Project stage<select name="projectStatus"><option>lead</option><option>qualified</option><option>proposal</option><option>active</option><option>on_hold</option><option>completed</option><option>closed</option></select></label>
+    <label>Next follow-up date<input name="followUpDate" type="date"></label><label>Priority<select name="priority"><option>normal</option><option>high</option><option>urgent</option></select></label>
+    <label class="span-all">CRM notes<textarea name="notes" maxlength="5000" rows="4"></textarea></label></div>
+  <div class="business-dialog-actions"><a id="clientDocumentLink" class="button secondary" href="/admin/documents/">Create quotation / invoice</a><button id="clientSave" class="button primary" type="submit">Save profile</button></div>
+  <section><h3>Enquiry history</h3><div class="business-history" id="clientEnquiries"></div></section>
+  <section><h3>Related quotations &amp; invoices</h3><div class="business-history" id="clientDocuments"></div></section>
+  <section><h3>Activity timeline</h3><div class="business-history" id="clientActivity"></div></section>
+</form></dialog></body></html>

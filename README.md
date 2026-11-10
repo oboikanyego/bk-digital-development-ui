@@ -77,3 +77,11 @@ Use `/admin/email-templates/` (admin sign-in required) to choose a MongoDB email
 ## Email automation and delivery monitoring
 
 Email notifications are now durable MongoDB jobs: admin alert, customer confirmation, and meeting-request alert. The dashboard displays provider statuses and retry attempts, including delivered/bounced/failed events when Resend webhooks are configured. Version history and rollback are accessible from the email template manager. A Netlify Scheduled Function calls the Render backend retry worker every ten minutes using a shared `EMAIL_JOB_TOKEN` configured as a secret on both platforms.
+
+## Business administration (P1)
+
+Private admin routes: `/admin/crm/` (profiles, enquiry history, follow-ups, stages, activity), `/admin/documents/` (quotations, PDF invoices, manual acceptance/payment records) and `/admin/site-settings/` (SEO, navigation, footer, testimonials, FAQs, custom homepage content and design tokens). Existing protected admin sign-in applies to all API operations. HTML is escaped before it is inserted into these admin screens.
+
+The same-origin API proxy handles PDF responses as Base64-encoded binary with `application/pdf`, so downloads remain valid across Netlify and Render. Resend sends a PDF attachment, using database-backed Handlebars templates.
+
+The original authored HTML remains a cold-start and crawler fallback. MongoDB values control hydrated public pages after JavaScript loads; JavaScript-rendered SEO metadata alone does not guarantee search-engine indexing.

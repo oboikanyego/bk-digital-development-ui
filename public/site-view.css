@@ -27,3 +27,43 @@ body.cms-managed .service-card a{color:var(--cms-accent)}
 @media(max-width:1100px){.nav-wrap{gap:13px}.nav-links{gap:13px}.admin-access{font-size:10px}}
 @media(max-width:960px){.admin-access{display:none}.nav-links .mobile-admin-access{display:block;border-top:1px solid #dbe6eb;margin-top:8px;color:#0d6985}}
 @media(max-width:640px){.cms-unavailable{padding:50px 0}.cms-dash-actions{width:100%}}
+
+/* MongoDB controlled public sections and reusable presentation tokens. */
+body.cms-managed{--cms-radius:8px;--cms-background:#fff;--cms-text:#132f46}
+body.cms-managed main>.cms-advanced{background:var(--cms-background);color:var(--cms-text);padding:65px 0}
+.cms-advanced h2{font-size:clamp(26px,3vw,39px);line-height:1.1;color:var(--cms-text);letter-spacing:-.045em;margin:0 0 20px}
+.cms-advanced p{color:var(--cms-text);line-height:1.75;max-width:790px}
+.cms-advanced .btn{display:inline-flex;margin-top:12px;border-radius:var(--cms-radius)}
+.cms-promo{border-top:1px solid #e1e9ed}
+.cms-promo .container{max-width:870px;text-align:center}
+.cms-promo .container p{margin:auto}
+.cms-testimonials{background:#f6f9fa!important}
+.cms-testimonial-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.cms-testimonial-grid blockquote{background:white;border:1px solid #e0e8ec;border-radius:8px;padding:23px;margin:0}
+.cms-testimonial-grid blockquote p{font-size:16px;line-height:1.7;margin-top:0}
+.cms-testimonial-grid blockquote footer{font-size:12px;font-weight:750;color:#087d9f}
+.cms-faqs details{border-bottom:1px solid #dce7eb;padding:16px 0}
+.cms-faqs summary{font-weight:760;font-size:15px;cursor:pointer;color:#183a50}
+.cms-faqs details p{font-size:14px;margin:12px 0 4px}
+body.cms-managed .btn,body.cms-managed .button{border-radius:var(--cms-radius)}
+
+/* WCAG contrast corrections on the light editorial homepage; retained on all layouts. */
+.studio-hero .eyebrow{color:#07566b}
+.studio-hero .hero-lead{color:#526476}
+.studio-hero .hero-proof{color:#526679}
+.studio-strip .strip-inner span{color:#29495c}
+.studio-strip .strip-inner .strip-label{color:#07566b}
+.offering-number{color:#4a6374}
+.offering-body p{color:#485e70}
+.offering-body .text-link,.offering-card .text-link{color:#075f7a}
+@media(prefers-reduced-motion:reduce){
+  .reveal-hidden,.reveal-visible{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}
+}
+
+/* WCAG AA text contrast for editable accent colours on light backgrounds. */
+body.cms-managed .eyebrow.dark,body.cms-managed .text-link{color:#075773}
+.method-grid>div:first-child>p:not(.eyebrow){color:#4f6476}
+.method-steps>div p{color:#4c6071}
+
+/* Accessible testimonial attribution: not a site footer; avoid inherited dark footer styles. */
+.cms-testimonial-grid blockquote cite{display:block;font-style:normal;color:#315366;background:transparent;font-weight:700;font-size:12px}
