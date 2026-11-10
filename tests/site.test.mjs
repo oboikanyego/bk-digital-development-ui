@@ -146,3 +146,15 @@ test("Royal Treats is included with a verified desktop and mobile browser captur
    assert.ok(image.length>9000);
  }
 });
+
+test("KasiDrop screenshot is visible in business portfolio and selected homepage work",()=>{
+ const portfolio=read("portfolio/index.html");
+ const home=read("index.html");
+ const asset="/images/projects/kasidrop-live.webp";
+ assert.match(portfolio,/kasidrop-live\.webp[^>]*loading="eager"/);
+ assert.match(home,/KasiDrop/);
+ assert.match(home,/kasidrop-live\.webp[^>]*loading="eager"/);
+ const screenshot=readFileSync("public"+asset);
+ assert.equal(screenshot.toString("ascii",0,4),"RIFF");
+ assert.equal(screenshot.toString("ascii",8,12),"WEBP");
+});
