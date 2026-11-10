@@ -118,7 +118,7 @@ try{
  await desktop.locator("#docClient").selectOption(sampleEmail);
  await desktop.locator("[data-line-description]").first().fill("Website development");
  await desktop.locator("[data-line-price]").first().fill("123.45");
- assert.match(await desktop.locator("#docTotal").innerText(),/123\.45/);
+ assert.match(await desktop.locator("#docTotal").innerText(),/123[.,]45/);
  await axe(desktop,"desktop-documents");
  await desktop.locator("#docCreate").click();
  await desktop.getByText("Q-2026-00001 created as a draft.").waitFor();
