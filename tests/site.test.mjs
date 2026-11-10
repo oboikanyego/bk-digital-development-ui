@@ -76,3 +76,33 @@ test("the contact form uses a wakeup preflight but does not replay enquiries",()
  assert.match(script,/fetch\("\/api\/contact"/);
  assert.doesNotMatch(script,/fetch\("\/api\/contact"[\s\S]*?fetch\("\/api\/contact"/);
 });
+
+test("original portfolio case studies and real local screenshots are present",()=>{
+ const portfolio=read("portfolio/index.html");
+ const screenshots=[
+   ["MzansiRent","/images/projects/mzansirent.webp"],
+   ["DentaCare","/images/projects/dentacare.webp"],
+   ["Freelance Services Platform","/images/projects/freelance-services-platform.webp"]
+ ];
+ for(const [name,path] of screenshots){
+   assert.ok(portfolio.includes(name));
+   assert.ok(portfolio.includes(path));
+   const image=readFileSync("public"+path);
+   assert.equal(image.toString("ascii",0,4),"RIFF");
+   assert.equal(image.toString("ascii",8,12),"WEBP");
+   assert.ok(image.length>15000);
+ }
+ for(const slug of ["mzansirent","dentacare","freelance-services-platform"]){
+   assert.ok(portfolio.includes("oboikanyego-portfolio.netlify.app/projects/"+slug));
+ }
+ assert.match(portfolio,/Technical explorations/i);
+ assert.match(portfolio,/Real-Time Chat System/);
+ assert.match(portfolio,/Secure Authentication System/);
+});
+
+test("homepage also features authentic screenshot assets from the source portfolio",()=>{
+ const home=read("index.html");
+ assert.match(home,/images\/projects\/mzansirent\.webp/);
+ assert.match(home,/images\/projects\/dentacare\.webp/);
+ assert.match(home,/Explore the case study/);
+});
