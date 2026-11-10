@@ -32,7 +32,10 @@ async function refreshEmailConfig() {
     banner.hidden = false;
     banner.dataset.configured = String(result.configured);
     if (result.configured) {
-      banner.textContent = "Email notifications are configured. Resend delivery still depends on your verified sender domain.";
+      banner.textContent = result.sandboxSender
+        ? "Email sending uses Resend's test-only onboarding address. Messages may reach your account inbox, but customer acknowledgements to other addresses need a verified business domain."
+        : "Email notifications are configured. Delivery status is confirmed through signed Resend webhooks.";
+      if (result.sandboxSender) banner.dataset.configured = "false";
     } else {
       banner.textContent = "Email notifications are not configured on Render. Missing: " +
         (result.missing || []).join(", ") + ". Saved enquiries can be retried after these settings are fixed.";
