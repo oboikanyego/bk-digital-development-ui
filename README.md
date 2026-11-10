@@ -62,3 +62,7 @@ The website's canonical links, robots.txt and sitemap now reference the branded 
 ## Portfolio project images
 
 The public `/portfolio/` page includes three real optimised WebP application screenshots transferred from the developer's original portfolio repository (`oboikanyego/my-portfolio`): MzansiRent, DentaCare and Freelance Services Platform. Source project details are taken from `src/config/default-site-config.js` in the portfolio API and authored project case studies in `my-portfolio`. These images are stored locally under `/public/images/projects/` for reliability and do not require a third-party screenshot service. The existing newer projects remain in the portfolio with clearly illustrative preview graphics. Real-time chat and authentication are labelled technical demonstrations, not marketed as deployed products.
+
+## Verified live website screenshots
+
+Desktop and mobile screenshots for KasiDrop, Mzansi Rent Lite and Genesis Kiddies Corner are captured from each site's public homepage with Playwright Chromium in GitHub Actions and stored in `public/images/projects/`. `public/images/projects/live-capture-manifest.json` contains source URLs, HTTP statuses, titles, visible text lengths, sizes and capture date. No private accounts are used. Mobile variants are served using `<picture>` sources. Note that free backend sleep can leave loading placeholders visible during screenshot capture. The screenshots represent actual page states, not fabricated mockups.
