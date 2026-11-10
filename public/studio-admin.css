@@ -47,3 +47,23 @@ td{color:#334a5c}
 #retryEmail{color:#0b6c89;border-color:#bfdbe4}
 #retryEmailStatus:empty{display:none}
 @media(max-width:760px){.dialog-actions{flex-wrap:wrap}#retryEmail{margin-right:auto}}
+
+/* Email delivery monitoring in the private business dashboard. */
+.delivery-overview{margin:25px 0;padding:23px;background:#fff;border:1px solid #dce6eb;border-radius:9px}
+.delivery-overview-header h2{font-size:20px;letter-spacing:-.03em;color:#203b52;margin:0 0 7px}
+.delivery-overview-header p{font-size:12px;line-height:1.6;color:#688095;margin:0 0 18px}
+.delivery-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:17px}
+.delivery-metric{border:1px solid #dfe8ee;border-radius:5px;background:#f7fafb;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:7px}
+.delivery-metric span{font-size:11px;text-transform:capitalize;color:#577083;font-weight:680}
+.delivery-metric strong{font-size:20px;color:#16384e}
+.email-pill.delivered{background:#d5f0e1;color:#176344}
+.email-pill.bounced,.email-pill.suppressed,.email-pill.complained,.email-pill.exhausted{background:#fae1df;color:#963c42}
+.email-pill.retrying,.email-pill.delayed,.email-pill.needs_review,.email-pill.queued{background:#fff1d6;color:#835a22}
+.lead-notifications{margin:12px 0 20px;padding:13px;background:#f7fafb;border:1px solid #e1e9ee;border-radius:7px}
+.lead-notifications h3{margin:0 0 10px;font-size:13px}
+.lead-notifications>div{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:7px 0;border-bottom:1px solid #e6ebef}
+.lead-notifications>div:last-child{border-bottom:0}
+.lead-notifications strong{min-width:135px;font-size:12px}
+.lead-notifications small{color:#708697;font-size:10px}
+@media(max-width:850px){.delivery-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:400px){.delivery-overview{padding:15px}}

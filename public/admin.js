@@ -50,6 +50,27 @@ async function refreshStats() {
   byId("statMeetings").textContent = data.requestedMeetings ?? 0;
   byId("statConverted").textContent = data.converted ?? 0;
 }
+const emailKindLabel = k => ({
+ enquiry_notification:"Admin enquiry alert",
+ customer_acknowledgement:"Customer acknowledgement",
+ meeting_request_notification:"Meeting request"
+}[k]||k);
+async function loadEmailDeliveries(){
+  const response=await call("/email/deliveries");
+  const summary=response.summary||[],items=response.items||[];
+  const statuses=["queued","retrying","sent","delivered","bounced","failed","suppressed","needs_review"];
+  const totals=Object.fromEntries(statuses.map(status=>[status,summary.filter(x=>x.status===status).reduce((n,x)=>n+x.count,0)]));
+  byId("deliveryMetrics").innerHTML=statuses.map(status=>
+    "<div class='delivery-metric'><span>"+escapeText(status.replace("_"," "))+
+    "</span><strong>"+totals[status]+"</strong></div>"
+  ).join("");
+  byId("deliveryRows").innerHTML=items.length ? items.slice(0,30).map(item=>
+    "<tr><td>"+escapeText(emailKindLabel(item.kind))+"</td><td><span class='email-pill "+
+    escapeText(item.status)+"'>"+escapeText(item.status.replace("_"," "))+
+    "</span></td><td>"+escapeText(item.attempts??0)+"</td><td>"+escapeText(formatDate(item.updatedAt))+
+    "</td><td>"+escapeText(item.lastError||item.providerId||"—")+"</td></tr>"
+  ).join(""):"<tr><td colspan='5'>No email notifications have been queued yet.</td></tr>";
+}
 async function loadEnquiries() {
   const search = byId("search").value.trim();
   const status = byId("statusFilter").value;
@@ -112,6 +133,14 @@ function showLead(id) {
     "<div" + (name === "Project details" ? " class='wide'" : "") + "><dt>" +
     escapeText(name) + "</dt><dd>" + escapeText(value || "—") + "</dd></div>"
   ).join("");
+  const notices=lead.notifications||[];
+  byId("leadNotifications").innerHTML=notices.length?
+    '<h3>Related notifications</h3>'+notices.map(item=>
+      '<div><strong>'+escapeText(emailKindLabel(item.kind))+'</strong><span class="email-pill '+
+      escapeText(item.status)+'">'+escapeText(item.status.replace("_"," "))+
+      '</span><small>'+escapeText(item.attempts||0)+' attempt(s)'+
+      (item.lastError?' · '+escapeText(item.lastError):'')+'</small></div>'
+    ).join(""):'<p>No notification jobs associated with this enquiry yet.</p>';
   byId("leadStatus").value = lead.status || "new";
   byId("leadNotes").value = lead.internalNotes || "";
   byId("retryEmail").hidden = !["pending", "failed"].includes(lead.emailStatus || "pending");
@@ -120,7 +149,7 @@ function showLead(id) {
   byId("leadDialog").showModal();
 }
 async function refreshAll() {
-  await Promise.all([refreshStats(), loadEnquiries(), loadMeetings(), refreshEmailConfig()]);
+  await Promise.all([refreshStats(), loadEnquiries(), loadMeetings(), refreshEmailConfig(), loadEmailDeliveries()]);
   message("Information updated.");
 }
 byId("retryEmail").addEventListener("click", async () => {

@@ -73,3 +73,7 @@ Royal Treats is included in the project showcase with desktop and mobile screens
 
 ## Email template management
 Use `/admin/email-templates/` (admin sign-in required) to choose a MongoDB email template, edit its subject, HTML design, plain-text fallback and Cloudinary PNG/JPG logo, then preview the Handlebars rendering with example customer data. Publish increments its revision. All live email sends and admin email retries read the published record; there is no frontend template file or hardcoded template used at runtime.
+
+## Email automation and delivery monitoring
+
+Email notifications are now durable MongoDB jobs: admin alert, customer confirmation, and meeting-request alert. The dashboard displays provider statuses and retry attempts, including delivered/bounced/failed events when Resend webhooks are configured. Version history and rollback are accessible from the email template manager. A Netlify Scheduled Function calls the Render backend retry worker every ten minutes using a shared `EMAIL_JOB_TOKEN` configured as a secret on both platforms.

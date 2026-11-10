@@ -67,6 +67,35 @@
     field.focus();
     readDraft(); dirty=true;state();
   }
+  async function loadHistory(){
+    if(!key)return;
+    const result=await api("/email/templates/"+templateKey()+"/history");
+    const versions=result.items||[];
+    $("templateHistory").innerHTML=versions.map(v=>
+      '<div class="email-history-entry"><div><strong>Revision '+escape(v.revision)+
+      '</strong><span>'+escape(v.updatedAt?new Date(v.updatedAt).toLocaleString("en-ZA"):"Original version")+
+      '</span></div><button type="button" class="button secondary" data-restore-revision="'+escape(v.revision)+'" '+
+      (v.revision===revision?'disabled':'')+'>Restore</button></div>'
+    ).join("")||"<p>No version history has been recorded yet.</p>";
+  }
+  async function rollback(target){
+    if(!draft||dirty||busy)return status("Publish or discard your unsaved edits before restoring a version.",true);
+    if(!confirm("Restore revision "+target+" as a new published version? This affects future emails."))return;
+    busy=true;state();
+    try{
+      const result=await api("/email/templates/"+templateKey()+"/rollback",{
+        method:"POST",body:JSON.stringify({revision,restoreRevision:target})
+      });
+      draft=result.template;revision=draft.revision;dirty=false;
+      showTemplate();await loadHistory();
+      status("Restored revision "+target+" as newly published revision "+revision+".");
+    }catch(error){status(error.message,true);}
+    finally{busy=false;state();}
+  }
+  $("templateHistory").addEventListener("click",event=>{
+    const button=event.target.closest("[data-restore-revision]");
+    if(button)void rollback(Number(button.dataset.restoreRevision));
+  });
   async function loadTemplate(nextKey) {
     if (dirty && !confirm("Discard your unpublished template edits?")) {
       $("templateSelect").value=key;
@@ -78,6 +107,7 @@
       key=nextKey;revision=result.template.revision;draft=result.template;
       $("templateSelect").value=key;
       dirty=false;showTemplate();$("editorWorkspace").hidden=false;
+      await loadHistory();
       $("previewSubject").textContent="Choose Preview email to render sample data";
       $("emailPreviewFrame").srcdoc="";
       $("previewText").textContent="";
@@ -108,7 +138,7 @@
         method:"PUT",body:JSON.stringify({revision,template:draft})
       });
       draft=result.template;revision=draft.revision;dirty=false;
-      showTemplate();status("Template published to MongoDB (revision "+revision+"). New enquiries use this version.");
+      showTemplate();await loadHistory();status("Template published to MongoDB (revision "+revision+"). New enquiries use this version.");
     }catch(error){status(error.message+" Your changes are still in the editor.",true);}
     finally{busy=false;state();$("publishButton").textContent="Publish to MongoDB";}
   }

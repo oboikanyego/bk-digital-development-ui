@@ -66,6 +66,11 @@
         <div id="textPanel" role="tabpanel" aria-labelledby="textTab" hidden><label class="code-label" for="templateText">Plain text with Handlebars placeholders</label><textarea id="templateText" rows="19" maxlength="10000" spellcheck="false"></textarea></div>
         <label class="email-enable"><input type="checkbox" id="templateEnabled"><span>Enable this template for outbound notifications</span></label>
         <p class="email-hint">Publishing saves the current template in MongoDB. Every new enquiry and manual retry uses the latest version.</p>
+        <section class="email-versions" aria-labelledby="historyHeading">
+          <h3 id="historyHeading">Version history</h3>
+          <p>Previous revisions are retained. Restoring an older version publishes a new revision without deleting history.</p>
+          <div id="templateHistory" aria-live="polite"></div>
+        </section>
       </section>
       <section class="email-preview-panel" aria-labelledby="previewHeading">
         <div class="preview-header"><div><h2 id="previewHeading">Inbox preview</h2><p>Rendered with sample customer details · no email is sent</p></div></div>
