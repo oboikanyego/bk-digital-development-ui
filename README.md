@@ -58,3 +58,7 @@ The new Netlify project has a successful production build on main. The previous 
 If legacy URL redirects are required later, restore/create a Netlify project that owns the old hostname, and publish a minimal redirect-only configuration there, rather than renaming or changing this branded site. Old links are not guaranteed to work unless that old hostname is recovered and a redirect deployment is confirmed.
 
 The website's canonical links, robots.txt and sitemap now reference the branded address. The API proxy uses BACKEND_URL if configured and otherwise falls back to the existing public Render API URL.
+
+## Portfolio project images
+
+The public `/portfolio/` page includes three real optimised WebP application screenshots transferred from the developer's original portfolio repository (`oboikanyego/my-portfolio`): MzansiRent, DentaCare and Freelance Services Platform. Source project details are taken from `src/config/default-site-config.js` in the portfolio API and authored project case studies in `my-portfolio`. These images are stored locally under `/public/images/projects/` for reliability and do not require a third-party screenshot service. The existing newer projects remain in the portfolio with clearly illustrative preview graphics. Real-time chat and authentication are labelled technical demonstrations, not marketed as deployed products.
