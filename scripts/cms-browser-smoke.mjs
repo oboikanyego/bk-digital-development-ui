@@ -1,6 +1,6 @@
 import { chromium } from "playwright";
 import assert from "node:assert/strict";
-const base = "https://6af2a7b747e6a6cfb95abe02--mzansi-digital-ventures.netlify.app";
+const base = process.env.CMS_BASE_URL || "https://mzansi-digital-ventures.netlify.app";
 const fixture = {
   revision:1,
   company:{name:"Mzansi Digital Ventures (Pty) Ltd",shortName:"Mzansi Digital Ventures",email:"info@example.com",whatsapp:"27790000000",location:"Gauteng, South Africa",logoUrl:"/brand-mark.svg",accentColor:"#087d9f"},

@@ -1,10 +1,5 @@
 name: CMS browser smoke test
 on:
-  push:
-    branches: [feature/visual-site-cms-cloudinary]
-    paths:
-      - .github/workflows/cms-browser-smoke.yml
-      - scripts/cms-browser-smoke.mjs
   workflow_dispatch:
 permissions:
   contents: read

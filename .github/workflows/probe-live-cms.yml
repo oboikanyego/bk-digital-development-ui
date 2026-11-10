@@ -1,10 +1,5 @@
 name: Verify live MongoDB CMS endpoint
 on:
-  push:
-    branches: [feature/visual-site-cms-cloudinary]
-    paths:
-      - .github/workflows/probe-live-cms.yml
-      - scripts/probe-live-cms.mjs
   workflow_dispatch:
 permissions:
   contents: read
