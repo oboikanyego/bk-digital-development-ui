@@ -87,3 +87,6 @@
   .cms-actions{flex-direction:column;align-items:stretch}
   .cms-main .top-actions{flex-wrap:wrap}
 }
+
+.cms-email-entry{display:block;margin:10px 9px;padding:12px 13px;background:#e6f4f7;color:#0d6885;border-radius:4px;font-size:12px;font-weight:760;text-decoration:none}
+.cms-email-entry:hover{background:#d9ebf0}

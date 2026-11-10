@@ -34,3 +34,25 @@ test("enquiry notifications show configuration status and allow protected admin 
  assert.match(script,/refreshEmailConfig/);
  assert.match(contact,/email alert is temporarily unavailable/);
 });
+
+test("email template management is a dedicated protected admin page, with preview and versioned publish",()=>{
+ const page=readFileSync("public/admin/email-templates/index.html","utf8");
+ const script=readFileSync("public/email-template-editor.js","utf8");
+ const dash=readFileSync("public/admin/dashboard/index.html","utf8");
+ const editor=readFileSync("public/admin/content/index.html","utf8");
+ const build=readFileSync("scripts/build.mjs","utf8");
+ assert.match(page,/noindex,nofollow/);
+ for(const id of ["templateSelect","templateSubject","templateHtml","templateText","templateLogo","previewButton","publishButton","emailPreviewFrame"]){
+  assert.match(page,new RegExp('id="'+id+'"'));
+ }
+ assert.match(page,/Handlebars/);
+ assert.match(page,/sandbox=""/);
+ assert.match(script,/\/email\/templates/);
+ assert.match(script,/\/preview/);
+ assert.match(script,/revision/);
+ assert.match(script,/\/media\/sign/);
+ assert.match(script,/srcdoc/);
+ assert.match(dash,/href="\/admin\/email-templates\/"/);
+ assert.match(editor,/href="\/admin\/email-templates\/"/);
+ assert.match(build,/email-template-editor\.js/);
+});

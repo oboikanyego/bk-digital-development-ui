@@ -70,3 +70,6 @@ Desktop and mobile screenshots for KasiDrop, Mzansi Rent Lite and Genesis Kiddie
 ## Royal Treats
 
 Royal Treats is included in the project showcase with desktop and mobile screenshot assets captured from its public Netlify storefront. The source project's Angular frontend and Node.js/MongoDB API support dessert ordering, local delivery, and separate admin/courier operations. Source capture metadata is stored in `public/images/projects/royal-treats-capture.json`.
+
+## Email template management
+Use `/admin/email-templates/` (admin sign-in required) to choose a MongoDB email template, edit its subject, HTML design, plain-text fallback and Cloudinary PNG/JPG logo, then preview the Handlebars rendering with example customer data. Publish increments its revision. All live email sends and admin email retries read the published record; there is no frontend template file or hardcoded template used at runtime.
