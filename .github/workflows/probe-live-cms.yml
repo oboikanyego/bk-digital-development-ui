@@ -1,0 +1,20 @@
+name: Verify live MongoDB CMS endpoint
+on:
+  push:
+    branches: [feature/visual-site-cms-cloudinary]
+    paths:
+      - .github/workflows/probe-live-cms.yml
+      - scripts/probe-live-cms.mjs
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/probe-live-cms.mjs
