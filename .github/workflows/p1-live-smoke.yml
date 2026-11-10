@@ -1,10 +1,11 @@
 name: P1 deployed backend and frontend smoke checks
 on:
   push:
-    branches: [feature/p1-crm-documents-cms-quality, main]
+    branches: [qa/p1-production-smoke-20261110]
     paths:
       - scripts/p1-live-smoke.mjs
       - .github/workflows/p1-live-smoke.yml
+      - scripts/p1-live-smoke.mjs
   workflow_dispatch:
 permissions:
   contents: read
@@ -19,5 +20,5 @@ jobs:
           node-version: "22"
       - name: Verify production Render and Netlify preview (read-only)
         env:
-          SMOKE_UI_URL: https://6af347f633b3b4f9489635e6--mzansi-digital-ventures.netlify.app
+          SMOKE_UI_URL: https://mzansi-digital-ventures.netlify.app
         run: node scripts/p1-live-smoke.mjs
