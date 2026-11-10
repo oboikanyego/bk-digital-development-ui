@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#11253a">
+<meta name="color-scheme" content="light">
+<title>Email templates | Mzansi Digital Ventures</title>
+<link rel="icon" href="/brand-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/admin.css">
+<link rel="stylesheet" href="/studio-admin.css">
+<link rel="stylesheet" href="/email-template-editor.css">
+<script src="/service-health.js" defer></script>
+<script src="/email-template-editor.js" defer></script>
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="/admin/dashboard/"><img class="logo" src="/brand-mark.svg" alt="" width="40" height="40"><span>Mzansi Digital<br><small>Ventures · Email templates</small></span></a>
+<nav class="top-actions" aria-label="Admin navigation">
+  <a href="/admin/dashboard/" class="button secondary">Enquiries</a>
+  <a href="/admin/content/" class="button secondary">Website editor</a>
+  <button id="logout" type="button" class="button secondary">Sign out</button>
+</nav>
+</header>
+<main class="email-editor-main">
+  <section class="email-heading">
+    <div><span class="eyebrow">COMMUNICATIONS / MONGODB</span><h1>Email templates.</h1>
+      <p>Manage the messages sent from your website. Edit the subject, branded HTML and plain-text fallback. Handlebars replaces placeholders with the submitted enquiry details.</p>
+    </div>
+    <div class="email-actions">
+      <span id="saveState" class="state">Connecting…</span>
+      <button type="button" id="previewButton" class="button secondary" disabled>Preview email</button>
+      <button type="button" id="publishButton" class="button primary" disabled>Publish to MongoDB</button>
+    </div>
+  </section>
+  <p id="editorStatus" class="message" aria-live="polite" role="status"></p>
+  <div id="editorWorkspace" class="email-workspace" hidden>
+    <aside class="email-sidebar">
+      <label for="templateSelect">Notification template</label>
+      <select id="templateSelect" aria-label="Select email template"></select>
+      <div class="email-side-caption">Changes are versioned. Existing emails are not modified, and no emails are sent when you preview.</div>
+      <div class="email-variable-guide">
+        <h2>Handlebars variables</h2>
+        <p>Click a variable to insert it into the selected subject or body field.</p>
+        <div id="variablesList" class="variable-list" aria-label="Available email placeholders"></div>
+        <p class="email-help">Use <code>{{#if phone}}...{{/if}}</code> to show optional fields. Customer data is HTML-escaped automatically.</p>
+      </div>
+    </aside>
+    <div class="email-editor-layout">
+      <section class="email-fields" aria-labelledby="emailFieldsHeading">
+        <h2 id="emailFieldsHeading">Template content</h2>
+        <label>Template name<input id="templateName" maxlength="120" required></label>
+        <label>Internal description<textarea id="templateDescription" rows="2" maxlength="350"></textarea></label>
+        <label>Email subject<input id="templateSubject" maxlength="300" spellcheck="false" required></label>
+        <div class="email-logo-row">
+          <div class="email-logo-preview"><img id="emailLogo" alt="Email logo preview" width="72" height="72"></div>
+          <div class="email-logo-details">
+            <label>Email logo (PNG or JPG URL)<input id="templateLogo" type="url" maxlength="600" required></label>
+            <label class="button secondary upload-action">Upload logo to Cloudinary<input type="file" id="templateLogoUpload" accept="image/png,image/jpeg" hidden></label>
+          </div>
+        </div>
+        <div class="editor-tabs" role="tablist" aria-label="Message format">
+          <button type="button" id="htmlTab" class="editor-tab active" aria-selected="true" role="tab">HTML design</button>
+          <button type="button" id="textTab" class="editor-tab" aria-selected="false" role="tab">Plain text</button>
+        </div>
+        <div id="htmlPanel" role="tabpanel" aria-labelledby="htmlTab"><label class="code-label" for="templateHtml">HTML with Handlebars placeholders</label><textarea id="templateHtml" rows="19" maxlength="55000" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea></div>
+        <div id="textPanel" role="tabpanel" aria-labelledby="textTab" hidden><label class="code-label" for="templateText">Plain text with Handlebars placeholders</label><textarea id="templateText" rows="19" maxlength="10000" spellcheck="false"></textarea></div>
+        <label class="email-enable"><input type="checkbox" id="templateEnabled"><span>Enable this template for outbound notifications</span></label>
+        <p class="email-hint">Publishing saves the current template in MongoDB. Every new enquiry and manual retry uses the latest version.</p>
+      </section>
+      <section class="email-preview-panel" aria-labelledby="previewHeading">
+        <div class="preview-header"><div><h2 id="previewHeading">Inbox preview</h2><p>Rendered with sample customer details · no email is sent</p></div></div>
+        <div class="preview-subject"><span>SUBJECT</span><strong id="previewSubject">Select Preview email</strong></div>
+        <iframe title="Rendered email preview" id="emailPreviewFrame" sandbox="" referrerpolicy="no-referrer" loading="lazy"></iframe>
+        <details class="preview-text"><summary>View plain-text rendering</summary><pre id="previewText"></pre></details>
+      </section>
+    </div>
+  </div>
+</main>
+</body>
+</html>
