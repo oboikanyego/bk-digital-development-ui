@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#11253a">
+<title>Website editor | Mzansi Digital Ventures (Pty) Ltd</title>
+<link rel="icon" href="/brand-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/admin.css"><link rel="stylesheet" href="/studio-admin.css"><link rel="stylesheet" href="/content-editor.css">
+<script src="/service-health.js" defer></script><script src="/admin/content.js" defer></script>
+</head>
+<body>
+<header class="topbar">
+<a class="brand" href="/admin/dashboard/"><img class="logo" src="/brand-mark.svg" alt="" width="40" height="40"><span>Mzansi Digital<br><small>Ventures · Site management</small></span></a>
+<div class="top-actions"><a href="/admin/dashboard/" class="button secondary">Enquiries</a><a href="/" target="_blank" rel="noopener noreferrer" class="button secondary">View live site ↗</a><button id="editorLogout" type="button" class="button secondary">Sign out</button></div>
+</header>
+<main class="cms-main" id="cmsMain">
+  <div class="cms-heading"><div><span class="eyebrow">WEBSITE MANAGEMENT</span><h1>Edit your website.</h1><p>Update content, services, prices and project screenshots without changing the repository.</p></div>
+   <div class="cms-actions"><span id="editState" class="edit-state">Loading…</span><button id="publishSite" type="button" class="button primary" disabled>Publish changes ↗</button></div></div>
+  <div class="cms-layout" id="cmsWorkspace" hidden>
+    <nav class="cms-side" aria-label="Website editor sections">
+      <button type="button" class="cms-tab active" data-tab="company" aria-current="page">Company &amp; branding</button>
+      <button type="button" class="cms-tab" data-tab="home">Homepage</button>
+      <button type="button" class="cms-tab" data-tab="about">About us</button>
+      <button type="button" class="cms-tab" data-tab="services">Services</button>
+      <button type="button" class="cms-tab" data-tab="projects">Projects &amp; images</button>
+      <button type="button" class="cms-tab" data-tab="pricing">Pricing</button>
+      <button type="button" class="cms-tab" data-tab="visibility">Page visibility</button>
+      <p>Changes become visible after you publish. Images upload to Cloudinary and their URLs are saved in MongoDB.</p>
+    </nav>
+    <div class="cms-panels">
+      <section class="cms-panel" data-panel="company">
+        <div class="cms-panel-heading"><h2>Company &amp; branding</h2><p>These settings appear across the public pages.</p></div>
+        <div class="cms-form-grid">
+          <label>Company name<input data-path="company.name" required maxlength="100"></label>
+          <label>Short brand name<input data-path="company.shortName" required maxlength="50"></label>
+          <label>Business email<input type="email" data-path="company.email" required maxlength="180"></label>
+          <label>WhatsApp number (international format)<input data-path="company.whatsapp" maxlength="20" placeholder="27790000000"></label>
+          <label>Location<input data-path="company.location" maxlength="100"></label>
+          <label>Accent colour<input data-path="company.accentColor" type="color"></label>
+        </div>
+        <div class="cms-media"><div class="cms-media-preview" id="logoPreview"></div><div><strong>Company logo</strong><p>PNG, JPG or WebP, up to 8 MB.</p><label class="button secondary cms-upload-label">Upload logo <input id="logoUpload" type="file" accept="image/png,image/jpeg,image/webp" hidden></label><p class="cms-hint">Your existing logo stays until a new one is published.</p></div></div>
+      </section>
+      <section class="cms-panel" data-panel="home" hidden>
+        <div class="cms-panel-heading"><h2>Homepage</h2><p>Control the first message visitors see.</p></div>
+        <div class="cms-form-grid">
+          <label class="wide">Small heading<input data-path="home.eyebrow" maxlength="100"></label>
+          <label class="wide">Main headline<input data-path="home.heading" maxlength="140"></label>
+          <label class="wide">Highlighted headline text<input data-path="home.highlight" maxlength="90"></label>
+          <label class="wide">Introduction<textarea data-path="home.description" rows="4" maxlength="700"></textarea></label>
+          <label>Primary button text<input data-path="home.buttonText" maxlength="55"></label>
+        </div>
+      </section>
+      <section class="cms-panel" data-panel="about" hidden>
+        <div class="cms-panel-heading"><h2>About us</h2><p>Update the company introduction and mission.</p></div>
+        <div class="cms-form-grid">
+          <label>Main heading<input data-path="about.heading" maxlength="120"></label>
+          <label>Highlighted text<input data-path="about.highlight" maxlength="100"></label>
+          <label class="wide">Company introduction<textarea data-path="about.intro" rows="5" maxlength="900"></textarea></label>
+          <label>Mission heading<input data-path="about.missionHeading" maxlength="100"></label>
+          <label>Mission highlight<input data-path="about.missionHighlight" maxlength="90"></label>
+          <label class="wide">Mission description<textarea data-path="about.missionDescription" rows="5" maxlength="700"></textarea></label>
+        </div>
+      </section>
+      <section class="cms-panel" data-panel="services" hidden>
+        <div class="cms-panel-heading"><div><h2>Services</h2><p>Edit the services customers can browse.</p></div><button type="button" class="button secondary" data-add="services">+ Add service</button></div>
+        <div id="serviceEditor" class="cms-list"></div>
+      </section>
+      <section class="cms-panel" data-panel="projects" hidden>
+        <div class="cms-panel-heading"><div><h2>Projects &amp; images</h2><p>Add projects, edit descriptions and upload screenshots. Dragging files is not required.</p></div><button type="button" class="button secondary" data-add="projects">+ Add project</button></div>
+        <div id="projectEditor" class="cms-list"></div>
+      </section>
+      <section class="cms-panel" data-panel="pricing" hidden>
+        <div class="cms-panel-heading"><div><h2>Pricing packages</h2><p>Publish new prices and packages, including feature lists.</p></div><button type="button" class="button secondary" data-add="pricing">+ Add package</button></div>
+        <div id="pricingEditor" class="cms-list"></div>
+      </section>
+      <section class="cms-panel" data-panel="visibility" hidden>
+        <div class="cms-panel-heading"><h2>Public page visibility</h2><p>Hide a page from navigation and visitors while you update its content. This is not a security mechanism for confidential data.</p></div>
+        <div class="cms-visibility" id="visibilityEditor"></div>
+      </section>
+    </div>
+  </div>
+  <p id="cmsStatus" class="message" role="status" aria-live="polite"></p>
+</main>
+</body>
+</html>
