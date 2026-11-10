@@ -37,7 +37,8 @@ const client={_id:sampleEmail,email:sampleEmail,name:"Browser QA Client",busines
 const messages=[];
 const browser=await chromium.launch({headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
 async function pageFor(mobile=false){
- const page=await browser.newPage({viewport:mobile?{width:390,height:844}:{width:1366,height:900}});
+ const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1366,height:900}});
+ const page=await context.newPage();
  page.on("pageerror",err=>messages.push(err.message));
  page.on("console",m=>{if(m.type()==="error")messages.push(m.text());});
  await page.route("**/api/health",r=>r.fulfill({status:200,contentType:"application/json",body:JSON.stringify({status:"ok"})}));
