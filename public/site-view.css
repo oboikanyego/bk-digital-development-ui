@@ -46,3 +46,16 @@ body.cms-managed main>.cms-advanced{background:var(--cms-background);color:var(-
 .cms-faqs summary{font-weight:760;font-size:15px;cursor:pointer;color:#183a50}
 .cms-faqs details p{font-size:14px;margin:12px 0 4px}
 body.cms-managed .btn,body.cms-managed .button{border-radius:var(--cms-radius)}
+
+/* WCAG contrast corrections on the light editorial homepage; retained on all layouts. */
+.studio-hero .eyebrow{color:#07566b}
+.studio-hero .hero-lead{color:#526476}
+.studio-hero .hero-proof{color:#526679}
+.studio-strip .strip-inner span{color:#29495c}
+.studio-strip .strip-inner .strip-label{color:#07566b}
+.offering-number{color:#4a6374}
+.offering-body p{color:#485e70}
+.offering-body .text-link,.offering-card .text-link{color:#075f7a}
+@media(prefers-reduced-motion:reduce){
+  .reveal-hidden,.reveal-visible{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}
+}

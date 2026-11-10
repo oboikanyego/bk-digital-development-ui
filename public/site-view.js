@@ -53,6 +53,7 @@
     });
     const name = company.shortName.split(/\s+/);
     const tail = name.length > 1 ? name.pop() : "";
+    all(".site-header .brand").forEach(node=>node.setAttribute("aria-label",company.shortName+" home"));
     all(".site-header .brand,.footer-grid .brand").forEach(node => {
       const strong = node.querySelector("strong"), small = node.querySelector("small");
       if (strong) strong.textContent = name.join(" ");

@@ -38,7 +38,7 @@ const messages=[];
 const a11yFindings=[];
 const browser=await chromium.launch({headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
 async function pageFor(mobile=false){
- const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1366,height:900}});
+ const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1366,height:900},reducedMotion:"reduce"});
  const page=await context.newPage();
  page.on("pageerror",err=>messages.push(err.message));
  page.on("console",m=>{if(m.type()==="error")messages.push(m.text());});
@@ -102,6 +102,7 @@ try{
  await desktop.goto(base+"/admin/crm/",{waitUntil:"domcontentloaded",timeout:85000});
  await desktop.getByRole("button",{name:"Open profile"}).waitFor();
  await desktop.getByRole("button",{name:"Open profile"}).first().click();
+ await desktop.locator("#clientDialog").waitFor({state:"visible",timeout:10000});
  assert.equal(await desktop.locator("#clientDialog").isVisible(),true);
  await desktop.locator("#clientDialog").getByRole("button",{name:"Close"}).click();
  await axe(desktop,"desktop-crm");
