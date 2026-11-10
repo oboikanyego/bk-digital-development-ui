@@ -117,8 +117,8 @@ form?.addEventListener("submit", async event => {
     if (preferences) preferences.hidden = true;
     formStatus.className = "form-status success";
     formStatus.textContent = result.notification === "sent"
-      ? "Thank you. Your enquiry has been saved and our team has been notified."
-      : "Thank you. Your enquiry has been saved. Our team will follow up.";
+      ? "Thank you. Your enquiry has been saved and the email alert was accepted for delivery."
+      : "Your enquiry has been saved. Our email alert is temporarily unavailable, but the team can review and follow up from the admin dashboard.";
   } catch (error) {
     formStatus.className = "form-status error";
     formStatus.textContent = error.message || "We couldn't submit your enquiry right now. You can also reach us by email or WhatsApp.";
