@@ -1,0 +1,48 @@
+name: Capture real project screenshots
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feature/live-project-screenshots
+    paths:
+      - .github/workflows/capture-project-screenshots.yml
+      - scripts/capture-project-screenshots.mjs
+
+permissions:
+  contents: write
+
+jobs:
+  screenshots:
+    name: Open deployed sites, capture and validate screenshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/live-project-screenshots
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --no-audit --no-fund playwright sharp
+      - run: npx playwright install --with-deps chromium
+      - name: Capture desktop and mobile homepages
+        run: node scripts/capture-project-screenshots.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: deployed-project-screenshots
+          path: |
+            public/images/projects/*-live.webp
+            public/images/projects/mobile/*-live.webp
+            public/images/projects/live-capture-manifest.json
+          if-no-files-found: warn
+      - name: Commit validated screenshots to feature branch
+        if: success()
+        run: |
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add public/images/projects/*-live.webp public/images/projects/mobile/*-live.webp public/images/projects/live-capture-manifest.json
+          git diff --cached --quiet || git commit -m "assets: capture live public project screenshots"
+          git push origin HEAD:refs/heads/feature/live-project-screenshots
