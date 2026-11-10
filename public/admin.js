@@ -47,11 +47,13 @@ async function refreshEmailConfig() {
   }
 }
 async function refreshStats() {
-  const data = await call("/stats");
-  byId("statAll").textContent = data.enquiries ?? 0;
-  byId("statNew").textContent = data.newEnquiries ?? 0;
-  byId("statMeetings").textContent = data.requestedMeetings ?? 0;
-  byId("statConverted").textContent = data.converted ?? 0;
+  const [data,crm]=await Promise.all([call("/stats"),call("/crm/metrics")]);
+  byId("statAll").textContent=data.enquiries??0;
+  byId("statNew").textContent=data.newEnquiries??0;
+  byId("statMeetings").textContent=data.requestedMeetings??0;
+  byId("statConverted").textContent=data.converted??0;
+  byId("statClients").textContent=crm.clients??0;
+  byId("statFollowUps").textContent=crm.dueFollowUps??0;
 }
 const emailKindLabel = k => ({
  enquiry_notification:"Admin enquiry alert",
