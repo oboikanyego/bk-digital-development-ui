@@ -1,0 +1,29 @@
+
+/* Site-wide configurable accent and visible admin access. */
+:root { --cms-accent: #087d9f; }
+.admin-access{font-size:11px;font-weight:750;color:#496579;white-space:nowrap;margin-left:3px;text-decoration:underline;text-underline-offset:4px}
+.admin-access:hover{color:var(--cms-accent)}
+.nav-links .mobile-admin-access{display:none}
+.footer-admin-access{font-size:11px!important;color:#9ac9d5!important}
+.cms-dash-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.cms-unavailable{padding:80px 0;background:#f7f9fa;color:#1a3147}
+.cms-unavailable h1{font-size:40px;line-height:1.1}
+body.cms-managed .studio-hero h1 span,
+body.cms-managed .section h2 span,
+body.cms-managed .studio-section-head h2 span,
+body.cms-managed .portfolio-intro h1 span,
+body.cms-managed .about-grid h1 span,
+body.cms-managed .contact-copy h2 span{color:var(--cms-accent)}
+body.cms-managed .eyebrow.dark,body.cms-managed .text-link{color:var(--cms-accent)}
+body.cms-managed .service-card a{color:var(--cms-accent)}
+.cms-service-number{font-size:36px;line-height:1.2;font-weight:760;color:#26718a;margin:4px 0 24px}
+.cms-service-card{min-height:300px}
+.cms-project-image{position:relative;display:block;overflow:hidden;height:100%;width:100%;border-radius:4px}
+.cms-project-image img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top}
+.cms-price-price{font-size:26px;color:#1b3145;font-weight:780;letter-spacing:-.04em;margin:17px 0}
+.cms-price-features{list-style:none;margin:16px 0;padding:0}
+.cms-price-features li{padding:6px 0;color:#526a7d;font-size:12px}
+.cms-price-features li:before{content:"✓";color:var(--cms-accent);margin-right:10px}
+@media(max-width:1100px){.nav-wrap{gap:13px}.nav-links{gap:13px}.admin-access{font-size:10px}}
+@media(max-width:960px){.admin-access{display:none}.nav-links .mobile-admin-access{display:block;border-top:1px solid #dbe6eb;margin-top:8px;color:#0d6985}}
+@media(max-width:640px){.cms-unavailable{padding:50px 0}.cms-dash-actions{width:100%}}
