@@ -110,3 +110,14 @@
 
 /* Four live product cards now form a balanced two-by-two gallery on desktop. */
 @media(min-width:781px){.more-projects-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.more-project-art.screenshot{height:285px}}
+
+/* Feature an authentic KasiDrop screenshot alongside the other homepage builds. */
+@media(min-width:1050px){
+  .studio-work .case-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+  .studio-work .case-visual.screenshot{height:228px}
+  .studio-work .case-card h3{font-size:21px}
+}
+@media(min-width:701px) and (max-width:1049px){
+  .studio-work .case-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .studio-work .case-card:last-child{grid-column:1/-1;max-width:520px}
+}
