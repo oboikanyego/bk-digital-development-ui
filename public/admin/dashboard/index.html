@@ -12,6 +12,11 @@
         <article><span>Meeting requests</span><strong id="statMeetings">—</strong></article>
         <article><span>Converted leads</span><strong id="statConverted">—</strong></article>
       </div>
+      <section class="delivery-overview" aria-labelledby="deliveryOverviewTitle">
+        <div class="delivery-overview-header"><div><h2 id="deliveryOverviewTitle">Email delivery health</h2><p>Resend provider status for admin alerts, customer acknowledgements and meeting requests.</p></div></div>
+        <div class="delivery-metrics" id="deliveryMetrics" aria-label="Email delivery totals"></div>
+        <div class="table-wrap"><table><thead><tr><th>Message type</th><th>Current status</th><th>Attempts</th><th>Last update</th><th>Details</th></tr></thead><tbody id="deliveryRows"></tbody></table></div>
+      </section>
       <div class="tabs" role="tablist" aria-label="Management sections">
         <button id="tabEnquiries" class="tab active" role="tab" aria-selected="true" type="button">Enquiries</button>
         <button id="tabMeetings" class="tab" role="tab" aria-selected="false" type="button">Meetings</button>
@@ -34,7 +39,7 @@
   <dialog id="leadDialog">
     <form id="leadForm">
       <div class="dialog-header"><div><span class="eyebrow">LEAD DETAILS</span><h2 id="leadTitle">Enquiry</h2></div><button id="closeDialog" type="button" class="icon-button" aria-label="Close details">×</button></div>
-      <div id="leadDetails" class="lead-details"></div>
+      <div id="leadDetails" class="lead-details"></div><div id="leadNotifications" class="lead-notifications" aria-label="Related email notifications"></div>
       <label>Pipeline status<select id="leadStatus"><option>new</option><option>contacted</option><option>quoted</option><option>converted</option><option>closed</option></select></label>
       <label>Internal notes<textarea id="leadNotes" rows="5" maxlength="2000" placeholder="Next steps, quote discussed, follow-up notes..."></textarea></label>
       <p id="retryEmailStatus" class="message error" role="status" aria-live="polite"></p><div class="dialog-actions"><button type="button" id="retryEmail" class="button secondary" hidden>Retry email notification</button><button type="button" id="cancelDialog" class="button secondary">Cancel</button><button class="button primary" type="submit">Save changes</button></div>

@@ -52,3 +52,12 @@
 @media(max-width:1200px){.email-editor-layout{grid-template-columns:1fr}.email-preview-panel{min-height:500px}.email-sidebar{padding:15px}}
 @media(max-width:850px){.email-workspace{grid-template-columns:1fr}.email-sidebar{position:static}.email-variable-guide{display:block}.email-heading{flex-direction:column;align-items:start}.email-actions{justify-content:flex-start}.email-editor-main{padding:30px 17px 70px}.top-actions{flex-wrap:wrap}}
 @media(max-width:500px){.email-fields,.email-preview-panel{padding:17px}.email-logo-row{grid-template-columns:1fr}.email-heading h1{font-size:35px}#emailPreviewFrame{height:620px}.email-actions{width:100%}.email-actions button{flex:1}}
+
+.email-versions{margin-top:30px;padding-top:23px;border-top:1px solid #dce6eb}
+.email-versions h3{font-size:17px;letter-spacing:-.03em;margin:0 0 6px}
+.email-versions>p{font-size:11px;color:#6d8291;line-height:1.7;margin:0 0 18px}
+.email-history-entry{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #e7eef1}
+.email-history-entry strong{display:block;font-size:12px}
+.email-history-entry span{font-size:10px;color:#7b8c99}
+.email-history-entry .button{min-height:30px;font-size:11px}
+.email-history-entry .button:disabled{opacity:.35}
