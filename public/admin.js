@@ -25,6 +25,24 @@ async function call(path, options = {}) {
   if (!response.ok) throw new Error(result.message || "Unable to load information.");
   return result;
 }
+async function refreshEmailConfig() {
+  const banner = byId("emailAlertStatus");
+  try {
+    const result = await call("/email/config");
+    banner.hidden = false;
+    banner.dataset.configured = String(result.configured);
+    if (result.configured) {
+      banner.textContent = "Email notifications are configured. Resend delivery still depends on your verified sender domain.";
+    } else {
+      banner.textContent = "Email notifications are not configured on Render. Missing: " +
+        (result.missing || []).join(", ") + ". Saved enquiries can be retried after these settings are fixed.";
+    }
+  } catch (error) {
+    banner.hidden = false;
+    banner.dataset.configured = "false";
+    banner.textContent = "Could not check the email notification configuration: " + error.message;
+  }
+}
 async function refreshStats() {
   const data = await call("/stats");
   byId("statAll").textContent = data.enquiries ?? 0;
@@ -44,8 +62,10 @@ async function loadEnquiries() {
     "<tr><td><span class='client-name'>" + escapeText(item.name) + "</span><span class='client-sub'>" + escapeText(item.businessName || item.email) +
     "</span></td><td>" + escapeText(item.projectType) + "</td><td>" + escapeText(formatDate(item.createdAt)) +
     "</td><td><span class='pill " + escapeText(item.status) + "'>" + escapeText(item.status) +
+    "</span></td><td><span class='email-pill " + escapeText(item.emailStatus || "pending") + "'>" +
+    escapeText(item.emailStatus || "pending") +
     "</span></td><td><button class='row-action' data-id='" + escapeText(item._id) + "'>View & edit</button></td></tr>"
-  ).join("") : "<tr><td colspan='5'>No enquiries match your filters yet.</td></tr>";
+  ).join("") : "<tr><td colspan='6'>No enquiries match your filters yet.</td></tr>";
   byId("pageInfo").textContent = total + " enquiries · Page " + page;
   byId("prevPage").disabled = page <= 1;
   byId("nextPage").disabled = page * 25 >= total;
@@ -94,12 +114,36 @@ function showLead(id) {
   ).join("");
   byId("leadStatus").value = lead.status || "new";
   byId("leadNotes").value = lead.internalNotes || "";
+  byId("retryEmail").hidden = !["pending", "failed"].includes(lead.emailStatus || "pending");
+  byId("retryEmail").disabled = false;
+
   byId("leadDialog").showModal();
 }
 async function refreshAll() {
-  await Promise.all([refreshStats(), loadEnquiries(), loadMeetings()]);
+  await Promise.all([refreshStats(), loadEnquiries(), loadMeetings(), refreshEmailConfig()]);
   message("Information updated.");
 }
+byId("retryEmail").addEventListener("click", async () => {
+  if (!currentLeadId) return;
+  const button=byId("retryEmail");
+  button.disabled=true;
+  button.textContent="Sending notification…";
+  try {
+    const result=await call("/enquiries/" + encodeURIComponent(currentLeadId) + "/email/retry", {
+      method:"POST",body:"{}"
+    });
+    byId("leadDialog").close();
+    await Promise.all([loadEnquiries(),refreshEmailConfig()]);
+    message(result.message || "Notification accepted by Resend.");
+  } catch (error) {
+    message(error.message,true);
+    const status=byId("retryEmailStatus");
+    status.textContent=error.message;
+  } finally {
+    button.disabled=false;
+    button.textContent="Retry email notification";
+  }
+});
 byId("logout").addEventListener("click", async () => {
   const button = byId("logout");
   button.disabled = true;
