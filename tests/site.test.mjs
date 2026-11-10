@@ -99,3 +99,10 @@ test("original portfolio case studies and real local screenshots are present",()
  assert.match(portfolio,/Real-Time Chat System/);
  assert.match(portfolio,/Secure Authentication System/);
 });
+
+test("homepage also features authentic screenshot assets from the source portfolio",()=>{
+ const home=read("index.html");
+ assert.match(home,/images\/projects\/mzansirent\.webp/);
+ assert.match(home,/images\/projects\/dentacare\.webp/);
+ assert.match(home,/Explore the case study/);
+});
