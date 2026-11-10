@@ -106,3 +106,23 @@ test("homepage also features authentic screenshot assets from the source portfol
  assert.match(home,/images\/projects\/dentacare\.webp/);
  assert.match(home,/Explore the case study/);
 });
+
+test("KasiDrop, Mzansi Rent Lite and Genesis cards use real browser screenshots",()=>{
+ const html=read("portfolio/index.html");
+ const manifest=JSON.parse(read("images/projects/live-capture-manifest.json"));
+ assert.equal(manifest.projects.length,3);
+ for(const id of ["kasidrop","mzansi-rent-lite","genesis-kiddies-corner"]){
+  assert.ok(html.includes("images/projects/"+id+"-live.webp"));
+  assert.ok(html.includes("images/projects/mobile/"+id+"-live.webp"));
+  for(const subdir of ["","mobile/"]){
+   const screenshot=readFileSync("public/images/projects/"+subdir+id+"-live.webp");
+   assert.equal(screenshot.toString("ascii",0,4),"RIFF");
+   assert.equal(screenshot.toString("ascii",8,12),"WEBP");
+   assert.ok(screenshot.length>10000);
+  }
+  const record=manifest.projects.find(p=>p.id===id);
+  assert.equal(record?.desktop?.status,200);
+  assert.ok(record?.desktop?.bodyTextLength>75);
+ }
+ assert.match(html,/genesis-kiddies-corner2\.netlify\.app/);
+});

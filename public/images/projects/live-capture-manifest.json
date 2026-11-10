@@ -1,0 +1,93 @@
+{
+  "capturedAt": "2026-11-10T03:53:18.046Z",
+  "method": "Playwright Chromium",
+  "projects": [
+    {
+      "id": "kasidrop",
+      "name": "KasiDrop",
+      "url": "https://kasi-drop.netlify.app/",
+      "desktop": {
+        "path": "public/images/projects/kasidrop-live.webp",
+        "title": "KasiDrop | Local roots. Delivered.",
+        "bytes": 33880,
+        "entropy": null,
+        "bodyTextLength": 1776,
+        "status": 200,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      "mobile": {
+        "path": "public/images/projects/mobile/kasidrop-live.webp",
+        "title": "KasiDrop | Local roots. Delivered.",
+        "bytes": 26222,
+        "entropy": null,
+        "bodyTextLength": 1351,
+        "status": 200,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
+    },
+    {
+      "id": "mzansi-rent-lite",
+      "name": "Mzansi Rent Lite",
+      "url": "https://mzansi-rent.netlify.app/",
+      "desktop": {
+        "path": "public/images/projects/mzansi-rent-lite-live.webp",
+        "title": "Find verified rentals · Mzansi Rent",
+        "bytes": 26084,
+        "entropy": null,
+        "bodyTextLength": 579,
+        "status": 200,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      "mobile": {
+        "path": "public/images/projects/mobile/mzansi-rent-lite-live.webp",
+        "title": "Find verified rentals · Mzansi Rent",
+        "bytes": 20516,
+        "entropy": null,
+        "bodyTextLength": 542,
+        "status": 200,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
+    },
+    {
+      "id": "genesis-kiddies-corner",
+      "name": "Genesis Kiddies Corner",
+      "url": "https://genesis-kiddies-corner2.netlify.app/",
+      "desktop": {
+        "path": "public/images/projects/genesis-kiddies-corner-live.webp",
+        "title": "Home | The Genesis Kiddies Corner",
+        "bytes": 80500,
+        "entropy": null,
+        "bodyTextLength": 443,
+        "status": 200,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      "mobile": {
+        "path": "public/images/projects/mobile/genesis-kiddies-corner-live.webp",
+        "title": "Home | The Genesis Kiddies Corner",
+        "bytes": 32150,
+        "entropy": null,
+        "bodyTextLength": 383,
+        "status": 200,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
+    }
+  ]
+}
