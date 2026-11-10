@@ -5,6 +5,12 @@ on:
     paths:
       - scripts/p1-browser-audit.mjs
       - .github/workflows/p1-browser-audit.yml
+      - public/site-view.js
+      - public/site-view.css
+      - public/business-console.css
+      - public/advanced-settings.js
+      - public/admin/**
+      - public/index.html
   workflow_dispatch:
 permissions:
   contents: read
@@ -21,5 +27,5 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Run browser and WCAG checks against Netlify preview
         env:
-          AUDIT_BASE_URL: https://6af345414d70ba4614fbf040--mzansi-digital-ventures.netlify.app
+          AUDIT_BASE_URL: https://6af3469fe4f609fbc6411524--mzansi-digital-ventures.netlify.app
         run: node scripts/p1-browser-audit.mjs
