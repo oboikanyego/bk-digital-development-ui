@@ -20,3 +20,17 @@ test("session cookie is passed from Express through the proxy",()=>{
  assert.doesNotMatch(dash,/adminKey/);
  assert.match(proxy,/Set-Cookie/);
 });
+
+test("enquiry notifications show configuration status and allow protected admin retries",()=>{
+ const dash=readFileSync("public/admin/dashboard/index.html","utf8");
+ const script=readFileSync("public/admin.js","utf8");
+ const contact=readFileSync("public/app.js","utf8");
+ assert.match(dash,/id="emailAlertStatus"/);
+ assert.match(dash,/id="retryEmail"/);
+ assert.match(dash,/<th>Email alert<\/th>/);
+ assert.match(script,/\/email\/config/);
+ assert.match(script,/\/email\/retry/);
+ assert.match(script,/emailStatus/);
+ assert.match(script,/refreshEmailConfig/);
+ assert.match(contact,/email alert is temporarily unavailable/);
+});
