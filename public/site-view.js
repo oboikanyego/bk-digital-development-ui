@@ -53,7 +53,7 @@
     });
     const name = company.shortName.split(/\s+/);
     const tail = name.length > 1 ? name.pop() : "";
-    all(".site-header .brand").forEach(node=>node.setAttribute("aria-label",company.shortName+" home"));
+    all(".site-header .brand").forEach(node=>node.removeAttribute("aria-label"));
     all(".site-header .brand,.footer-grid .brand").forEach(node => {
       const strong = node.querySelector("strong"), small = node.querySelector("small");
       if (strong) strong.textContent = name.join(" ");
@@ -269,7 +269,7 @@
           for(const item of testimonials){
             const card=document.createElement("blockquote");
             const quote=document.createElement("p");quote.textContent=item.quote;
-            const by=document.createElement("footer");by.textContent=item.name+(item.role?" · "+item.role:"");
+            const by=document.createElement("cite");by.textContent=item.name+(item.role?" · "+item.role:"");
             card.append(quote,by);grid.append(card);
           }
           container.append(grid);section.append(container);sections.push(section);

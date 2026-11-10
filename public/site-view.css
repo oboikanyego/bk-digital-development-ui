@@ -64,3 +64,6 @@ body.cms-managed .btn,body.cms-managed .button{border-radius:var(--cms-radius)}
 body.cms-managed .eyebrow.dark,body.cms-managed .text-link{color:#075773}
 .method-grid>div:first-child>p:not(.eyebrow){color:#4f6476}
 .method-steps>div p{color:#4c6071}
+
+/* Accessible testimonial attribution: not a site footer; avoid inherited dark footer styles. */
+.cms-testimonial-grid blockquote cite{display:block;font-style:normal;color:#315366;background:transparent;font-weight:700;font-size:12px}

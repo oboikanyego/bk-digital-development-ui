@@ -55,3 +55,6 @@
 .business-stats article span{color:#4b6070}
 .business-table-wrap th{color:#455d70}
 .business-subtle{color:#506879}
+
+/* WCAG AA for customer secondary text on light table rows. */
+.business-table-wrap td small{color:#435b6c}
