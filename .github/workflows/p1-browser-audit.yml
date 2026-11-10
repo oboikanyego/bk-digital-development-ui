@@ -21,5 +21,5 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Run browser and WCAG checks against Netlify preview
         env:
-          AUDIT_BASE_URL: https://6af3427b4d70ba4614fb4685--mzansi-digital-ventures.netlify.app
+          AUDIT_BASE_URL: https://6af344307abc586c25310b3a--mzansi-digital-ventures.netlify.app
         run: node scripts/p1-browser-audit.mjs
