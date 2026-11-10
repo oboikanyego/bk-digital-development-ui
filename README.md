@@ -66,3 +66,7 @@ The public `/portfolio/` page includes three real optimised WebP application scr
 ## Verified live website screenshots
 
 Desktop and mobile screenshots for KasiDrop, Mzansi Rent Lite and Genesis Kiddies Corner are captured from each site's public homepage with Playwright Chromium in GitHub Actions and stored in `public/images/projects/`. `public/images/projects/live-capture-manifest.json` contains source URLs, HTTP statuses, titles, visible text lengths, sizes and capture date. No private accounts are used. Mobile variants are served using `<picture>` sources. Note that free backend sleep can leave loading placeholders visible during screenshot capture. The screenshots represent actual page states, not fabricated mockups.
+
+## Royal Treats
+
+Royal Treats is included in the project showcase with desktop and mobile screenshot assets captured from its public Netlify storefront. The source project's Angular frontend and Node.js/MongoDB API support dessert ordering, local delivery, and separate admin/courier operations. Source capture metadata is stored in `public/images/projects/royal-treats-capture.json`.
