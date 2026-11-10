@@ -1,0 +1,52 @@
+
+.business-main{max-width:1280px;margin:auto;padding:38px 22px 90px}
+.business-heading{padding:15px 0 24px;border-bottom:1px solid #dce6eb;margin-bottom:23px}
+.business-heading h1{font-size:clamp(33px,4.6vw,50px);line-height:1.12;margin:9px 0}
+.business-heading p{max-width:740px;font-size:13px;line-height:1.7}
+.business-feedback{margin:0 0 14px;font-size:13px;min-height:20px;color:#0a7186}
+.business-feedback.error{color:#9b2e36}
+.business-stats{display:flex;gap:14px;flex-wrap:wrap;margin:20px 0}
+.business-stats article{background:#fff;border:1px solid #dce6ec;padding:17px 25px;min-width:175px;border-radius:9px}
+.business-stats span{font-size:12px;color:#6c8190;display:block}
+.business-stats strong{font-size:32px;letter-spacing:-.07em}
+.business-card{background:#fff;border:1px solid #dfe8eb;border-radius:10px;padding:22px;margin:18px 0}
+.business-card h2{font-size:23px;letter-spacing:-.04em;margin:0}
+.business-card h3{font-size:17px;letter-spacing:-.03em}
+.business-card p{font-size:12px;line-height:1.7}
+.business-card-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:15px}
+.business-filters{display:flex;align-items:end;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+.business-filters label{min-width:180px;flex:1}
+.business-table-wrap{overflow:auto;width:100%}
+.business-table-wrap table{width:100%;min-width:670px;border-collapse:collapse;text-align:left}
+.business-table-wrap th{font-size:11px;color:#697f8f;font-weight:800;text-transform:uppercase;letter-spacing:.06em;padding:11px;border-bottom:1px solid #dce6ec}
+.business-table-wrap td{padding:13px 11px;border-bottom:1px solid #e9eef1;font-size:12px;line-height:1.6;vertical-align:top}
+.business-table-wrap td small{display:block;color:#8193a1}
+.business-table-wrap button{padding:7px 10px;min-height:32px;font-size:11px;margin:0 4px 4px 0}
+.business-page-controls{display:flex;align-items:center;gap:12px;justify-content:end;margin-top:16px;font-size:12px}
+.business-due-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.business-due{padding:14px;border:1px solid #e4edf1;border-radius:7px;background:#f8fafb}
+.business-due strong,.business-due span{display:block}
+.business-due span{color:#61788b;font-size:11px}
+.business-dialog{width:min(870px,calc(100vw - 26px));max-height:92vh;border:1px solid #dde7ea;border-radius:12px;padding:25px;background:#fff;color:#152e40}
+.business-dialog::backdrop{background:#0b1e2cc7}
+.business-dialog-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.business-dialog-head h2{margin:0 0 6px}
+.business-subtle{font-size:12px;color:#627b8c}
+.business-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:18px 0}
+.business-form-grid .span-all{grid-column:1/-1}
+.business-form-grid textarea{min-height:90px}
+.business-dialog-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-bottom:22px}
+.business-history{background:#f7fafb;border:1px solid #e4eaee;border-radius:6px;padding:10px;margin-bottom:17px;max-height:260px;overflow:auto}
+.business-history div{padding:9px 7px;border-bottom:1px solid #e1e9ed;font-size:12px}
+.business-history div:last-child{border-bottom:0}
+.business-history small{display:block;color:#71879a}
+.business-totals{max-width:280px;margin:19px 0 20px auto}
+.business-totals p{display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid #e2ebef;padding-bottom:8px}
+.business-totals p:last-child{font-weight:800;color:#0c6687;font-size:16px}
+#docItems input{min-width:80px}
+#docItems input[data-line-description]{min-width:230px}
+.business-status{display:inline-block;padding:4px 9px;border-radius:20px;background:#e8f2f5;color:#126580;font-size:11px;font-weight:760;text-transform:capitalize}
+.business-status.paid,.business-status.accepted{background:#dcf1e5;color:#1b6545}
+.business-status.rejected,.business-status.void,.business-status.failed{background:#fae2e0;color:#943a43}
+.business-status.draft{background:#f2f1e2;color:#766328}
+@media(max-width:760px){.business-form-grid{grid-template-columns:1fr}.topbar{align-items:start;flex-wrap:wrap}.top-actions{flex-wrap:wrap;gap:7px}.top-actions .button{font-size:11px}.business-card{padding:15px}.business-main{padding:25px 13px 80px}.business-card-head{align-items:start;flex-direction:column}}
