@@ -17,6 +17,10 @@
         <div class="delivery-metrics" id="deliveryMetrics" aria-label="Email delivery totals"></div>
         <div class="table-wrap"><table><thead><tr><th>Message type</th><th>Current status</th><th>Attempts</th><th>Last update</th><th>Details</th></tr></thead><tbody id="deliveryRows"></tbody></table></div>
       </section>
+      <section class="operations-health" aria-labelledby="opsHeading">
+        <div><h2 id="opsHeading">Production operations</h2><p>MongoDB, email configuration, Cloudinary media and background delivery worker readiness.</p></div>
+        <div id="opsHealth" class="operations-health-items" role="status" aria-live="polite"><p>Checking service health…</p></div>
+      </section>
       <div class="tabs" role="tablist" aria-label="Management sections">
         <button id="tabEnquiries" class="tab active" role="tab" aria-selected="true" type="button">Enquiries</button>
         <button id="tabMeetings" class="tab" role="tab" aria-selected="false" type="button">Meetings</button>

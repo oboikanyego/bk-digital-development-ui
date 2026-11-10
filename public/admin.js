@@ -46,6 +46,23 @@ async function refreshEmailConfig() {
     banner.textContent = "Could not check the email notification configuration: " + error.message;
   }
 }
+async function refreshOpsHealth(){
+ const target=byId("opsHealth");
+ try{
+  const data=await call("/operations/health");
+  const checks=[
+    ["Database",data.database==="connected"],
+    ["Resend",data.resendConfigured],
+    ["Cloudinary",data.cloudinaryConfigured],
+    ["Signed webhook",data.webhookConfigured],
+    ["Background retry token",data.retryWorkerConfigured]
+  ];
+  target.innerHTML=checks.map(([name,ready])=>
+    "<span class='ops-check "+(ready?"ready":"warning")+
+    "'><b>"+escapeText(name)+"</b><small>"+(ready?"Configured":"Attention required")+"</small></span>"
+  ).join("");
+ }catch(error){target.textContent="Operations status could not be checked. Open the API readiness endpoint or review Render logs.";}
+}
 async function refreshStats() {
   const [data,crm]=await Promise.all([call("/stats"),call("/crm/metrics")]);
   byId("statAll").textContent=data.enquiries??0;
@@ -154,7 +171,7 @@ function showLead(id) {
   byId("leadDialog").showModal();
 }
 async function refreshAll() {
-  await Promise.all([refreshStats(), loadEnquiries(), loadMeetings(), refreshEmailConfig(), loadEmailDeliveries()]);
+  await Promise.all([refreshStats(), loadEnquiries(), loadMeetings(), refreshEmailConfig(), loadEmailDeliveries(), refreshOpsHealth()]);
   message("Information updated.");
 }
 byId("retryEmail").addEventListener("click", async () => {
