@@ -35,6 +35,7 @@ const site={
 const client={_id:sampleEmail,email:sampleEmail,name:"Browser QA Client",businessName:"QA Business",
   phone:"",notes:"",followUpDate:"",projectStatus:"lead",priority:"normal"};
 const messages=[];
+const a11yFindings=[];
 const browser=await chromium.launch({headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
 async function pageFor(mobile=false){
  const context=await browser.newContext({viewport:mobile?{width:390,height:844}:{width:1366,height:900}});
@@ -79,7 +80,13 @@ async function axe(page,label){
  console.log("ACCESSIBILITY",label,JSON.stringify({violations:report.violations.map(v=>({
   id:v.id,impact:v.impact,affected:v.nodes.length
  }))}));
- assert.equal(severe.length,0,label+": no serious/critical axe violations expected");
+ if(severe.length)console.log("ACCESSIBILITY DETAILS",label,JSON.stringify(severe.map(v=>({
+  id:v.id,nodes:v.nodes.slice(0,14).map(n=>({
+    target:n.target,summary:n.failureSummary?.slice(0,550),html:n.html?.slice(0,180)
+  }))
+ }))));
+ // Continue auditing other screens so a single inherited issue does not hide others.
+ a11yFindings.push({label,serious:severe.map(v=>({id:v.id,affected:v.nodes.length}))});
 }
 try{
  const desktop=await pageFor();
@@ -136,5 +143,8 @@ try{
  await mobile.close();
  if(messages.length)console.log("BROWSER JS CONSOLE ERRORS",JSON.stringify(messages));
  assert.equal(messages.filter(s=>/Uncaught|TypeError|ReferenceError|SyntaxError/.test(s)).length,0);
+ const failures=a11yFindings.filter(x=>x.serious.length>0);
+ if(failures.length)console.log("WCAG AUDIT FINDINGS",JSON.stringify(failures));
+ assert.equal(failures.length,0,"No serious or critical accessibility issues expected in deployed UI");
  console.log("P1 browser audit passed.");
 }finally{await browser.close();}
