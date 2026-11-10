@@ -1,0 +1,35 @@
+{
+  "capturedAt": "2026-11-10T04:14:32.933Z",
+  "method": "Playwright Chromium",
+  "projects": [
+    {
+      "id": "royal-treats",
+      "name": "Royal Treats",
+      "url": "https://royal-treats.netlify.app/",
+      "desktop": {
+        "path": "public/images/projects/royal-treats-live.webp",
+        "title": "Sweet Treats, Bigger Smiles | Royal Treats",
+        "bytes": 50734,
+        "entropy": null,
+        "bodyTextLength": 850,
+        "status": 200,
+        "viewport": {
+          "width": 1440,
+          "height": 900
+        }
+      },
+      "mobile": {
+        "path": "public/images/projects/mobile/royal-treats-live.webp",
+        "title": "Sweet Treats, Bigger Smiles | Royal Treats",
+        "bytes": 31238,
+        "entropy": null,
+        "bodyTextLength": 828,
+        "status": 200,
+        "viewport": {
+          "width": 390,
+          "height": 844
+        }
+      }
+    }
+  ]
+}
