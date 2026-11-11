@@ -16,4 +16,18 @@
 </form></section>
 <section class="business-card"><div class="business-card-head"><div><h2>Document register</h2><p>Sent means accepted by Resend, not necessarily read. Paid statuses are manually recorded and should match your bank statement.</p></div><button id="docRefresh" type="button" class="button secondary">Refresh</button></div>
 <div class="business-table-wrap"><table><thead><tr><th>Document</th><th>Client</th><th>Amount</th><th>Status</th><th>Delivery</th><th>Actions</th></tr></thead><tbody id="docRows"></tbody></table></div></section>
-</main></body></html>
+</main>
+<dialog id="docEditDialog" class="business-dialog ai-doc-editor">
+ <form id="docEditForm">
+  <div class="business-dialog-head"><div><span class="eyebrow">REVIEW BEFORE SENDING</span><h2 id="docEditTitle">Price quotation draft</h2></div><button id="docEditClose" type="button" class="button secondary">Close</button></div>
+  <p class="business-subtle">AI-generated quotations use R0 placeholders. Review every deliverable, enter approved prices, and confirm the scope before sending.</p>
+  <div class="business-table-wrap"><table><thead><tr><th>Service / deliverable</th><th>Qty</th><th>Unit price (ZAR)</th></tr></thead><tbody id="docEditItems"></tbody></table></div>
+  <div class="business-form-grid">
+   <label>Tax rate (%)<select id="docEditTax"><option value="0">0% (default)</option><option value="1500">15% (when applicable)</option></select></label>
+   <label>Valid until<input id="docEditValid" type="date"></label>
+   <label class="span-all">Scope, notes and terms<textarea id="docEditNotes" maxlength="1400" rows="4"></textarea></label>
+  </div>
+  <p id="docEditTotal" class="business-totals" role="status">Quotation total will appear here</p>
+  <div class="business-dialog-actions"><button id="docEditCancel" type="button" class="button secondary">Cancel</button><button id="docEditSave" class="button primary" type="submit">Save reviewed prices</button></div>
+ </form>
+</dialog></body></html>
