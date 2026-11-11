@@ -9,7 +9,7 @@ await mkdir("qa-screenshots",{recursive:true});
 const errors=[];
 const aiReply={
  mode:"ai",
- reply:"For selling and renting mascots, I recommend a combined online store and rental booking platform. Customers can buy or rent, check available dates and ask for delivery. Do you rent by the day or weekend?",
+ reply:"For selling and renting mascots, I recommend a combined online store and rental booking platform. Customers can buy or rent, check available dates and ask for delivery. Do you rent by the day or weekend? "+("The website should display each mascot, offer sale and rental prices, prevent double bookings, capture delivery information, and give staff an easy dashboard for orders, inventory and calendar availability. ").repeat(6),
  solution:{category:"commerce-rentals",title:"Online store + rental booking platform",projectType:"Booking website/system",
   features:["Mascot catalogue with Buy and Rent options","Rental availability calendar and double-booking prevention",
    "Payments and deposits","Admin dashboard for rentals and sales"],
@@ -69,6 +69,7 @@ try{
   await page.locator(".ai-input-form textarea").fill("I sell mascots and rent mascot costumes for parties and events, and need a booking website.");
   await page.locator(".ai-input-form button[type=submit]").click();
   await page.locator(".ai-result:not([hidden])").waitFor();
+  const pageBeforeWizard=await page.evaluate(()=>window.scrollY);
   await page.locator("[data-ai-review]").click();
   const dialog=page.getByRole("dialog",{name:"Review and submit your AI project brief"});
   await dialog.waitFor({state:"visible"});
@@ -76,6 +77,70 @@ try{
   assert.equal(leadPosts,0,"no CRM submission before consent");
   assert.equal(await dialog.locator('input[name=feature]:checked').count(),4);
   assert.equal(await dialog.locator('input[name=title]').inputValue(),brief.title);
+  // Regression for the customer screenshot: background page, recommendation
+  // textarea and dialog must NOT independently scroll.
+  await page.waitForTimeout(100);
+  const geometry=async()=>dialog.evaluate(modal=>{
+    const main=modal.querySelector(".aiw-body"),
+      shell=modal.querySelector(".aiw-shell"),
+      summary=modal.querySelector('textarea[name="summary"]'),
+      name=modal.querySelector(".aiw-title"),
+      footer=modal.querySelector(".aiw-actions");
+    const bounds=el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom};};
+    return {
+      htmlOverflow:getComputedStyle(document.documentElement).overflowY,
+      bodyOverflow:getComputedStyle(document.body).overflowY,
+      bodyPosition:getComputedStyle(document.body).position,
+      modalOverflow:getComputedStyle(modal).overflowY,
+      shellOverflow:getComputedStyle(shell).overflowY,
+      mainOverflow:getComputedStyle(main).overflowY,
+      mainScroll:main.scrollHeight-main.clientHeight,
+      summaryOverflow:getComputedStyle(summary).overflowY,
+      summaryScroll:summary.scrollHeight-summary.clientHeight,
+      summaryHeight:summary.clientHeight,
+      heading:bounds(name),footer:bounds(footer),
+      scrollTop:main.scrollTop,pageY:window.scrollY
+    };
+  });
+  let layout=await geometry();
+  assert.equal(layout.htmlOverflow,"hidden","page scrollbar must disappear");
+  assert.equal(layout.bodyPosition,"fixed","marketing page must stay locked");
+  assert.equal(layout.modalOverflow,"hidden","native dialog must never scroll");
+  assert.equal(layout.shellOverflow,"hidden","dialog shell must not scroll");
+  assert.equal(layout.mainOverflow,"auto","only the central form scrolls");
+  assert.equal(layout.summaryOverflow,"hidden","AI response textarea must not have its own scrollbar");
+  assert.ok(layout.summaryScroll<=2,"AI text must fit without internal scrolling: "+JSON.stringify(layout));
+  assert.ok(layout.summaryHeight>180,"long AI advice should expand naturally: "+JSON.stringify(layout));
+  assert.ok(layout.mainScroll>100,"central form must have room to scroll");
+  const scroll=dialog.locator(".aiw-body");
+  await scroll.evaluate(el=>{el.scrollTop=0});
+  const rect=await scroll.boundingBox();
+  await page.mouse.move(rect.x+rect.width/2,rect.y+rect.height/2);
+  await page.mouse.wheel(0,350);
+  await page.waitForTimeout(80);
+  const moved=await geometry();
+  assert.ok(moved.scrollTop>100,"wheel moves central form");
+  assert.equal(moved.pageY,layout.pageY,"page stays fixed while form scrolls");
+  assert.ok(Math.abs(moved.heading.top-layout.heading.top)<=2,"heading remains fixed");
+  assert.ok(Math.abs(moved.footer.top-layout.footer.top)<=2,"submit buttons remain fixed");
+  await scroll.evaluate(el=>{el.scrollTop=0});
+  console.log("SINGLE_SCROLL_PASS",width,JSON.stringify({
+    summaryHeight:layout.summaryHeight,
+    formScroll:layout.mainScroll,
+    innerTextareaScroll:layout.summaryScroll,
+    backgroundLocked:true
+  }));
+  const summaryTextarea=dialog.locator('textarea[name=summary]');
+  await summaryTextarea.fill("A short project summary.");
+  await page.waitForTimeout(45);
+  const small=await geometry();
+  assert.ok(small.summaryHeight<layout.summaryHeight-60,"textarea shrinks when shortened");
+  assert.ok(small.summaryScroll<=2,"short summary does not scroll");
+  await summaryTextarea.fill(aiReply.reply.slice(0,1000));
+  await page.waitForTimeout(45);
+  const large=await geometry();
+  assert.ok(large.summaryScroll<=2,"edited long advice remains fully visible");
+  assert.ok(large.summaryHeight>small.summaryHeight,"textarea regrows on edit");
   await dialog.locator('textarea[name=description]').fill("I sell mascot costumes and rent them for birthday parties and school events. Weekend rentals are essential.");
   await page.screenshot({path:"qa-screenshots/ai-brief-review-"+width+".png",animations:"disabled"});
   await dialog.getByRole("button",{name:/Continue to contact details/}).click();
@@ -111,6 +176,15 @@ try{
   if(width!==1440)assert.ok(!("transcript" in lastPayload),"no transcript without opt in");
   assert.ok(events.includes("opened")&&events.includes("idea_submitted")&&events.includes("brief_reviewed"));
   await dialog.getByRole("button",{name:"Close",exact:true}).click();
+  await page.waitForFunction(()=>!document.documentElement.classList.contains("aiw-page-locked"));
+  const restored=await page.evaluate(()=>({
+    scrollY:window.scrollY,
+    bodyPosition:getComputedStyle(document.body).position,
+    htmlOverflow:getComputedStyle(document.documentElement).overflowY
+  }));
+  assert.ok(Math.abs(restored.scrollY-pageBeforeWizard)<=2,"original page scroll offset restored");
+  assert.notEqual(restored.bodyPosition,"fixed","background page unlocked after close");
+  assert.notEqual(restored.htmlOverflow,"hidden","page can scroll normally after close");
   console.log("PUBLIC WIZARD PASS",width,JSON.stringify({leadPosts,consent:true,transcript:width===1440,events}));
   await ctx.close();
  }
