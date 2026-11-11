@@ -55,7 +55,7 @@
 .ai-input-form textarea{display:block;width:100%;min-height:105px;border-radius:10px;border:1px solid #cedeeb;background:#f9fcfe;color:#152f44;padding:13px 14px;font-size:13px;line-height:1.65;resize:vertical}
 .ai-input-form textarea:focus{outline:3px solid rgba(33,177,208,.22);border-color:#1585aa}
 .ai-submit-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px}
-.ai-count{font-size:10px;color:#657e8d}
+.ai-count{font-size:10px;color:#425b6a;font-weight:650}
 .ai-send-button{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:45px;padding:10px 17px;background:#0c7498;color:#fff;border:1px solid #0c7498;border-radius:9px;font-size:12px;font-weight:830;cursor:pointer}
 .ai-send-button:hover{background:#0b5979}
 .ai-send-button:disabled{opacity:.65;cursor:progress}
