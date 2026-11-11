@@ -24,7 +24,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Check 1440px, iPhone Pro Max 440px, 320px, keyboard, a11y and enquiry POST
         env:
-          PREVIEW_URL: https://6af426f2928af7c9f7046749--mzansi-digital-ventures.netlify.app
+          PREVIEW_URL: https://6af4274185021869d723f4c1--mzansi-digital-ventures.netlify.app
         run: node scripts/project-picker-browser-qa.mjs
       - uses: actions/upload-artifact@v4
         if: always()
