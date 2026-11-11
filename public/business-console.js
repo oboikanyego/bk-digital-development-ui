@@ -22,6 +22,8 @@ $("bizLogout").addEventListener("click",async()=>{
 
 if(screen==="crm"){
  let page=1,total=0,selected="";
+ const initialParams=new URLSearchParams(location.search);
+ if(initialParams.get("source")==="ai_advisor")$("crmSource").value="ai_advisor";
  const stageOptions=["lead","qualified","proposal","active","on_hold","completed","closed"];
  async function load(){
   const q=$("crmSearch").value.trim(),status=$("crmStage").value,source=$("crmSource").value;
@@ -123,7 +125,10 @@ if(screen==="crm"){
   const button=event.target.closest("[data-client]");
   if(button)openClient(button.dataset.client).catch(e=>notify(e.message,true));
  });
- load().catch(error=>notify(error.message,true));
+ load().then(()=>{
+   const client=initialParams.get("client");
+   if(client)openClient(client).catch(e=>notify(e.message,true));
+ }).catch(error=>notify(error.message,true));
 }
 
 if(screen==="documents"){
