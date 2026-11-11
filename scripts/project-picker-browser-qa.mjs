@@ -45,7 +45,7 @@ try{
   // Opening and searching choices should never trigger the OS-native select.
   await trigger.click();
   const bounds=await panel.boundingBox();
-  assert.ok(bounds.left>=-1&&bounds.right<=width+1,"picker cannot overflow the "+width+"px viewport: "+JSON.stringify(bounds));
+  assert.ok(bounds.x>=-1&&bounds.x+bounds.width<=width+1,"picker cannot overflow the "+width+"px viewport: "+JSON.stringify(bounds));
   const allOptions=page.locator("#projectTypeOptions [role='option']");
   assert.equal(await allOptions.count(),11);
   const isMobile=width<=700;
