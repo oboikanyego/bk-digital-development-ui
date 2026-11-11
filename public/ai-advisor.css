@@ -232,8 +232,24 @@ body.ai-chat-modal-open { overflow: hidden; }
 .ai-widget-close:hover { background: rgba(255,255,255,.13); }
 .ai-widget-content .ai-chat-scroll { flex: 1 1 auto; min-height: 0; }
 .ai-widget-content .ai-conversation {
+  /* The old widget's 190px max-height remained more specific than the
+     full-height rule, so replies overflowed behind the recommendation card. */
+  max-height: none;
+  min-height: 0;
+  height: auto;
+  overflow: visible;
+  flex: 0 0 auto;
   padding: 20px 17px 11px;
   gap: 12px;
+}
+.ai-widget-content .ai-conversation .ai-bubble {
+  overflow-wrap: anywhere;
+}
+.ai-widget-content .ai-chat-scroll > .ai-result {
+  position: relative;
+  clear: both;
+  flex: 0 0 auto;
+  isolation: isolate;
 }
 .ai-widget-content .ai-bubble {
   max-width: 90%;

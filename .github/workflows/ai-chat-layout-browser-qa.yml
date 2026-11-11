@@ -1,7 +1,7 @@
 name: AI chat scroll and modal browser QA
 on:
   push:
-    branches: [fix/ai-chat-scroll-layout-20261111]
+    branches: [fix/ai-advisor-reply-card-overlap]
     paths:
       - scripts/ai-chat-layout-browser-qa.mjs
       - .github/workflows/ai-chat-layout-browser-qa.yml
@@ -23,7 +23,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Validate one scroll area, pinned composer, long replies, mobile and a11y
         env:
-          PREVIEW_URL: https://6af43e86ffcad1c281e7749b--mzansi-digital-ventures.netlify.app
+          PREVIEW_URL: https://6af4426124dd8fcac28abc73--mzansi-digital-ventures.netlify.app
         run: node scripts/ai-chat-layout-browser-qa.mjs
       - uses: actions/upload-artifact@v4
         if: always()
