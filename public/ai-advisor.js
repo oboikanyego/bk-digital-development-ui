@@ -101,7 +101,8 @@
       event.preventDefault();
       if(busy||!form.reportValidity())return;
       const message=textarea.value.trim();
-      if(message.length<15){showMessage("Please describe your idea in a little more detail.",true);return;}
+      const minimum=history.length?2:15;
+      if(message.length<minimum){showMessage(minimum===15?"Please describe your idea in a little more detail.":"Please enter at least two characters.",true);return;}
       busy=true;
       button.disabled=true;
       button.textContent="Thinking…";
@@ -124,6 +125,7 @@
         if(!reply)throw Error("No recommendation received. Please try again.");
         appendBubble(container,"assistant",reply);
         history.push({role:"user",content:message},{role:"assistant",content:reply.slice(0,900)});
+        textarea.minLength=2; // Short follow-up answers like "both" are valid.
         if(history.length>12)history.splice(2,history.length-12);
         projectAnswers.push(message);
         if(projectAnswers.length>8)projectAnswers.splice(1,projectAnswers.length-8);
