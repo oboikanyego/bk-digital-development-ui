@@ -68,7 +68,7 @@ try {
     await page.locator("#aiAdvisorApp .ai-conversation").waitFor();
     const initial=await page.evaluate(()=>{
       const container=document.querySelector("#aiAdvisorApp .ai-chat-scroll");
-      const panel=document.querySelector("#aiAdvisorApp .ai-advisor-panel");
+      const panel=document.querySelector("#aiAdvisorApp.ai-advisor-panel");
       return {
         chatOverflow:getComputedStyle(container).overflowY,
         overscroll:getComputedStyle(container).overscrollBehaviorY,
