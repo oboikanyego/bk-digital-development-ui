@@ -98,6 +98,34 @@ try {
     assert.match(await dialog.locator(".ai-result").innerText(),/Online store and payments/);
     assert.equal(await dialog.locator(".ai-chat-scroll .ai-result").count(),1);
     assert.equal(await dialog.locator(".ai-conversation .ai-bubble").count(),3);
+    const verifyNoOverlap=async phase=>{
+      const geometry=await dialog.evaluate(modal=>{
+        const conversation=modal.querySelector(".ai-conversation");
+        const lastBubble=conversation.querySelector(".ai-bubble:last-child");
+        const recommendation=modal.querySelector(".ai-result:not([hidden])");
+        const rect=element=>{
+          const r=element.getBoundingClientRect();
+          return {top:r.top,bottom:r.bottom,height:r.height};
+        };
+        return {
+          conversation:rect(conversation),
+          lastBubble:rect(lastBubble),
+          recommendation:rect(recommendation),
+          maxHeight:getComputedStyle(conversation).maxHeight,
+          overflowY:getComputedStyle(conversation).overflowY,
+          ownOverflow:conversation.scrollHeight-conversation.clientHeight
+        };
+      });
+      console.log("CHAT_GEOMETRY",phase,v.width,JSON.stringify(geometry));
+      assert.equal(geometry.maxHeight,"none","chat must grow naturally, not be clamped to 190px");
+      assert.equal(geometry.overflowY,"visible","chat must not create a second scrolling layer");
+      assert.ok(geometry.ownOverflow<=2,"chat bubbles must stay inside their container");
+      assert.ok(geometry.recommendation.top>=geometry.conversation.bottom-1,
+        "recommendation card must start below the entire conversation: "+JSON.stringify(geometry));
+      assert.ok(geometry.recommendation.top>=geometry.lastBubble.bottom-1,
+        "recommendation card must not overlap latest AI reply: "+JSON.stringify(geometry));
+    };
+    await verifyNoOverlap("single-reply");
     await page.screenshot({path:"qa-screenshots/ai-chat-result-"+v.width+"x"+v.height+".png",animations:"disabled"});
     for(let i=0;i<5;i++){
       await form.locator("textarea").fill("I also want customers to book mascot rentals for upcoming events and manage their dates. Example "+i);
@@ -105,6 +133,7 @@ try {
       await page.waitForFunction(n=>document.querySelectorAll(".ai-conversation .ai-bubble").length===n,5+2*i);
     }
     assert.equal(spy.posts(),6);
+    await verifyNoOverlap("long-conversation");
     layout=await getLayout();
     assert.ok(layout.chatScroll>20,"long conversations should scroll inside chat: "+JSON.stringify(layout));
     assert.ok(layout.dialogScroll<=2 && layout.contentScroll<=2,"only the chat area should scroll after long conversation");
