@@ -23,7 +23,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Test desktop and mobile contact, dynamic selects, admin and accessibility
         env:
-          PREVIEW_URL: https://6af42d5881959ddb11b7864d--mzansi-digital-ventures.netlify.app
+          PREVIEW_URL: https://6af42e117a95d347948fc3ed--mzansi-digital-ventures.netlify.app
         run: node scripts/unified-select-browser-qa.mjs
       - uses: actions/upload-artifact@v4
         if: always()
