@@ -63,6 +63,30 @@ async function refreshOpsHealth(){
   ).join("");
  }catch(error){target.textContent="Operations status could not be checked. Open the API readiness endpoint or review Render logs.";}
 }
+async function refreshAiAnalytics(){
+  try{
+    const data=await call("/ai/analytics?days=30");
+    const totals=data.totals||{},rates=data.rates||{};
+    const metrics=[
+      ["Assistant opens",totals.opened||0],
+      ["Project ideas",totals.idea_submitted||0],
+      ["Brief reviews",totals.brief_reviewed||0],
+      ["CRM leads",totals.lead_submitted||0],
+      ["Quote drafts",totals.quotation_drafted||0],
+      ["Quotes sent",totals.quotation_sent||0],
+      ["Converted",totals.converted||0]
+    ];
+    byId("aiFunnelMetrics").innerHTML=metrics.map(([label,n])=>
+      "<div class='delivery-metric'><span>"+escapeText(label)+"</span><strong>"+
+      escapeText(n)+"</strong></div>").join("");
+    byId("aiFunnelRates").textContent=
+      "Ideas / opens: "+(rates.ideasPerOpen||0)+"% · Leads / ideas: "+(rates.leadsPerIdea||0)+
+      "% · Quote drafts / leads: "+(rates.quotesPerLead||0)+"%";
+  }catch(error){
+    byId("aiFunnelMetrics").textContent="AI conversion metrics are temporarily unavailable.";
+    byId("aiFunnelRates").textContent="";
+  }
+}
 async function refreshStats() {
   const [data,crm]=await Promise.all([call("/stats"),call("/crm/metrics")]);
   byId("statAll").textContent=data.enquiries??0;
@@ -95,8 +119,8 @@ async function loadEmailDeliveries(){
 }
 async function loadEnquiries() {
   const search = byId("search").value.trim();
-  const status = byId("statusFilter").value;
-  const query = new URLSearchParams({ page: String(page), search, status });
+  const status = byId("statusFilter").value,source=byId("sourceFilter").value;
+  const query = new URLSearchParams({ page: String(page), search, status,source });
   const result = await call("/enquiries?" + query);
   leadCache = result.items || [];
   total = result.total || 0;
@@ -107,7 +131,7 @@ async function loadEnquiries() {
     "</td><td><span class='pill " + escapeText(item.status) + "'>" + escapeText(item.status) +
     "</span></td><td><span class='email-pill " + escapeText(item.emailStatus || "pending") + "'>" +
     escapeText(item.emailStatus || "pending") +
-    "</span></td><td><button class='row-action' data-id='" + escapeText(item._id) + "'>View & edit</button></td></tr>"
+    "</span></td><td><button class='row-action' data-id='" + escapeText(item._id) + "'>"+(item.source==="ai_advisor"?"✦ View AI lead":"View & edit")+"</button></td></tr>"
   ).join("") : "<tr><td colspan='6'>No enquiries match your filters yet.</td></tr>";
   byId("pageInfo").textContent = total + " enquiries · Page " + page;
   byId("prevPage").disabled = page <= 1;
@@ -143,6 +167,22 @@ function showLead(id) {
   if (!lead) return;
   currentLeadId = id;
   byId("leadTitle").textContent = lead.name || "Enquiry";
+  const ai=lead.source==="ai_advisor" && lead.aiBrief;
+  byId("leadAiBrief").hidden=!ai;
+  byId("leadQuoteDraft").hidden=!ai;
+  byId("leadOpenCrm").href="/admin/crm/?source=ai_advisor&client="+encodeURIComponent(lead.email||"");
+  if(ai){
+    const brief=lead.aiBrief;
+    const features=Array.isArray(brief.features)?brief.features:[];
+    const questions=Array.isArray(brief.openQuestions)?brief.openQuestions:[];
+    byId("leadAiBrief").innerHTML="<h3>✦ Customer-reviewed AI project brief</h3>"+
+      "<p><b>"+escapeText(brief.title||"Project")+"</b></p>"+
+      "<p>"+escapeText(brief.description||"")+"</p>"+
+      "<ul>"+features.map(x=>"<li>"+escapeText(x)+"</li>").join("")+"</ul>"+
+      (questions.length?"<p><b>To clarify:</b> "+questions.map(escapeText).join("; ")+"</p>":"")+
+      "<p><b>Budget:</b> "+escapeText(brief.budget||"Not sure")+
+      " · <b>Timeline:</b> "+escapeText(brief.timeline||"Flexible")+"</p>";
+  }
   const fields = [
     ["Email", lead.email], ["Phone", lead.phone], ["Business", lead.businessName],
     ["Service", lead.projectType], ["Budget", lead.budget], ["Contact method", lead.contactMethod],
@@ -171,9 +211,17 @@ function showLead(id) {
   byId("leadDialog").showModal();
 }
 async function refreshAll() {
-  await Promise.all([refreshStats(), loadEnquiries(), loadMeetings(), refreshEmailConfig(), loadEmailDeliveries(), refreshOpsHealth()]);
+  await Promise.all([refreshStats(), loadEnquiries(), loadMeetings(), refreshEmailConfig(), loadEmailDeliveries(), refreshOpsHealth(), refreshAiAnalytics()]);
   message("Information updated.");
 }
+byId("leadQuoteDraft").addEventListener("click",async()=>{
+  if(!currentLeadId)return;
+  const button=byId("leadQuoteDraft");button.disabled=true;
+  try{
+    const result=await call("/ai/leads/"+encodeURIComponent(currentLeadId)+"/quotation-draft",{method:"POST",body:"{}"});
+    location.href="/admin/documents/?edit="+encodeURIComponent(result.document._id);
+  }catch(error){message(error.message,true);button.disabled=false;}
+});
 byId("retryEmail").addEventListener("click", async () => {
   if (!currentLeadId) return;
   const button=byId("retryEmail");
@@ -210,6 +258,7 @@ byId("search").addEventListener("keydown", event => {
   if (event.key === "Enter") { event.preventDefault(); byId("searchButton").click(); }
 });
 byId("statusFilter").addEventListener("change", () => byId("searchButton").click());
+byId("sourceFilter").addEventListener("change", () => byId("searchButton").click());
 byId("prevPage").addEventListener("click", () => { page--; loadEnquiries().catch(error => message(error.message, true)); });
 byId("nextPage").addEventListener("click", () => { page++; loadEnquiries().catch(error => message(error.message, true)); });
 function setTab(meetings) {
