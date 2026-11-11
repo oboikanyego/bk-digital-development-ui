@@ -63,7 +63,8 @@
     const status=container.querySelector("[data-ai-status]");
     const count=container.querySelector("[data-ai-count]");
     const history=[];
-    let previousIdea="", lastSuggestion=null, busy=false;
+    const projectAnswers=[];
+    let lastSuggestion=null, busy=false;
 
     async function health() {
       try {
@@ -113,7 +114,9 @@
         const response=await fetch("/api/ai/advice",{
           method:"POST",credentials:"same-origin",
           headers:{"content-type":"application/json"},
-          body:JSON.stringify({message,history:history.slice(-4)})
+          // Keep the original project goal alongside the recent conversation,
+          // so follow-ups such as “both days and weekends” retain business context.
+          body:JSON.stringify({message,history:history.length>4?[history[0],...history.slice(-3)]:history.slice(-4)})
         });
         const data=await response.json().catch(()=>({}));
         if(!response.ok)throw Error(data.message||"The advisor could not connect. Please try again.");
@@ -121,9 +124,10 @@
         if(!reply)throw Error("No recommendation received. Please try again.");
         appendBubble(container,"assistant",reply);
         history.push({role:"user",content:message},{role:"assistant",content:reply.slice(0,900)});
-        if(history.length>4)history.splice(0,history.length-4);
+        if(history.length>12)history.splice(2,history.length-12);
+        projectAnswers.push(message);
+        if(projectAnswers.length>8)projectAnswers.splice(1,projectAnswers.length-8);
         lastSuggestion=data.solution;
-        previousIdea=message;
         if(data.solution?.title){
           result.hidden=false;
           result.querySelector("[data-ai-result-title]").textContent=data.solution.title;
@@ -152,10 +156,12 @@
     }
     form.addEventListener("submit",submit);
     container.querySelector("[data-ai-quote]").addEventListener("click",()=>{
-      if(!lastSuggestion||!previousIdea)return;
+      if(!lastSuggestion||!projectAnswers.length)return;
       const brief=[
         "AI advisor project brief",
-        "My idea: "+previousIdea,
+        "My idea: "+projectAnswers[0],
+        ...(projectAnswers.length>1?["Additional requirements discussed:\n"+
+          projectAnswers.slice(1).map((answer,i)=>(i+1)+". "+answer).join("\n")]:[]),
         "Suggested solution: "+lastSuggestion.title,
         "Suggested features: "+(lastSuggestion.features||[]).join(", "),
         "Please contact me to discuss the scope and a tailored quotation."
