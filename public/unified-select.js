@@ -35,6 +35,7 @@
     dialog = document.createElement("dialog");
     dialog.className = "mdv-select-dialog";
     dialog.setAttribute("aria-labelledby", "mdvSelectTitle");
+    dialog.setAttribute("aria-modal", "true");
     dialog.innerHTML =
       '<div class="mdv-select-sheet">' +
       '<div class="mdv-select-grabber" aria-hidden="true"></div>' +
