@@ -128,8 +128,8 @@ try {
     await page.screenshot({path:"qa-screenshots/ai-chat-long-"+v.width+"x"+v.height+".png",animations:"disabled"});
     await page.keyboard.press("Escape");
     assert.equal(await dialog.isVisible(),false);
+    await page.waitForFunction(()=>document.querySelector(".ai-advisor-launcher")?.getAttribute("aria-expanded")==="false" && !document.body.classList.contains("ai-chat-modal-open"));
     assert.equal(await launcher.getAttribute("aria-expanded"),"false");
-    assert.equal(await page.evaluate(()=>document.body.classList.contains("ai-chat-modal-open")),false);
     assert.equal(await launcher.isVisible(),true);
     await launcher.click();
     assert.equal(await dialog.locator(".ai-conversation .ai-bubble").count(),13,"reopening preserves conversation");
