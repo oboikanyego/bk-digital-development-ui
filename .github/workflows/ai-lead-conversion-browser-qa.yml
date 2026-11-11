@@ -24,7 +24,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Test AI brief review, consent, CRM payload and mobile accessibility
         env:
-          PREVIEW_URL: https://6af453bf67f5c6fef321c5a4--mzansi-digital-ventures.netlify.app
+          PREVIEW_URL: https://6af4552521000eaeca4810a3--mzansi-digital-ventures.netlify.app
         run: node scripts/ai-lead-conversion-browser-qa.mjs
       - uses: actions/upload-artifact@v4
         if: always()
