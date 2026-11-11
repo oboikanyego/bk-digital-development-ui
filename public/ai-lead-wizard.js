@@ -229,7 +229,7 @@
       const historyLabel=make("label","aiw-consent");
       const historyBox=make("input");historyBox.type="checkbox";historyBox.name="shareTranscript";historyBox.checked=shareTranscript;
       historyLabel.append(historyBox,make("span",null,
-        "Include up to 12 messages from my AI conversation (optional). Shared chat messages are automatically removed from CRM after 30 days."));
+        "Include up to 12 messages from my AI conversation (optional). Shared messages stop appearing in admin views after 30 days and are purged from storage when cleanup runs."));
       form.append(consentLabel,historyLabel);
       const caveat=make("p","aiw-small","Your chat stays private unless you choose to include it. Your reviewed brief and contact details are kept for business follow-up; you can contact us to request removal. No account or payment is required.");
       form.append(caveat);
