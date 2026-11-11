@@ -110,3 +110,255 @@
   .ai-panel-availability{white-space:normal;text-align:center}
 }
 @media(prefers-reduced-motion:reduce){.ai-advisor-launcher{transition:none;transform:none!important}}
+
+
+/* Chat layout v2: one conversation scroller, pinned composer and calm chrome.
+   This deliberately overrides the original stacked, independently scrolling
+   widget sections that produced several scrollbars in Chrome. */
+.ai-advisor-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.ai-panel-header { flex: 0 0 auto; }
+.ai-chat-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #b4cdd8 transparent;
+  background: linear-gradient(180deg,#f7fbfd 0%,#fff 68%);
+}
+.ai-chat-scroll::-webkit-scrollbar { width: 6px; }
+.ai-chat-scroll::-webkit-scrollbar-thumb { background: #b4cdd8; border-radius: 20px; }
+.ai-chat-scroll:focus-visible { outline: 3px solid #218cac; outline-offset: -3px; }
+.ai-conversation {
+  flex: none;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  background: transparent;
+  padding-bottom: 10px;
+}
+.ai-suggestions[hidden] { display: none!important; }
+.ai-result { margin-bottom: 22px; }
+.ai-input-form {
+  flex: 0 0 auto;
+  margin-top: 0;
+  z-index: 1;
+  box-shadow: 0 -7px 25px rgba(7,44,70,.045);
+}
+#aiAdvisorApp .ai-advisor-panel {
+  height: min(745px, max(560px, 80dvh));
+}
+#aiAdvisorApp .ai-conversation { padding-top: 23px; }
+#aiAdvisorApp .ai-suggestions { padding-top: 14px; }
+
+body.ai-chat-modal-open { overflow: hidden; }
+.ai-advisor-launcher[aria-expanded="true"] { display: none; }
+.ai-advisor-dialog {
+  inset: auto 22px 22px auto;
+  width: min(470px, calc(100vw - 32px));
+  height: min(710px, calc(100dvh - 44px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  isolation: isolate;
+}
+.ai-advisor-dialog:not([open]) { display: none!important; }
+.ai-widget-content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
+}
+.ai-widget-content .ai-advisor-panel {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.ai-widget-content .ai-panel-header {
+  position: relative;
+  min-height: 81px;
+  padding: 15px 48px 15px 16px;
+  gap: 10px;
+}
+.ai-widget-content .ai-panel-header>div { flex: 1; min-width: 0; }
+.ai-widget-content .ai-panel-icon {
+  flex: 0 0 39px;
+  width: 39px;
+  height: 39px;
+  font-size: 23px;
+  border-radius: 10px;
+}
+.ai-widget-content .ai-panel-overline {
+  font-size: 8px;
+  letter-spacing: .11em;
+  margin-bottom: 5px;
+}
+.ai-widget-content .ai-panel-header h2 {
+  font-size: 16px;
+  line-height: 1.23;
+  letter-spacing: -.025em;
+}
+.ai-widget-content .ai-panel-availability {
+  margin-left: 0;
+  font-size: 8px;
+  padding: 5px 7px;
+}
+.ai-widget-close {
+  position: absolute;
+  top: 11px;
+  right: 11px;
+  width: 28px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  font-size: 25px;
+  line-height: 1;
+  color: #e9faff;
+  background: transparent;
+  cursor: pointer;
+}
+.ai-widget-close:hover { background: rgba(255,255,255,.13); }
+.ai-widget-content .ai-chat-scroll { flex: 1 1 auto; min-height: 0; }
+.ai-widget-content .ai-conversation {
+  padding: 20px 17px 11px;
+  gap: 12px;
+}
+.ai-widget-content .ai-bubble {
+  max-width: 90%;
+  font-size: 12px;
+  line-height: 1.6;
+  border-radius: 13px;
+  padding: 12px 14px;
+}
+.ai-widget-content .ai-bubble-user {
+  background: #0c7297;
+  border-bottom-right-radius: 4px;
+}
+.ai-widget-content .ai-bubble-label {
+  margin-bottom: 4px;
+  font-size: 9px;
+}
+.ai-widget-content .ai-suggestions {
+  padding: 12px 17px 16px;
+}
+.ai-widget-content .ai-suggestions>p {
+  margin-bottom: 10px;
+}
+.ai-widget-content .ai-suggestion-grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 8px;
+}
+.ai-widget-content .ai-suggestion {
+  min-height: 58px;
+  padding: 10px;
+  font-size: 10.5px;
+  line-height: 1.45;
+  border-radius: 9px;
+}
+.ai-widget-content .ai-result {
+  margin: 7px 17px 22px;
+  padding: 16px;
+  border-radius: 13px;
+  background: linear-gradient(145deg,#f3fbfb,#eaf6f9);
+}
+.ai-widget-content .ai-result-title { font-size: 14px; }
+.ai-widget-content .ai-feature-list span { font-size: 10.5px; padding: 7px 9px; }
+.ai-widget-content .ai-quote-link {
+  font-size: 11px;
+  margin-top: 14px;
+  min-height: 41px;
+}
+.ai-widget-content .ai-input-form {
+  padding: 12px 16px 11px;
+  border-top: 1px solid #dceaf0;
+  box-shadow: 0 -6px 23px rgba(7,44,70,.055);
+}
+.ai-widget-content .ai-input-form label {
+  font-size: 11px;
+  margin-bottom: 6px;
+}
+.ai-widget-content .ai-input-form textarea {
+  min-height: 64px;
+  max-height: 110px;
+  height: 67px;
+  resize: none;
+  line-height: 1.45;
+  padding: 10px 12px;
+  font-size: 12px;
+}
+.ai-widget-content .ai-submit-row { margin-top: 9px; }
+.ai-widget-content .ai-send-button {
+  min-height: 40px;
+  padding: 9px 13px;
+  border-radius: 8px;
+  font-size: 11px;
+}
+.ai-widget-content .ai-privacy {
+  font-size: 9px;
+  line-height: 1.4;
+  color: #526b7a;
+  margin: 8px 0 0;
+}
+.ai-widget-content .ai-feedback {
+  margin: 7px 0 0;
+  font-size: 10px;
+  line-height: 1.35;
+}
+.ai-widget-full {
+  height: 43px;
+  min-height: 43px;
+  flex: 0 0 43px;
+  border-top: 1px solid #cfe4ee;
+  text-decoration: none;
+}
+.ai-widget-full:hover { background: #d7edf5; }
+
+@media (max-width: 620px) {
+  .ai-advisor-dialog {
+    inset: auto 0 0 0;
+    width: 100vw;
+    height: min(100dvh, 850px);
+    max-height: 100dvh;
+    border-radius: 19px 19px 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .ai-widget-content .ai-panel-header {
+    min-height: 72px;
+    padding: 12px 46px 12px 14px;
+  }
+  .ai-widget-content .ai-conversation { padding: 16px 14px 10px; }
+  .ai-widget-content .ai-suggestions { padding: 8px 14px 14px; }
+  .ai-widget-content .ai-result { margin: 7px 14px 17px; }
+  .ai-widget-content .ai-input-form { padding: 10px 14px 9px; }
+  .ai-widget-content .ai-bubble { max-width: 92%; }
+  #aiAdvisorApp .ai-advisor-panel { height: min(680px, max(540px, 80dvh)); }
+}
+@media (max-width: 390px) {
+  .ai-widget-content .ai-panel-overline { display: none; }
+  .ai-widget-content .ai-panel-header h2 { font-size: 14px; }
+  .ai-widget-content .ai-panel-availability { font-size: 7px; padding: 4px 5px; }
+  .ai-widget-content .ai-panel-icon { width: 33px; height: 33px; flex-basis: 33px; }
+  .ai-widget-content .ai-suggestion-grid { grid-template-columns: 1fr; }
+  .ai-widget-content .ai-suggestion { min-height: 43px; }
+  .ai-widget-content .ai-panel-header { min-height: 61px; }
+  .ai-widget-content .ai-input-form textarea { min-height: 56px; height: 59px; }
+}
+@media (max-height: 620px) {
+  .ai-advisor-dialog { height: calc(100dvh - 14px); bottom: 7px; }
+  .ai-widget-content .ai-panel-header { min-height: 58px; padding-top: 8px; padding-bottom: 8px; }
+  .ai-widget-content .ai-input-form textarea { min-height: 50px; height: 52px; }
+  .ai-widget-content .ai-privacy { display: none; }
+}
