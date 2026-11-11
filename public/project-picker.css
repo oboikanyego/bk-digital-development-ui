@@ -215,7 +215,7 @@
 }
 .project-picker-copy { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .project-picker-copy strong { font-size: 13px; font-weight: 780; line-height: 1.3; }
-.project-picker-copy small { font-size: 11px; color: #607b8b; line-height: 1.4; }
+.project-picker-copy small { font-size: 11px; color: #4e6473; line-height: 1.4; }
 .project-picker-check { color: #0b819b; font-size: 17px; opacity: 0; font-weight: 900; }
 .project-picker-option[aria-selected="true"] .project-picker-check { opacity: 1; }
 .project-picker-empty { color: #5f7385; font-size: 12px; padding: 24px 12px; text-align: center; }
