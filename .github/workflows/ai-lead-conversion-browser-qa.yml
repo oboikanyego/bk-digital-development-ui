@@ -1,0 +1,34 @@
+name: AI lead conversion browser QA
+on:
+  push:
+    branches: [feature/ai-lead-conversion-experience]
+    paths:
+      - scripts/ai-lead-conversion-browser-qa.mjs
+      - .github/workflows/ai-lead-conversion-browser-qa.yml
+      - public/ai-lead-flow.js
+      - public/ai-lead-flow.css
+      - public/ai-advisor.js
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --no-save --no-audit --no-fund playwright @axe-core/playwright
+      - run: npx playwright install --with-deps chromium
+      - name: Test AI brief review, consent, CRM payload and mobile accessibility
+        env:
+          PREVIEW_URL: https://6af452f291e46f47ab8c7cb1--mzansi-digital-ventures.netlify.app
+        run: node scripts/ai-lead-conversion-browser-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ai-lead-wizard-screenshots
+          path: qa-screenshots/*.png
+          if-no-files-found: ignore
