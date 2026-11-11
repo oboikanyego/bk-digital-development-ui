@@ -66,7 +66,7 @@ try{
   const response=await page.goto(root+"/ai-advisor/",{waitUntil:"domcontentloaded",timeout:90000});
   assert.equal(response.status(),200);
   await page.waitForFunction(()=>Boolean(window.MDVAILeadWizard));
-  await page.locator(".ai-suggestion").nth(1).click();
+  await page.locator(".ai-input-form textarea").fill("I sell mascots and rent mascot costumes for parties and events, and need a booking website.");
   await page.locator(".ai-input-form button[type=submit]").click();
   await page.locator(".ai-result:not([hidden])").waitFor();
   await page.locator("[data-ai-review]").click();
