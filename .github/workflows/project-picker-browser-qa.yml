@@ -1,0 +1,34 @@
+name: Contact project picker browser QA
+on:
+  push:
+    branches: [feature/contact-project-picker-mobile-sheet-20261111]
+    paths:
+      - scripts/project-picker-browser-qa.mjs
+      - .github/workflows/project-picker-browser-qa.yml
+      - public/project-picker.js
+      - public/project-picker.css
+      - public/contact/index.html
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --no-audit --no-fund playwright @axe-core/playwright
+      - run: npx playwright install --with-deps chromium
+      - name: Check 1440px, iPhone Pro Max 440px, 320px, keyboard, a11y and enquiry POST
+        env:
+          PREVIEW_URL: https://6af42634250bdeb5ebc9dc99--mzansi-digital-ventures.netlify.app
+        run: node scripts/project-picker-browser-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: project-picker-responsive-screenshots
+          path: qa-screenshots/*.png
+          if-no-files-found: ignore
