@@ -1,0 +1,33 @@
+name: AI advisor preview browser QA
+on:
+  push:
+    branches: [feature/free-ai-project-advisor]
+    paths:
+      - scripts/ai-advisor-browser-qa.mjs
+      - .github/workflows/ai-advisor-browser-qa.yml
+      - public/ai-advisor.js
+      - public/ai-advisor.css
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --no-save --no-audit --no-fund playwright @axe-core/playwright
+      - run: npx playwright install --with-deps chromium
+      - name: Audit AI advisor, quote handoff and mobile floating widget
+        env:
+          PREVIEW_URL: https://6af43a24b620470d82227ea0--mzansi-digital-ventures.netlify.app
+        run: node scripts/ai-advisor-browser-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ai-advisor-design-screenshots
+          path: qa-screenshots/*.png
+          if-no-files-found: ignore

@@ -57,6 +57,29 @@ if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-mot
 const form = document.getElementById("contactForm");
 const formStatus = document.getElementById("formStatus");
 
+/* AI Advisor -> existing enquiry form handoff. No project details go into the
+ * URL or server until the visitor chooses to submit their contact enquiry. */
+if (form && new URLSearchParams(location.search).get("from") === "ai-advisor") {
+  try {
+    const raw = sessionStorage.getItem("mdv-ai-project-brief");
+    const brief = raw ? JSON.parse(raw) : null;
+    if (brief && Number.isFinite(brief.createdAt) &&
+        Date.now() - brief.createdAt < 60 * 60 * 1000 &&
+        typeof brief.message === "string") {
+      const message = form.elements.namedItem("message");
+      if (message) message.value = brief.message.slice(0, 4800);
+      const projectType = form.elements.namedItem("projectType");
+      if (projectType && typeof brief.projectType === "string" &&
+          [...projectType.options].some(option => option.value === brief.projectType)) {
+        projectType.value = brief.projectType;
+        projectType.dispatchEvent(new Event("change", { bubbles:true }));
+      }
+    }
+    sessionStorage.removeItem("mdv-ai-project-brief");
+  } catch { /* Private browsing may block session storage. */ }
+}
+
+
 function tomorrowInJohannesburg() {
   const date = new Date(Date.now() + 24 * 60 * 60 * 1000);
   const parts = new Intl.DateTimeFormat("en-ZA", {
