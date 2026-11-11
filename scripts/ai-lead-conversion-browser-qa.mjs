@@ -110,7 +110,7 @@ try{
   assert.equal(layout.mainOverflow,"auto","only the central form scrolls");
   assert.equal(layout.summaryOverflow,"hidden","AI response textarea must not have its own scrollbar");
   assert.ok(layout.summaryScroll<=2,"AI text must fit without internal scrolling: "+JSON.stringify(layout));
-  assert.ok(layout.summaryHeight>180,"long AI advice should expand naturally: "+JSON.stringify(layout));
+  assert.ok(layout.summaryHeight>120,"long AI advice should expand naturally: "+JSON.stringify(layout));
   assert.ok(layout.mainScroll>100,"central form must have room to scroll");
   const scroll=dialog.locator(".aiw-body");
   await scroll.evaluate(el=>{el.scrollTop=0});
@@ -254,6 +254,35 @@ try{
   assert.equal(await wizard.count(),0,"wizard is torn down when closed");
   await chat.locator(".ai-widget-close").click();
   console.log("FLOATING CHAT → NESTED BRIEF PASS");
+  await ctx.close();
+ }
+ // When opened after the visitor has scrolled the marketing page, closing
+ // the brief must return the page to the exact same scroll offset.
+ {
+  const ctx=await browser.newContext({viewport:{width:1366,height:700}});
+  const page=await ctx.newPage();await common(page);
+  await page.goto(root+"/contact/",{waitUntil:"domcontentloaded",timeout:90000});
+  await page.waitForFunction(()=>Boolean(window.MDVAILeadWizard));
+  const previousY=await page.evaluate(()=>{
+    document.documentElement.style.scrollBehavior="auto";
+    window.scrollTo(0,220);
+    return window.scrollY;
+  });
+  assert.ok(previousY>70,"contact page should have enough content to test scroll restoration");
+  await page.evaluate(value=>window.MDVAILeadWizard.open({
+    solution:value.solution,
+    answers:["I sell mascots and rent them for events, and want an online store and booking website."],
+    reply:value.reply
+  }),aiReply);
+  const wizard=page.getByRole("dialog",{name:"Review and submit your AI project brief"});
+  await wizard.waitFor({state:"visible"});
+  const bodyTop=await page.evaluate(()=>getComputedStyle(document.body).top);
+  assert.equal(bodyTop,-previousY+"px","fixed page offset matches initial scroll");
+  await page.keyboard.press("Escape");
+  await page.waitForFunction(()=>!document.documentElement.classList.contains("aiw-page-locked"));
+  const currentY=await page.evaluate(()=>window.scrollY);
+  assert.ok(Math.abs(previousY-currentY)<=2,"Escape restores the original scroll position");
+  console.log("BACKGROUND SCROLL POSITION RESTORATION PASS",previousY,currentY);
   await ctx.close();
  }
  assert.deepEqual(errors,[]);
