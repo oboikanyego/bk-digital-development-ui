@@ -17,6 +17,7 @@ function open({solution={},projectAnswers=[],history=[]}={}) {
   if(!answers.length)return;
   const chat=history.filter(x=>x&&["user","assistant"].includes(x.role)&&typeof x.content==="string")
     .slice(-12).map(x=>({role:x.role,content:clean(x.content,900)}));
+  const aiSummary=clean([...chat].reverse().find(x=>x.role==="assistant")?.content||"",1000);
   const features=[...new Set((solution.features||[]).filter(x=>typeof x==="string")
     .map(x=>clean(x,160)).filter(x=>x.length>=3))].slice(0,12);
   const selected=features.length?features:["Responsive business website","Contact and enquiry form"];
@@ -50,6 +51,8 @@ function open({solution={},projectAnswers=[],history=[]}={}) {
               <input name="title" maxlength="140" placeholder="Mascot Sales & Rental Platform"></label>
             <label class="mdv-brief-field">What would you like to build?
               <textarea name="description" maxlength="2600" rows="4"></textarea></label>
+            <label class="mdv-brief-field">AI consultant’s recommendation (editable)
+              <textarea name="summary" maxlength="1000" rows="3" placeholder="Summary of the AI advice from your conversation"></textarea></label>
             <div class="mdv-brief-field"><div class="mdv-brief-field-head">
               <strong>Recommended features</strong><span data-feature-count></span></div>
               <div class="mdv-brief-features" role="group" aria-label="Project features"></div>
@@ -129,9 +132,11 @@ function open({solution={},projectAnswers=[],history=[]}={}) {
   }
   field("title").value=clean(solution.title||"My digital business project",140);
   field("description").value=clean(answers[0],2600);
+  field("summary").value=aiSummary;
   field("notes").value=clean(answers.slice(1).join("\n"),1000);
   function data(){
     return {title:clean(field("title").value,140),description:clean(field("description").value,2600),
+      summary:clean(field("summary").value,1000),
       projectType:state.projectType,features:[...state.features],
       budget:field("budget").value,timeline:field("timeline").value,
       notes:clean(field("notes").value,1000),openQuestions:state.questions};
@@ -192,6 +197,7 @@ function open({solution={},projectAnswers=[],history=[]}={}) {
     review.replaceChildren();
     const rows=[
       ["PROJECT",draft.title],["BUSINESS REQUIREMENTS",draft.description],
+      ...(draft.summary?[["AI SUGGESTED APPROACH",draft.summary]]:[]),
       ["FEATURES",draft.features.map(x=>"✓ "+x).join("\n")],
       ["BUDGET & TIMELINE",draft.budget+" · "+draft.timeline],
       ...(draft.notes?[["ADDITIONAL REQUIREMENTS",draft.notes]]:[]),
