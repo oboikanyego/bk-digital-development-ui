@@ -28,7 +28,7 @@ test("customer-focused sections and existing MongoDB-driven project grid remain 
   for (const name of ["home-services", "home-outcomes", "studio-work", "home-process", "home-final-cta"]) {
     assert.ok(home.includes(name), name);
   }
-  for (const target of ['class="case-grid"', 'class="studio-hero', 'class="hero-lead"', 'class="hero-actions"', 'class="btn btn-primary"']) {
+  for (const target of ['class="case-grid"', 'studio-hero home-hero', 'class="hero-lead"', 'class="hero-actions"', 'class="btn btn-primary"']) {
     assert.ok(home.includes(target), target);
   }
   assert.match(siteView, /setTitle\("\.studio-hero h1"/);
