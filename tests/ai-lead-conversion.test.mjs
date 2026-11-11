@@ -49,3 +49,15 @@ test("legacy contact forms and independent CRM enquiries remain intact",()=>{
   assert.match(read("admin/crm/index.html"),/clientForm/);
   assert.match(read("admin/documents/index.html"),/documentForm/);
 });
+
+test("AI lead wizard discloses optional transcript retention and includes a hidden bot trap",()=>{
+  const script=read("ai-lead-wizard.js"),styles=read("ai-lead-wizard.css");
+  assert.match(script,/Shared messages stop appearing in admin views after 30 days/);
+  assert.match(script,/Your chat stays private unless you choose to include it/);
+  assert.match(script,/Your reviewed brief and contact details are kept for business follow-up/);
+  assert.match(script,/name="website"|textInput\("website"/);
+  assert.match(script,/trapValue=f\.querySelector/);
+  assert.match(script,/website:trapValue/);
+  assert.match(styles,/\.aiw-trap\{position:absolute/);
+  assert.match(script,/consent=Boolean/);
+});
