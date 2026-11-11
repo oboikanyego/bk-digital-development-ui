@@ -41,7 +41,8 @@ for (const width of [1440,768,390,320]) {
   assert.ok(state.heroCta?.width>100&&state.heroCta.height>=40);
   assert.ok(state.footerCta,"final quote CTA missing");
   if(width<=768){
-    const menu=page.getByRole("button",{name:"Open navigation"});
+    const menu=page.locator(".nav-toggle");
+    assert.equal(await menu.getAttribute("aria-label"),"Open navigation");
     await menu.click();
     assert.equal(await menu.getAttribute("aria-expanded"),"true");
     assert.equal(await page.locator("#primaryNav").isVisible(),true);
