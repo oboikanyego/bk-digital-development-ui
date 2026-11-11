@@ -24,8 +24,8 @@ if(screen==="crm"){
  let page=1,total=0,selected="";
  const stageOptions=["lead","qualified","proposal","active","on_hold","completed","closed"];
  async function load(){
-  const q=$("crmSearch").value.trim(),status=$("crmStage").value;
-  const request=new URLSearchParams({q,status,page:String(page)});
+  const q=$("crmSearch").value.trim(),status=$("crmStage").value,source=$("crmLeadSource").value;
+  const request=new URLSearchParams({q,status,source,page:String(page)});
   const [res,due,summary]=await Promise.all([
     api("/crm/clients?"+request),api("/crm/follow-ups"),api("/crm/metrics")
   ]);
@@ -36,11 +36,11 @@ if(screen==="crm"){
   $("crmPrev").disabled=page<=1;$("crmNext").disabled=page*25>=res.total;
   $("crmRows").innerHTML=res.items.length?res.items.map(c=>
     "<tr><td><strong>"+escape(c.name||c.email)+"</strong><small>"+escape(c.email)+"</small></td><td>"+
-    escape(c.businessName||"—")+"</td><td><span class='business-status'>"+
+    escape(c.businessName||"—")+"</td><td>"+(c.lastLeadSource==="ai_advisor"?"<span class='business-status'>✦ AI Consultant</span>":"Website")+"</td><td><span class='business-status'>"+
     escape(c.projectStatus||"lead").replace("_"," ")+"</span></td><td>"+
     escape(c.followUpDate||"Not scheduled")+"</td><td><button class='button secondary' type='button' data-client='"+
     escape(c._id)+"'>Open profile</button></td></tr>"
-  ).join(""):"<tr><td colspan='5'>No matching clients yet.</td></tr>";
+  ).join(""):"<tr><td colspan='6'>No matching clients yet.</td></tr>";
   $("crmDueList").innerHTML=due.items.length?due.items.map(c=>
     "<div class='business-due'><strong>"+escape(c.name||c.email)+"</strong><span>Follow-up: "+
     escape(c.followUpDate)+"</span><span>"+escape(c.projectStatus||"lead")+"</span>"+
@@ -59,9 +59,14 @@ if(screen==="crm"){
   }
   $("clientDocumentLink").href="/admin/documents/?client="+encodeURIComponent(email);
   $("clientEnquiries").innerHTML=res.enquiries.length?res.enquiries.map(v=>
-    "<div><strong>"+escape(v.projectType||"Project enquiry")+"</strong> · "+
-    escape(v.status||"new")+"<small>"+escape(date(v.createdAt))+" · "+
-    escape(v.message||"").slice(0,400)+"</small></div>"
+    "<div><strong>"+escape(v.aiBrief?.title||v.projectType||"Project enquiry")+"</strong> · "+
+    escape(v.status||"new")+(v.source==="ai_advisor"?" · ✦ AI Consultant":"")+
+    "<small>"+escape(date(v.createdAt))+" · "+escape(v.message||"").slice(0,500)+"</small>"+
+    (v.source==="ai_advisor"?
+      "<button class='button secondary' type='button' data-ai-quote-id='"+escape(v._id)+
+      "' data-ai-client='"+escape(v.email)+"'>"+
+      (v.aiQuotationId?"Open prefilled quotation":"Create quotation draft from AI brief")+"</button>":"")+
+    "</div>"
   ).join(""):"<p>No enquiries available.</p>";
   $("clientDocuments").innerHTML=res.documents.length?res.documents.map(v=>
     "<div><strong>"+escape(v.number)+"</strong> · "+escape(v.kind)+" · "+
@@ -89,6 +94,19 @@ if(screen==="crm"){
  $("crmPrev").addEventListener("click",()=>{page--;load().catch(e=>notify(e.message,true));});
  $("crmNext").addEventListener("click",()=>{page++;load().catch(e=>notify(e.message,true));});
  document.addEventListener("click",event=>{
+  const quote=event.target.closest("[data-ai-quote-id]");
+  if(quote){
+    quote.disabled=true;
+    api("/ai/leads/"+encodeURIComponent(quote.dataset.aiQuoteId)+"/quotation-draft",{
+      method:"POST",body:"{}"
+    }).then(result=>{
+      const url=new URL("/admin/documents/",location.origin);
+      url.searchParams.set("client",quote.dataset.aiClient);
+      url.searchParams.set("edit",result.document._id);
+      location.assign(url.pathname+url.search);
+    }).catch(error=>{quote.disabled=false;notify(error.message,true);});
+    return;
+  }
   const button=event.target.closest("[data-client]");
   if(button)openClient(button.dataset.client).catch(e=>notify(e.message,true));
  });
