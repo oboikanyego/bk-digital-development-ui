@@ -1,7 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {readFileSync} from "node:fs";
-import {check} from "node:module";
 const read=file=>readFileSync("public/"+file,"utf8");
 test("AI brief review assets present on every advisor surface",()=>{
   for(const page of ["index.html","about/index.html","services/index.html","portfolio/index.html","pricing/index.html","process/index.html","contact/index.html","ai-advisor/index.html"]){
