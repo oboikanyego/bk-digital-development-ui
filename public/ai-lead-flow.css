@@ -1,0 +1,110 @@
+/* AI project brief — conversion experience. All layout stays inside native dialog. */
+.mdv-brief-dialog{position:fixed;inset:0;margin:auto;width:min(980px,calc(100vw - 28px));height:min(790px,calc(100dvh - 28px));max-width:none;max-height:none;border:1px solid #d4e6ef;border-radius:22px;padding:0;overflow:hidden;background:#f7fbfd;color:#153348;box-shadow:0 30px 110px rgba(5,26,45,.42);font:inherit}
+.mdv-brief-dialog:not([open]){display:none!important}
+.mdv-brief-dialog::backdrop{background:rgba(2,20,35,.68);backdrop-filter:blur(3px)}
+.mdv-brief-shell{height:100%;min-height:0;display:flex;flex-direction:column}
+.mdv-brief-head{display:flex;align-items:center;gap:15px;padding:20px 27px;background:linear-gradient(120deg,#081f36,#0e4967);color:#fff;flex:none}
+.mdv-brief-mark{width:49px;height:49px;display:grid;place-items:center;border-radius:13px;flex:none;font-size:25px;color:#73e9f6;background:#0d5b78;border:1px solid rgba(126,228,245,.34)}
+.mdv-brief-head-copy{flex:1;min-width:0}
+.mdv-brief-eyebrow{font-size:10px;letter-spacing:.13em;font-weight:850;color:#80dceb}
+.mdv-brief-head h2{font:780 clamp(20px,2.8vw,27px)/1.2 Inter,ui-sans-serif,system-ui,sans-serif;color:#fff;letter-spacing:-.038em;margin:5px 0}
+.mdv-brief-head p{margin:0;font-size:12px;color:#c4e1ed;line-height:1.5}
+.mdv-brief-close{flex:none;align-self:flex-start;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;font-size:26px;line-height:1;cursor:pointer}
+.mdv-brief-close:hover{background:rgba(255,255,255,.2)}
+.mdv-brief-progress{display:flex;gap:9px;padding:13px 27px;background:#ebf5fa;border-bottom:1px solid #d6e9f1;flex:none}
+.mdv-brief-progress span{display:inline-flex;align-items:center;gap:7px;border-radius:50px;padding:7px 12px;background:#e0eaf0;color:#5b7282;font-size:11px;font-weight:850;white-space:nowrap}
+.mdv-brief-progress span.is-active{background:#0f6d90;color:white}
+.mdv-brief-progress span.is-done{background:#d1f2eb;color:#146e59}
+.mdv-brief-progress b{font-weight:720}
+.mdv-brief-content{flex:1 1 auto;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(240px,.7fr);min-height:0;overflow:hidden}
+.mdv-brief-main{overflow-y:auto;overscroll-behavior:contain;min-height:0;scrollbar-width:thin;scrollbar-color:#bfd5df transparent;background:#fff}
+.mdv-brief-step{padding:28px 31px 35px;display:grid;gap:19px;align-content:start}
+.mdv-brief-step[hidden]{display:none!important}
+.mdv-brief-step-heading{display:grid;gap:8px;margin-bottom:3px}
+.mdv-brief-step-heading>span{font-size:10px;letter-spacing:.13em;color:#0b85a6;font-weight:900}
+.mdv-brief-step-heading h3{margin:0;color:#122f45;font-size:25px;letter-spacing:-.045em;line-height:1.25}
+.mdv-brief-step-heading p{margin:0;color:#536f80;font-size:13px;line-height:1.6}
+.mdv-brief-field{display:flex;flex-direction:column;gap:8px;color:#1b4358;font-size:12px;font-weight:800;min-width:0}
+.mdv-brief-field em,.mdv-brief-permissions em{font-style:normal;color:#be4848}
+.mdv-brief-field input,.mdv-brief-field textarea,.mdv-brief-field select,.mdv-brief-add input{box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:11px 13px;border:1px solid #cadfe9;border-radius:9px;color:#153b51;background:#f8fcfd;font:500 13px/1.6 Inter,ui-sans-serif,system-ui,sans-serif;resize:vertical}
+.mdv-brief-field input:focus,.mdv-brief-field textarea:focus,.mdv-brief-field select:focus,.mdv-brief-add input:focus{outline:3px solid rgba(10,148,189,.19);border-color:#0489a9}
+.mdv-brief-field textarea{min-height:95px}
+.mdv-brief-field-head{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#1b4358;font-size:12px}
+.mdv-brief-field-head>span{font-weight:600;color:#557587;font-size:11px}
+.mdv-brief-features{display:grid;grid-template-columns:1fr 1fr;gap:9px;background:#f4f9fb;border:1px solid #e0edf2;border-radius:11px;padding:13px}
+.mdv-brief-feature{display:flex;gap:9px;align-items:flex-start;color:#254e65;font-size:12px;font-weight:630;line-height:1.55;min-width:0}
+.mdv-brief-feature input{width:17px;height:17px;flex:none;margin:1px 0 0;accent-color:#0a7e9e;cursor:pointer}
+.mdv-brief-add{display:flex;gap:9px;margin-top:10px}
+.mdv-brief-add input{flex:1;min-width:0}
+.mdv-brief-add button{flex:none;padding:10px 12px;border:1px solid #b5d6e1;border-radius:8px;background:#e6f6fa;color:#12617e;font-size:11px;font-weight:850;cursor:pointer}
+.mdv-brief-columns{display:grid;grid-template-columns:1fr 1fr;gap:13px;min-width:0}
+.mdv-brief-hint{font-size:11px;line-height:1.65;color:#637e8b;margin:0}
+.mdv-brief-permissions{display:grid;gap:17px;padding:19px;border:1px solid #d9eaf0;border-radius:11px;background:#f5fbfc}
+.mdv-brief-permissions label{display:flex;align-items:flex-start;gap:12px;font-size:12px;line-height:1.65;color:#2a5064;font-weight:550;cursor:pointer}
+.mdv-brief-permissions input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:#087e9f}
+.mdv-brief-review{display:grid;gap:12px}
+.mdv-brief-review-item{padding:15px 17px;border:1px solid #dfebf1;border-radius:11px;background:#f8fbfd}
+.mdv-brief-review-item strong{display:block;font-size:10px;letter-spacing:.1em;color:#0d799a;margin-bottom:8px}
+.mdv-brief-review-item p{font-size:13px;line-height:1.65;color:#294b60;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+.mdv-brief-assurance{background:#ebf8f5;border:1px solid #c9e9df;color:#256454;border-radius:10px;padding:16px;font-size:12px;line-height:1.6}
+.mdv-brief-aside{background:linear-gradient(175deg,#0d3550,#09263b);color:#fff;padding:30px 23px;min-width:0;overflow-y:auto;overscroll-behavior:contain}
+.mdv-brief-aside>span{font-size:10px;letter-spacing:.11em;font-weight:870;color:#73dbeb;display:flex;justify-content:space-between}
+.mdv-brief-aside>span b{font-size:20px}
+.mdv-brief-aside h3{font-size:24px;line-height:1.27;letter-spacing:-.035em;color:#fff;overflow-wrap:anywhere;margin:23px 0 12px}
+.mdv-brief-aside>p{font-size:12px;line-height:1.75;color:#c2d9e4;overflow-wrap:anywhere;white-space:pre-wrap}
+.mdv-brief-aside dl{display:grid;gap:13px;padding-top:18px;margin:24px 0 0;border-top:1px solid rgba(137,217,236,.26)}
+.mdv-brief-aside dl div{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.mdv-brief-aside dt{font-size:11px;color:#9bc3d5}
+.mdv-brief-aside dd{margin:0;font-size:12px;color:#fff;font-weight:780;text-align:right}
+.mdv-brief-aside>small{display:block;color:#9fc8d8;margin-top:31px;font-size:11px;line-height:1.65}
+.mdv-brief-footer{background:#fff;border-top:1px solid #dae8ef;padding:14px 24px;display:flex;gap:18px;align-items:center;justify-content:space-between;min-height:75px;flex:none}
+.mdv-brief-feedback{margin:0;flex:1;font-size:12px;line-height:1.4;color:#477080;min-width:0}
+.mdv-brief-feedback.is-error{color:#a33838;font-weight:700}
+.mdv-brief-actions{display:flex;gap:10px;align-items:center;justify-content:flex-end}
+.mdv-brief-actions button{border:1px solid #bdd6e2;border-radius:9px;padding:10px 18px;min-height:43px;background:#edf6fa;color:#1a5870;font-size:12px;font-weight:850;cursor:pointer}
+.mdv-brief-actions [data-next]{background:#0c7195;color:white;border-color:#0c7195}
+.mdv-brief-actions [data-next]:hover{background:#0c5775}
+.mdv-brief-actions button:disabled{opacity:.6;cursor:wait}
+.mdv-brief-actions button[hidden]{display:none}
+.mdv-brief-success{text-align:center;justify-items:center;align-content:center;min-height:400px}
+.mdv-brief-success-icon{background:#d9f7ed;border:1px solid #b5e6d6;color:#188064;border-radius:50%;width:72px;height:72px;display:grid;place-items:center;font-size:36px}
+.mdv-brief-success h3{margin:0;font-size:28px;color:#0c4057}
+.mdv-brief-success>p{font-size:13px;color:#536e7f;line-height:1.65;margin:0}
+.mdv-brief-receipt{background:#eef9fc;border-radius:11px;padding:18px;display:grid;gap:9px;width:100%;max-width:400px}
+.mdv-brief-receipt small{font-size:10px;color:#56788b;letter-spacing:.1em}
+.mdv-brief-receipt strong{font-size:19px;color:#134e67;letter-spacing:.08em}
+.mdv-brief-receipt p{margin:0;font-size:12px;color:#4b6e7d;line-height:1.6}
+.mdv-brief-dialog button:focus-visible,.mdv-brief-dialog a:focus-visible{outline:3px solid #22bdd7;outline-offset:3px}
+.ai-quote-secondary{display:inline-block;color:#206b87;text-decoration:underline;text-underline-offset:3px;font-size:11px;font-weight:760;margin:12px 3px 1px}
+@media(max-width:760px){
+  .mdv-brief-dialog{inset:auto 0 0;width:100vw;height:min(95dvh,850px);max-height:100dvh;border-radius:21px 21px 0 0;border:0}
+  .mdv-brief-head{padding:15px 18px}
+  .mdv-brief-mark{width:37px;height:37px;flex-basis:37px;font-size:22px}
+  .mdv-brief-head h2{font-size:19px}
+  .mdv-brief-head p{font-size:11px}
+  .mdv-brief-eyebrow{font-size:8px}
+  .mdv-brief-progress{padding:10px 15px;gap:5px;overflow-x:auto}
+  .mdv-brief-progress span{font-size:10px;padding:6px 9px;gap:5px}
+  .mdv-brief-content{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr)}
+  .mdv-brief-aside{display:none}
+  .mdv-brief-step{padding:20px 17px 26px;gap:17px}
+  .mdv-brief-step-heading h3{font-size:22px}
+  .mdv-brief-footer{padding:12px 14px calc(12px + env(safe-area-inset-bottom));gap:8px;flex-wrap:wrap;min-height:0}
+  .mdv-brief-feedback{flex-basis:100%;font-size:11px}
+  .mdv-brief-feedback:empty{display:none}
+  .mdv-brief-actions{width:100%}
+  .mdv-brief-actions button[data-next]{flex:1}
+}
+@media(max-width:390px){
+  .mdv-brief-head h2{font-size:17px}
+  .mdv-brief-features{grid-template-columns:1fr}
+  .mdv-brief-columns{grid-template-columns:1fr}
+  .mdv-brief-add button{padding:8px;font-size:10px}
+  .mdv-brief-progress b{font-size:9px}
+}
+@media(max-height:580px){
+  .mdv-brief-dialog{height:calc(100dvh - 10px)}
+  .mdv-brief-head{padding-top:9px;padding-bottom:9px}
+  .mdv-brief-footer{padding-top:8px;padding-bottom:8px}
+}
+@media(prefers-reduced-motion:reduce){.mdv-brief-dialog *{scroll-behavior:auto!important}}
