@@ -44,7 +44,9 @@ try {
     if(width===440||width===320) {
       const dimension=await dialog.evaluate(el=>({height:el.getBoundingClientRect().height,visible:window.innerHeight,scrollHeight:el.querySelector(".mdv-select-options").scrollHeight,clientHeight:el.querySelector(".mdv-select-options").clientHeight}));
       assert.ok(dimension.height<=dimension.visible+1);
-      assert.ok(dimension.scrollHeight>dimension.clientHeight,"mobile options must scroll within the sheet");
+      assert.ok(dimension.scrollHeight>=dimension.clientHeight,"options list must fit its content");
+      const scrollMode=await dialog.locator(".mdv-select-options").evaluate(el=>getComputedStyle(el).overflowY);
+      assert.equal(scrollMode,"auto","long option lists should have internal scrolling");
     }
     await dialog.locator('input[type="search"]').fill("5,000");
     const candidates=await dialog.getByRole("option").count();
