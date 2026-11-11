@@ -267,8 +267,9 @@ async function initializeDashboard() {
     const user = await call("/auth/me");
     if (!user.authenticated) throw new Error("Access denied.");
     byId("dashboard").hidden = false;
-    await refreshAll();
+    // Analytics should load independently even if a different admin panel fails.
     document.dispatchEvent(new Event("mdv:admin-ready"));
+    await refreshAll();
   } catch (error) {
     message(error.message || "Unable to load the dashboard.", true);
   }
