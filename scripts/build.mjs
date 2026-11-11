@@ -8,6 +8,8 @@ const required = [
   "public/contact/index.html",
   "public/ai-advisor/index.html",
   "public/ai-advisor.js",
+  "public/ai-lead-flow.js",
+  "public/ai-lead-flow.css",
   "public/ai-advisor.css",
   "public/admin/login/index.html",
   "public/admin/dashboard/index.html",

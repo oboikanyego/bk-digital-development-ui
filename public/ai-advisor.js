@@ -23,7 +23,8 @@
     '<strong data-ai-result-title>Suggested solution</strong></div>',
     '<p class="ai-result-caption">A starting point you can explore with our team</p>',
     '<div class="ai-feature-list" data-ai-features></div>',
-    '<a class="ai-quote-link" href="/contact/?from=ai-advisor" data-ai-quote>Request a tailored quote <span aria-hidden="true">↗</span></a></div>',
+    '<button type="button" class="ai-quote-link" data-ai-brief>Review & submit project brief <span aria-hidden="true">↗</span></button>',
+    '<a class="ai-quote-secondary" href="/contact/?from=ai-advisor" data-ai-quote>Or use the standard contact form</a></div>',
     '<div class="ai-suggestions"><p>START WITH AN IDEA</p><div class="ai-suggestion-grid">',
     ...suggestions.map(([emoji,text],i)=>'<button type="button" class="ai-suggestion" data-ai-example="'+i+'"><span aria-hidden="true">'+emoji+'</span>'+text+'</button>'),
     '</div></div></div>',
@@ -65,6 +66,7 @@
     const history=[];
     const projectAnswers=[];
     let lastSuggestion=null, busy=false;
+    let firstIdeaTracked=false;
 
     async function health() {
       try {
@@ -130,6 +132,7 @@
         projectAnswers.push(message);
         if(projectAnswers.length>8)projectAnswers.splice(1,projectAnswers.length-8);
         lastSuggestion=data.solution;
+        if(!firstIdeaTracked){window.MDVAiLeadFlow?.track("idea_submitted");firstIdeaTracked=true;}
         if(data.solution?.title){
           result.hidden=false;
           result.querySelector("[data-ai-result-title]").textContent=data.solution.title;
@@ -157,6 +160,12 @@
       }
     }
     form.addEventListener("submit",submit);
+    container.querySelector("[data-ai-brief]").addEventListener("click",()=>{
+      if(!lastSuggestion||!projectAnswers.length)return;
+      window.MDVAiLeadFlow?.open({
+        solution:lastSuggestion,projectAnswers:[...projectAnswers],history:[...history]
+      });
+    });
     container.querySelector("[data-ai-quote]").addEventListener("click",()=>{
       if(!lastSuggestion||!projectAnswers.length)return;
       const brief=[
@@ -179,6 +188,7 @@
 
   if(pageHost){
     createPanel(pageHost);
+    window.MDVAiLeadFlow?.track("opened");
     return;
   }
   // Floating launchers appear on public marketing pages only.
@@ -204,7 +214,9 @@
   launcher.setAttribute("aria-controls","mzansiAiChatDialog");
   launcher.setAttribute("aria-expanded","false");
   dialog.id="mzansiAiChatDialog";
+  let openedTracked=false;
   launcher.addEventListener("click",()=>{
+    if(!openedTracked){window.MDVAiLeadFlow?.track("opened");openedTracked=true;}
     document.body.classList.add("ai-chat-modal-open");
     dialog.showModal();
     launcher.setAttribute("aria-expanded","true");

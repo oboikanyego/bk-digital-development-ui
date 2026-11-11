@@ -1,0 +1,18 @@
+.ai-admin-panel{margin:23px 0;padding:25px 26px;border:1px solid #d6e8f1;border-radius:17px;background:linear-gradient(145deg,#f9fcfe,#eff9fc);box-shadow:0 11px 36px rgba(5,49,76,.055)}
+.ai-admin-heading{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:19px}
+.ai-admin-heading h2{margin:5px 0 7px;color:#113b52;font-size:24px;letter-spacing:-.035em}
+.ai-admin-heading p{margin:0;color:#587386;font-size:12px;line-height:1.6;max-width:620px}
+.ai-admin-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px}
+.ai-admin-kpis article{background:#fff;border:1px solid #d8e7ee;border-radius:11px;padding:17px 16px;min-width:0}
+.ai-admin-kpis article span{display:block;color:#5b7788;font-size:11px;font-weight:720;line-height:1.4}
+.ai-admin-kpis article strong{display:block;margin-top:9px;color:#0b4763;font-size:27px;font-weight:860;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.ai-admin-foot{border-top:1px solid #d3e5ed;margin-top:18px;padding-top:15px;display:flex;flex-wrap:wrap;gap:12px}
+.ai-admin-foot>span{display:inline-flex;align-items:center;gap:8px;font-size:11px;color:#506e7f;border:1px solid #d0e4eb;padding:9px 11px;border-radius:9px;background:#fff}
+.ai-admin-foot>span strong{font-weight:700}
+.ai-admin-foot>span b{font-size:13px;color:#0d6687}
+.ai-admin-lead-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:13px;background:#e9f8fb;border:1px solid #c7e9f2;border-radius:10px;margin:12px 0}
+.ai-admin-lead-actions[hidden]{display:none}
+.ai-admin-lead-actions>span{font-size:11px;font-weight:800;color:#0c7092}
+@media(max-width:1050px){.ai-admin-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.ai-admin-panel{padding:19px 15px}.ai-admin-heading{flex-direction:column;align-items:flex-start}.ai-admin-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.ai-admin-kpis article{padding:13px}.ai-admin-kpis article strong{font-size:23px}.ai-admin-foot>span{width:100%;justify-content:space-between}}
+@media(max-width:360px){.ai-admin-kpis{grid-template-columns:1fr}}

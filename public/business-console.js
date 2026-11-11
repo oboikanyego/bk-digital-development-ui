@@ -22,10 +22,12 @@ $("bizLogout").addEventListener("click",async()=>{
 
 if(screen==="crm"){
  let page=1,total=0,selected="";
+ const initialParams=new URLSearchParams(location.search);
+ if(initialParams.get("source")==="ai_advisor")$("crmLeadSource").value="ai_advisor";
  const stageOptions=["lead","qualified","proposal","active","on_hold","completed","closed"];
  async function load(){
-  const q=$("crmSearch").value.trim(),status=$("crmStage").value;
-  const request=new URLSearchParams({q,status,page:String(page)});
+  const q=$("crmSearch").value.trim(),status=$("crmStage").value,source=$("crmLeadSource").value;
+  const request=new URLSearchParams({q,status,source,page:String(page)});
   const [res,due,summary]=await Promise.all([
     api("/crm/clients?"+request),api("/crm/follow-ups"),api("/crm/metrics")
   ]);
@@ -36,11 +38,11 @@ if(screen==="crm"){
   $("crmPrev").disabled=page<=1;$("crmNext").disabled=page*25>=res.total;
   $("crmRows").innerHTML=res.items.length?res.items.map(c=>
     "<tr><td><strong>"+escape(c.name||c.email)+"</strong><small>"+escape(c.email)+"</small></td><td>"+
-    escape(c.businessName||"—")+"</td><td><span class='business-status'>"+
+    escape(c.businessName||"—")+"</td><td>"+(c.lastLeadSource==="ai_advisor"?"<span class='business-status'>✦ AI Consultant</span>":"Website")+"</td><td><span class='business-status'>"+
     escape(c.projectStatus||"lead").replace("_"," ")+"</span></td><td>"+
     escape(c.followUpDate||"Not scheduled")+"</td><td><button class='button secondary' type='button' data-client='"+
     escape(c._id)+"'>Open profile</button></td></tr>"
-  ).join(""):"<tr><td colspan='5'>No matching clients yet.</td></tr>";
+  ).join(""):"<tr><td colspan='6'>No matching clients yet.</td></tr>";
   $("crmDueList").innerHTML=due.items.length?due.items.map(c=>
     "<div class='business-due'><strong>"+escape(c.name||c.email)+"</strong><span>Follow-up: "+
     escape(c.followUpDate)+"</span><span>"+escape(c.projectStatus||"lead")+"</span>"+
@@ -59,9 +61,14 @@ if(screen==="crm"){
   }
   $("clientDocumentLink").href="/admin/documents/?client="+encodeURIComponent(email);
   $("clientEnquiries").innerHTML=res.enquiries.length?res.enquiries.map(v=>
-    "<div><strong>"+escape(v.projectType||"Project enquiry")+"</strong> · "+
-    escape(v.status||"new")+"<small>"+escape(date(v.createdAt))+" · "+
-    escape(v.message||"").slice(0,400)+"</small></div>"
+    "<div><strong>"+escape(v.aiBrief?.title||v.projectType||"Project enquiry")+"</strong> · "+
+    escape(v.status||"new")+(v.source==="ai_advisor"?" · ✦ AI Consultant":"")+
+    "<small>"+escape(date(v.createdAt))+" · "+escape(v.message||"").slice(0,500)+"</small>"+
+    (v.source==="ai_advisor"?
+      "<button class='button secondary' type='button' data-ai-quote-id='"+escape(v._id)+
+      "' data-ai-client='"+escape(v.email)+"'>"+
+      (v.aiQuotationId?"Open prefilled quotation":"Create quotation draft from AI brief")+"</button>":"")+
+    "</div>"
   ).join(""):"<p>No enquiries available.</p>";
   $("clientDocuments").innerHTML=res.documents.length?res.documents.map(v=>
     "<div><strong>"+escape(v.number)+"</strong> · "+escape(v.kind)+" · "+
@@ -89,29 +96,52 @@ if(screen==="crm"){
  $("crmPrev").addEventListener("click",()=>{page--;load().catch(e=>notify(e.message,true));});
  $("crmNext").addEventListener("click",()=>{page++;load().catch(e=>notify(e.message,true));});
  document.addEventListener("click",event=>{
+  const quote=event.target.closest("[data-ai-quote-id]");
+  if(quote){
+    quote.disabled=true;
+    api("/ai/leads/"+encodeURIComponent(quote.dataset.aiQuoteId)+"/quotation-draft",{
+      method:"POST",body:"{}"
+    }).then(result=>{
+      const url=new URL("/admin/documents/",location.origin);
+      url.searchParams.set("client",quote.dataset.aiClient);
+      url.searchParams.set("edit",result.document._id);
+      location.assign(url.pathname+url.search);
+    }).catch(error=>{quote.disabled=false;notify(error.message,true);});
+    return;
+  }
   const button=event.target.closest("[data-client]");
   if(button)openClient(button.dataset.client).catch(e=>notify(e.message,true));
  });
- load().catch(error=>notify(error.message,true));
+ load().then(()=>{
+   const email=initialParams.get("client");
+   if(email)openClient(email).catch(error=>notify(error.message,true));
+ }).catch(error=>notify(error.message,true));
 }
 
 if(screen==="documents"){
  const label=(k)=>k==="quotation"?"Quotation":"Invoice";
  const params=new URLSearchParams(location.search);
  let clientParam=params.get("client")||"";
+ const editParam=params.get("edit")||"";
+ let editId="";
  const cents=v=>{
    const normalized=String(v??"").trim();
    if(!/^\d{1,9}(?:\.\d{1,2})?$/.test(normalized))throw Error("Enter a positive ZAR amount with up to two decimal places.");
    const [whole,decimal=""]=normalized.split(".");
    return Number(whole)*100+Number(decimal.padEnd(2,"0"));
  };
- function newLine(){
+ function newLine(item){
   const tr=document.createElement("tr");
   tr.innerHTML="<td><input data-line-description maxlength='180' aria-label='Service description' required placeholder='e.g. Business website build'></td>"+
    "<td><input data-line-quantity type='number' min='1' max='1000' step='1' value='1' aria-label='Quantity' required></td>"+
    "<td><input data-line-price type='number' min='0' max='1000000' step='.01' value='0.00' aria-label='Unit price in rand' required></td>"+
    "<td><button class='button secondary' type='button' data-line-remove>Remove</button></td>";
   $("docItems").appendChild(tr);
+  if(item){
+    tr.querySelector("[data-line-description]").value=item.description||"";
+    tr.querySelector("[data-line-quantity]").value=String(item.quantity||1);
+    tr.querySelector("[data-line-price]").value=(Number(item.unitPriceCents||0)/100).toFixed(2);
+  }
  }
  function items(){
   return [...$("docItems").querySelectorAll("tr")].map(tr=>({
@@ -147,7 +177,8 @@ if(screen==="documents"){
   const data=await api("/documents");
   $("docRows").innerHTML=data.items.length?data.items.map(doc=>{
     let buttons="<button class='button secondary' type='button' data-doc-action='pdf' data-doc='"+escape(doc._id)+"'>PDF</button>";
-    if(doc.status==="draft")buttons+="<button class='button primary' type='button' data-doc-action='send' data-doc='"+escape(doc._id)+"'>Send email</button>"+
+    if(doc.status==="draft")buttons+="<button class='button secondary' type='button' data-doc-action='edit' data-doc='"+escape(doc._id)+"'>Edit prices / scope</button>"+
+       "<button class='button primary' type='button' data-doc-action='send' data-doc='"+escape(doc._id)+"'>Send email</button>"+
        "<button class='button secondary' type='button' data-doc-action='void' data-doc='"+escape(doc._id)+"'>Void</button>";
     if(doc.kind==="quotation"&&doc.status==="sent")buttons+="<button class='button secondary' type='button' data-doc-action='accepted' data-doc='"+escape(doc._id)+"'>Accepted</button>"+
        "<button class='button secondary' type='button' data-doc-action='rejected' data-doc='"+escape(doc._id)+"'>Rejected</button>";
@@ -158,6 +189,44 @@ if(screen==="documents"){
       escape(doc.status)+"'>"+escape(doc.status)+"</span></td><td>"+
       escape(doc.emailDeliveryStatus||"—")+"</td><td>"+buttons+"</td></tr>";
   }).join(""):"<tr><td colspan='6'>No quotations or invoices created yet.</td></tr>";
+ }
+ function resetEditor(){
+  editId="";$("docCreate").textContent="Create draft document";
+  $("docCancelEdit").hidden=true;$("docEditHint").hidden=true;
+  $("docClient").disabled=false;$("docKind").disabled=false;
+  $("docNotes").value="";$("docDue").value="";$("docValid").value="";
+  $("docTax").value="0";$("docItems").replaceChildren();newLine();calc();
+ }
+ async function editDocument(id){
+  const response=await api("/documents/"+encodeURIComponent(id));
+  const doc=response.document;
+  if(!doc||doc.status!=="draft")throw Error("Only documents in draft state can be edited.");
+  editId=doc._id;
+  $("docKind").value=doc.kind;kindView();
+  const client=$("docClient");
+  if(![...client.options].some(x=>x.value===doc.clientId)){
+    const option=document.createElement("option");
+    option.value=doc.clientId;option.textContent=doc.clientName||doc.clientId;
+    client.append(option);
+  }
+  client.value=doc.clientId;
+  $("docClient").disabled=true;$("docKind").disabled=true;
+  $("docTax").value=String(doc.taxRateBp||0);
+  if(!$("docTax").value){
+    const opt=document.createElement("option");
+    opt.value=String(doc.taxRateBp||0);opt.textContent=(doc.taxRateBp/100)+"%";
+    $("docTax").append(opt);$("docTax").value=opt.value;
+  }
+  $("docNotes").value=doc.notes||"";$("docDue").value=doc.dueDate||"";
+  $("docValid").value=doc.validUntil||"";
+  $("docItems").replaceChildren();
+  for(const item of doc.items||[])newLine(item);
+  if(!$("docItems").children.length)newLine();
+  calc();
+  $("docCreate").textContent="Save draft changes";
+  $("docCancelEdit").hidden=false;$("docEditHint").hidden=false;
+  $("documentForm").scrollIntoView({behavior:"smooth",block:"start"});
+  notify(doc.number+" loaded. Enter and approve real prices before sending.");
  }
  async function download(id){
   if(window.MDVService)await window.MDVService.ensureReady();
@@ -171,6 +240,7 @@ if(screen==="documents"){
  }
  async function docAction(id,action){
   if(action==="pdf")return download(id);
+  if(action==="edit")return editDocument(id);
   if(action==="send"){
     if(!confirm("Send this PDF document to the client email address?"))return;
     await api("/documents/"+encodeURIComponent(id)+"/send",{method:"POST",body:"{}"});
@@ -196,9 +266,11 @@ if(screen==="documents"){
     };
     if(!payload.clientId)throw Error("Select a CRM customer.");
     if(payload.items.some(x=>!x.description||!Number.isSafeInteger(x.quantity)))throw Error("Each line needs a description and whole-number quantity.");
-    const output=await api("/documents",{method:"POST",body:JSON.stringify(payload)});
-    notify(output.document.number+" created as a draft. Review the PDF before sending.");
-    await loadDocuments();$("docNotes").value="";$("docItems").replaceChildren();newLine();calc();
+    const output=editId
+      ?await api("/documents/"+encodeURIComponent(editId),{method:"PATCH",body:JSON.stringify(payload)})
+      :await api("/documents",{method:"POST",body:JSON.stringify(payload)});
+    notify(output.document.number+(editId?" updated":" created")+" as a draft. Review PDF and pricing before sending.");
+    resetEditor();await loadDocuments();
   }catch(error){notify(error.message,true);}finally{button.disabled=false;}
  });
  document.addEventListener("click",event=>{
@@ -214,8 +286,12 @@ if(screen==="documents"){
  $("docTax").addEventListener("change",calc);
  $("docKind").addEventListener("change",kindView);
  $("docRefresh").addEventListener("click",()=>loadDocuments().catch(e=>notify(e.message,true)));
+ $("docCancelEdit").addEventListener("click",()=>{resetEditor();notify("Draft editing cancelled.");});
  newLine();kindView();calc();
- Promise.all([loadClients(),loadDocuments()]).then(()=>notify("Documents and clients loaded."))
+ Promise.all([loadClients(),loadDocuments()]).then(async()=>{
+   if(editParam)await editDocument(editParam);
+   else notify("Documents and clients loaded.");
+ })
   .catch(error=>notify(error.message,true));
 }
 })();

@@ -96,14 +96,16 @@ async function loadEmailDeliveries(){
 async function loadEnquiries() {
   const search = byId("search").value.trim();
   const status = byId("statusFilter").value;
-  const query = new URLSearchParams({ page: String(page), search, status });
+  const source = byId("sourceFilter").value;
+  const query = new URLSearchParams({ page: String(page), search, status, source });
   const result = await call("/enquiries?" + query);
   leadCache = result.items || [];
   total = result.total || 0;
   const rows = byId("enquiryRows");
   rows.innerHTML = leadCache.length ? leadCache.map(item =>
     "<tr><td><span class='client-name'>" + escapeText(item.name) + "</span><span class='client-sub'>" + escapeText(item.businessName || item.email) +
-    "</span></td><td>" + escapeText(item.projectType) + "</td><td>" + escapeText(formatDate(item.createdAt)) +
+    "</span></td><td>" + escapeText(item.projectType) +
+    (item.source==="ai_advisor"?"<small>✦ AI Consultant</small>":"") + "</td><td>" + escapeText(formatDate(item.createdAt)) +
     "</td><td><span class='pill " + escapeText(item.status) + "'>" + escapeText(item.status) +
     "</span></td><td><span class='email-pill " + escapeText(item.emailStatus || "pending") + "'>" +
     escapeText(item.emailStatus || "pending") +
@@ -149,7 +151,9 @@ function showLead(id) {
     ["Timeline", lead.timeline], ["Submitted", formatDate(lead.createdAt)],
     ["Meeting date", lead.meetingDate], ["Meeting time", lead.meetingTime],
     ["Meeting review needed", lead.meetingNeedsReview ? "Yes — check the enquiry details" : "No"],
-    ["Email notification", lead.emailStatus], ["Project details", lead.message]
+    ["Email notification", lead.emailStatus],
+    ["Lead source",lead.source==="ai_advisor"?"AI Consultant":"Contact form"],
+    ["Project details", lead.message]
   ];
   byId("leadDetails").innerHTML = fields.map(([name, value]) =>
     "<div" + (name === "Project details" ? " class='wide'" : "") + "><dt>" +
@@ -167,13 +171,31 @@ function showLead(id) {
   byId("leadNotes").value = lead.internalNotes || "";
   byId("retryEmail").hidden = !["pending", "failed"].includes(lead.emailStatus || "pending");
   byId("retryEmail").disabled = false;
-
+  byId("leadAiActions").hidden=lead.source!=="ai_advisor";
+  byId("leadAiClientLink").href="/admin/crm/?source=ai_advisor&client="+encodeURIComponent(lead.email);
+  byId("leadAiDraft").textContent=lead.aiQuotationId?"Open prefilled quotation":"Create prefilled quotation draft";
+  byId("leadAiDraft").disabled=false;
   byId("leadDialog").showModal();
 }
 async function refreshAll() {
   await Promise.all([refreshStats(), loadEnquiries(), loadMeetings(), refreshEmailConfig(), loadEmailDeliveries(), refreshOpsHealth()]);
   message("Information updated.");
 }
+byId("leadAiDraft").addEventListener("click",async()=>{
+  const lead=leadCache.find(item=>item._id===currentLeadId);
+  if(!lead||lead.source!=="ai_advisor")return;
+  const button=byId("leadAiDraft");
+  button.disabled=true;
+  try{
+    const result=await call("/ai/leads/"+encodeURIComponent(lead._id)+"/quotation-draft",{
+      method:"POST",body:"{}"
+    });
+    const url=new URL("/admin/documents/",location.origin);
+    url.searchParams.set("client",lead.email);
+    url.searchParams.set("edit",result.document._id);
+    location.assign(url.pathname+url.search);
+  }catch(error){message(error.message,true);button.disabled=false;}
+});
 byId("retryEmail").addEventListener("click", async () => {
   if (!currentLeadId) return;
   const button=byId("retryEmail");
@@ -210,6 +232,7 @@ byId("search").addEventListener("keydown", event => {
   if (event.key === "Enter") { event.preventDefault(); byId("searchButton").click(); }
 });
 byId("statusFilter").addEventListener("change", () => byId("searchButton").click());
+byId("sourceFilter").addEventListener("change", () => byId("searchButton").click());
 byId("prevPage").addEventListener("click", () => { page--; loadEnquiries().catch(error => message(error.message, true)); });
 byId("nextPage").addEventListener("click", () => { page++; loadEnquiries().catch(error => message(error.message, true)); });
 function setTab(meetings) {
@@ -244,6 +267,8 @@ async function initializeDashboard() {
     const user = await call("/auth/me");
     if (!user.authenticated) throw new Error("Access denied.");
     byId("dashboard").hidden = false;
+    // Analytics should load independently even if a different admin panel fails.
+    document.dispatchEvent(new Event("mdv:admin-ready"));
     await refreshAll();
   } catch (error) {
     message(error.message || "Unable to load the dashboard.", true);

@@ -1,0 +1,27 @@
+name: AI CRM and quotation browser QA
+on:
+  push:
+    branches: [feature/ai-lead-conversion-experience]
+    paths:
+      - scripts/ai-admin-conversion-browser-qa.mjs
+      - .github/workflows/ai-admin-conversion-browser-qa.yml
+      - public/business-console.js
+      - public/admin.js
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --no-save --no-audit --no-fund playwright
+      - run: npx playwright install --with-deps chromium
+      - name: Test AI CRM profiles, generated quotation pricing and analytics
+        env:
+          PREVIEW_URL: https://6af4552521000eaeca4810a3--mzansi-digital-ventures.netlify.app
+        run: node scripts/ai-admin-conversion-browser-qa.mjs
