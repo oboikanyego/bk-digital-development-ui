@@ -31,7 +31,9 @@
 .ai-bubble{border-radius:13px;padding:15px 17px;max-width:89%;font-size:13px;line-height:1.8;white-space:pre-wrap;box-shadow:0 4px 16px rgba(12,57,78,.04)}
 .ai-bubble-assistant{align-self:flex-start;background:#e9f5fa;color:#264d63;border:1px solid #d3e9f1;border-bottom-left-radius:4px}
 .ai-bubble-user{align-self:flex-end;background:#0f6d91;color:#fff;border-bottom-right-radius:4px}
-.ai-bubble-label{font-size:9px;letter-spacing:.11em;font-weight:900;display:block;margin-bottom:6px;opacity:.73}
+.ai-bubble-label{font-size:9px;letter-spacing:.11em;font-weight:900;display:block;margin-bottom:6px;opacity:1}
+.ai-bubble-assistant .ai-bubble-label{color:#134b65}
+.ai-bubble-user .ai-bubble-label{color:#fff}
 .ai-bubble p{margin:0}
 .ai-result{margin:0 27px 18px;background:linear-gradient(110deg,#eef9f8,#f1f8fc);border:1px solid #c7e9e9;border-radius:12px;padding:18px}
 .ai-result[hidden]{display:none!important}
