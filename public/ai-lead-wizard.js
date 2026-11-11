@@ -70,7 +70,7 @@
       openQuestions:solution.question?[max(solution.question,220)]:[]
     };
     const contact={name:"",email:"",phone:"",businessName:"",contactMethod:"Email"};
-    let stage=0,consent=false,shareTranscript=false,sending=false;
+    let stage=0,consent=false,shareTranscript=false,sending=false,trapValue="";
     const submissionId=crypto.randomUUID();
 
     const dialog=make("dialog","aiw-overlay");
@@ -159,6 +159,7 @@
       for(const key of Object.keys(contact))contact[key]=max(fd.get(key),key==="email"?254:key==="businessName"?160:key==="phone"?60:120);
       consent=Boolean(f.querySelector('[name="consent"]').checked);
       shareTranscript=Boolean(f.querySelector('[name="shareTranscript"]').checked);
+      trapValue=f.querySelector('[name="website"]')?.value||"";
       if(!consent){error("Please agree to share this project brief for your enquiry.");return false;}
       return true;
     }
@@ -212,6 +213,14 @@
         field("Phone number (optional)",textInput("phone",contact.phone,60,false,"tel"))
       );
       form.append(fields);
+      // Hidden honeypot is intentionally not visible, tabbable or necessary
+      // for a real user; automated form-fillers often populate it.
+      const honeypot=make("div","aiw-trap");
+      honeypot.setAttribute("aria-hidden","true");
+      const urlField=textInput("website",trapValue,120,false);
+      urlField.tabIndex=-1;urlField.autocomplete="off";
+      honeypot.append(field("Leave this field empty",urlField));
+      form.append(honeypot);
       form.append(field("Preferred contact method",select("contactMethod",["Email","Phone"],contact.contactMethod)));
       const consentLabel=make("label","aiw-consent");
       const checkbox=make("input");checkbox.type="checkbox";checkbox.name="consent";checkbox.checked=consent;checkbox.required=true;
@@ -220,9 +229,9 @@
       const historyLabel=make("label","aiw-consent");
       const historyBox=make("input");historyBox.type="checkbox";historyBox.name="shareTranscript";historyBox.checked=shareTranscript;
       historyLabel.append(historyBox,make("span",null,
-        "Include up to 12 messages from my AI conversation (optional)."));
+        "Include up to 12 messages from my AI conversation (optional). Shared chat messages are automatically removed from CRM after 30 days."));
       form.append(consentLabel,historyLabel);
-      const caveat=make("p","aiw-small","Your chat stays private unless you choose to include it. No account or payment is required.");
+      const caveat=make("p","aiw-small","Your chat stays private unless you choose to include it. Your reviewed brief and contact details are kept for business follow-up; you can contact us to request removal. No account or payment is required.");
       form.append(caveat);
       body.append(form);
       actions.append(button("← Back","outline",()=>{captureContact();go(0);}),
@@ -261,7 +270,7 @@
       sending=true;error("");
       const send=actions.querySelector(".primary");send.disabled=true;send.textContent="Submitting securely…";
       const payload={
-        submissionId,consent:true,shareTranscript,
+        submissionId,consent:true,shareTranscript,website:trapValue,
         brief:data,contact,
         ...(shareTranscript?{transcript:transcript.filter(x=>["assistant","user"].includes(x.role))
           .slice(-12).map(x=>({role:x.role,content:max(x.content,900)}))}:{})
