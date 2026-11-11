@@ -69,10 +69,14 @@ try{
   await page.locator(".ai-input-form textarea").fill("I sell mascots and rent mascot costumes for parties and events, and need a booking website.");
   await page.locator(".ai-input-form button[type=submit]").click();
   await page.locator(".ai-result:not([hidden])").waitFor();
-  const pageBeforeWizard=await page.evaluate(()=>window.scrollY);
   await page.locator("[data-ai-review]").click();
   const dialog=page.getByRole("dialog",{name:"Review and submit your AI project brief"});
   await dialog.waitFor({state:"visible"});
+  // Playwright may scroll the page *while clicking* the review button;
+  // read the actual offset stored by the dialog's open handler instead.
+  const pageAtWizardOpen=await page.evaluate(()=>-Number(
+    document.body.style.getPropertyValue("--aiw-page-top").replace("px","")
+  ));
   assert.match(await dialog.locator(".aiw-title").innerText(),/Review your AI project brief/);
   assert.equal(leadPosts,0,"no CRM submission before consent");
   assert.equal(await dialog.locator('input[name=feature]:checked').count(),4);
@@ -182,7 +186,7 @@ try{
     bodyPosition:getComputedStyle(document.body).position,
     htmlOverflow:getComputedStyle(document.documentElement).overflowY
   }));
-  assert.ok(Math.abs(restored.scrollY-pageBeforeWizard)<=2,"original page scroll offset restored");
+  assert.ok(Math.abs(restored.scrollY-pageAtWizardOpen)<=2,"page scroll restored to wizard-open offset: expected "+pageAtWizardOpen+" got "+restored.scrollY);
   assert.notEqual(restored.bodyPosition,"fixed","background page unlocked after close");
   assert.notEqual(restored.htmlOverflow,"hidden","page can scroll normally after close");
   console.log("PUBLIC WIZARD PASS",width,JSON.stringify({leadPosts,consent:true,transcript:width===1440,events}));
