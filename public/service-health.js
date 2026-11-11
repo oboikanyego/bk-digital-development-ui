@@ -96,6 +96,7 @@
 
   function requestTitle(path) {
     if (path === "/api/contact") return "Sending your enquiry";
+    if (path === "/api/ai/advice") return "Preparing your project recommendation";
     if (path === "/api/admin/auth/login") return "Signing you in";
     if (path === "/api/admin/auth/logout") return "Signing you out";
     if (path.includes("/documents")) return "Saving your document";
@@ -219,7 +220,7 @@
       try {
         // Wake first; the mutation itself is dispatched exactly once.
         await ensureReady();
-        mutationStage("Submitting securely…");
+        mutationStage(path === "/api/ai/advice" ? "Exploring your idea…" : "Submitting securely…");
         return await originalFetch(input, init);
       } finally {
         hideMutation();
