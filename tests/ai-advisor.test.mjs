@@ -31,7 +31,7 @@ test("AI advice uses API not client-side provider keys; no untrusted HTML render
   const js=read("ai-advisor.js");
   assert.match(js,/fetch\("\/api\/ai\/advice"/);
   assert.match(js,/fetch\("\/api\/ai\/status"/);
-  assert.match(js,/textContent=reply/);
+  assert.match(js,/appendBubble\(container,"assistant",reply\)/);
   assert.match(js,/content\.textContent=text/);
   assert.match(js,/history:history\.slice\(-4\)/);
   assert.doesNotMatch(js,/GROQ_API_KEY|api\.groq\.com/i);
