@@ -378,3 +378,35 @@ body.ai-chat-modal-open { overflow: hidden; }
   .ai-widget-content .ai-input-form textarea { min-height: 50px; height: 52px; }
   .ai-widget-content .ai-privacy { display: none; }
 }
+
+
+/* Full-page playground: scrolling belongs to the PAGE, not a nested chat.
+   The fixed-height single-scroll layout remains scoped to .ai-advisor-dialog
+   for the floating assistant. Without this, overscroll-behavior:contain traps
+   wheel/touch events whenever the pointer is inside the main chat card. */
+#aiAdvisorApp .ai-advisor-panel {
+  height: auto;
+  min-height: 0;
+  overflow: hidden; /* rounded card edges only; no independent scrollbar */
+}
+#aiAdvisorApp .ai-chat-scroll {
+  flex: 0 0 auto;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  overscroll-behavior: auto;
+}
+#aiAdvisorApp .ai-conversation {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+  overscroll-behavior: auto;
+}
+#aiAdvisorApp .ai-input-form textarea {
+  height: auto;
+  max-height: none;
+  overflow-y: hidden;
+  resize: none;
+}
