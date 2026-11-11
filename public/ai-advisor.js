@@ -48,7 +48,7 @@
     bubble.append(label,content);
     convo.appendChild(bubble);
     const scroller=panel.querySelector(".ai-chat-scroll");
-    if (scroller) scroller.scrollTop=scroller.scrollHeight;
+    if (scroller && panel.closest(".ai-advisor-dialog")) scroller.scrollTop=scroller.scrollHeight;
   }
 
   function createPanel(container) {
@@ -56,6 +56,19 @@
     container.innerHTML=markup(); // Static template; never insert user/provider content as HTML.
     const form=container.querySelector(".ai-input-form");
     const textarea=form.querySelector("textarea");
+    const fullPage=container===pageHost;
+    const resizeIdeaInput=()=>{
+      if(!fullPage)return;
+      // A long idea should grow with the full page, not trap wheel/touch
+      // scrolling in its own inner textarea viewport.
+      textarea.style.height="auto";
+      const borders=textarea.offsetHeight-textarea.clientHeight;
+      textarea.style.height=Math.max(105,textarea.scrollHeight+borders+2)+"px";
+    };
+    if(fullPage){
+      window.addEventListener("resize",resizeIdeaInput,{passive:true});
+      requestAnimationFrame(resizeIdeaInput);
+    }
     const button=form.querySelector("button[type='submit']");
     const feedback=form.querySelector(".ai-feedback");
     const result=container.querySelector(".ai-result");
@@ -93,6 +106,7 @@
 
     textarea.addEventListener("input",()=>{
       count.textContent=String(textarea.value.length)+" / 1200";
+      resizeIdeaInput();
       showMessage("");
     });
     container.querySelectorAll("[data-ai-example]").forEach(item=>item.addEventListener("click",()=>{
@@ -152,7 +166,7 @@
             target.appendChild(chip);
           });
         }
-        scrollArea.scrollTop=scrollArea.scrollHeight;
+        if(!fullPage)scrollArea.scrollTop=scrollArea.scrollHeight;
         status.textContent=data.mode==="ai"?"AI READY":"GUIDED MODE";
         showMessage(data.notice||"You can ask another question or request a quote.");
       }catch(error){
