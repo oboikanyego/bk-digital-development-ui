@@ -1,0 +1,33 @@
+name: AI playground natural page scroll browser QA
+on:
+  push:
+    branches: [fix/ai-playground-natural-page-scrolling-20261111]
+    paths:
+      - .github/workflows/ai-playground-page-scroll-qa.yml
+      - scripts/ai-playground-page-scroll-qa.mjs
+      - public/ai-advisor.css
+      - public/ai-advisor.js
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --no-save --no-audit --no-fund playwright @axe-core/playwright
+      - name: Mouse-wheel regression for inline assistant and floating chat
+        env:
+          PREVIEW_URL: https://6af471e0b2479f6db37fa609--mzansi-digital-ventures.netlify.app
+          PLAYWRIGHT_USE_SYSTEM_CHROME: "1"
+        run: node scripts/ai-playground-page-scroll-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ai-playground-scroll-screenshots
+          path: qa-screenshots/*.png
+          if-no-files-found: ignore
