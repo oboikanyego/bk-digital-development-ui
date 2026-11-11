@@ -12,7 +12,7 @@
   <div class="business-card-head"><h3>Line items</h3><button type="button" id="docAddItem" class="button secondary">+ Add line item</button></div>
   <div class="business-table-wrap"><table><thead><tr><th>Service / deliverable</th><th>Qty</th><th>Unit price (ZAR)</th><th></th></tr></thead><tbody id="docItems"></tbody></table></div>
   <div class="business-totals"><p>Subtotal <strong id="docSubtotal">R 0.00</strong></p><p>Tax <strong id="docTaxValue">R 0.00</strong></p><p>Total <strong id="docTotal">R 0.00</strong></p></div>
-  <button type="submit" id="docCreate" class="button primary">Create draft document</button>
+  <button type="submit" id="docCreate" class="button primary">Create draft document</button> <button type="button" id="docCancelEdit" class="button secondary" hidden>Cancel editing</button><p id="docEditHint" class="business-subtle" hidden>Review and price this AI-generated draft before sending it to the customer.</p>
 </form></section>
 <section class="business-card"><div class="business-card-head"><div><h2>Document register</h2><p>Sent means accepted by Resend, not necessarily read. Paid statuses are manually recorded and should match your bank statement.</p></div><button id="docRefresh" type="button" class="button secondary">Refresh</button></div>
 <div class="business-table-wrap"><table><thead><tr><th>Document</th><th>Client</th><th>Amount</th><th>Status</th><th>Delivery</th><th>Actions</th></tr></thead><tbody id="docRows"></tbody></table></div></section>
