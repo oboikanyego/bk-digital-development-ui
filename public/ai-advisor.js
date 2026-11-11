@@ -14,7 +14,7 @@
 
   const markup = () => [
     '<div class="ai-panel-header"><span class="ai-panel-icon" aria-hidden="true">✦</span>',
-    '<div><p class="ai-panel-overline">YOUR DIGITAL PROJECT PARTNER</p><h2>M​​zansi AI Consultant</h2></div>',
+    '<div><p class="ai-panel-overline">YOUR DIGITAL PROJECT PARTNER</p><h2>Mzansi AI Consultant</h2></div>',
     '<span class="ai-panel-availability" data-ai-status>Checking…</span></div>',
     '<div class="ai-conversation" role="log" aria-label="AI project conversation" aria-live="polite" aria-relevant="additions">',
     '<div class="ai-bubble ai-bubble-assistant"><span class="ai-bubble-label">MZANSI AI</span>',
