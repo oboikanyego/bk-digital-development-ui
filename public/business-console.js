@@ -178,7 +178,8 @@ if(screen==="documents"){
   const data=await api("/documents");
   $("docRows").innerHTML=data.items.length?data.items.map(doc=>{
     let buttons="<button class='button secondary' type='button' data-doc-action='pdf' data-doc='"+escape(doc._id)+"'>PDF</button>";
-    if(doc.status==="draft")buttons+="<button class='button primary' type='button' data-doc-action='send' data-doc='"+escape(doc._id)+"'>Send email</button>"+
+    if(doc.status==="draft")buttons+="<button class='button secondary' type='button' data-doc-action='edit' data-doc='"+escape(doc._id)+"'>Review &amp; price</button>"+
+       "<button class='button primary' type='button' data-doc-action='send' data-doc='"+escape(doc._id)+"'>Send email</button>"+
        "<button class='button secondary' type='button' data-doc-action='void' data-doc='"+escape(doc._id)+"'>Void</button>";
     if(doc.kind==="quotation"&&doc.status==="sent")buttons+="<button class='button secondary' type='button' data-doc-action='accepted' data-doc='"+escape(doc._id)+"'>Accepted</button>"+
        "<button class='button secondary' type='button' data-doc-action='rejected' data-doc='"+escape(doc._id)+"'>Rejected</button>";
@@ -200,7 +201,82 @@ if(screen==="documents"){
   const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="MDV-document.pdf";
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200);
  }
+ let editingDocument=null;
+ function updateEditTotal(){
+   try{
+     const data=[...$("docEditItems").querySelectorAll("tr")].map(row=>({
+       qty:Number(row.querySelector("[data-edit-qty]").value),
+       price:cents(row.querySelector("[data-edit-price]").value)
+     }));
+     const subtotal=data.reduce((n,row)=>n+row.qty*row.price,0);
+     const tax=Math.round(subtotal*Number($("docEditTax").value)/10000);
+     $("docEditTotal").textContent="Reviewed total: "+money(subtotal+tax);
+   }catch{$("docEditTotal").textContent="Check all prices and quantities.";}
+ }
+ async function editDraft(id){
+   const result=await api("/documents/"+encodeURIComponent(id));
+   const doc=result.document;
+   if(!doc||doc.status!=="draft")throw Error("Only draft documents can be edited.");
+   editingDocument=doc;
+   $("docEditTitle").textContent="Review "+doc.number+" · "+(doc.clientName||doc.clientId);
+   $("docEditNotes").value=doc.notes||"";
+   $("docEditTax").value=String(doc.taxRateBp||0);
+   $("docEditValid").value=doc.validUntil||"";
+   const rows=$("docEditItems");rows.replaceChildren();
+   for(const item of doc.items){
+     const tr=document.createElement("tr");
+     const d=document.createElement("td"),q=document.createElement("td"),p=document.createElement("td");
+     const description=document.createElement("input");
+     description.value=item.description;description.maxLength=180;description.required=true;
+     description.setAttribute("aria-label","Service description");
+     description.dataset.editDescription="";
+     const quantity=document.createElement("input");
+     quantity.type="number";quantity.min=1;quantity.max=1000;quantity.step=1;quantity.required=true;
+     quantity.value=String(item.quantity);quantity.dataset.editQty="";
+     quantity.setAttribute("aria-label","Quantity");
+     const price=document.createElement("input");
+     price.type="number";price.min=0;price.max=1000000;price.step=.01;price.required=true;
+     price.value=(item.unitPriceCents/100).toFixed(2);price.dataset.editPrice="";
+     price.setAttribute("aria-label","Unit price in rand");
+     d.append(description);q.append(quantity);p.append(price);tr.append(d,q,p);rows.append(tr);
+   }
+   updateEditTotal();
+   $("docEditDialog").showModal();
+ }
+ $("docEditClose").addEventListener("click",()=>$("docEditDialog").close());
+ $("docEditCancel").addEventListener("click",()=>$("docEditDialog").close());
+ $("docEditItems").addEventListener("input",updateEditTotal);
+ $("docEditTax").addEventListener("change",updateEditTotal);
+ $("docEditForm").addEventListener("submit",async event=>{
+   event.preventDefault();
+   if(!editingDocument)return;
+   const save=$("docEditSave");save.disabled=true;
+   try{
+     const items=[...$("docEditItems").querySelectorAll("tr")].map(row=>({
+       description:row.querySelector("[data-edit-description]").value.trim(),
+       quantity:Number(row.querySelector("[data-edit-qty]").value),
+       unitPriceCents:cents(row.querySelector("[data-edit-price]").value)
+     }));
+     if(items.some(item=>!item.description || !Number.isSafeInteger(item.quantity)||item.quantity<1))
+       throw Error("All quotation items require a description and valid quantity.");
+     if(!items.some(item=>item.unitPriceCents>0))
+       throw Error("Review the scope and enter at least one approved item price before saving.");
+     const payload={
+       items,taxRateBp:Number($("docEditTax").value),
+       notes:$("docEditNotes").value,validUntil:$("docEditValid").value,dueDate:""
+     };
+     const saved=await api("/documents/"+encodeURIComponent(editingDocument._id),{
+       method:"PATCH",body:JSON.stringify(payload)
+     });
+     $("docEditDialog").close();
+     editingDocument=null;
+     notify(saved.message||"Quotation prices updated. Review the PDF before sending.");
+     await loadDocuments();
+     if(new URL(location.href).searchParams.has("edit"))history.replaceState({}, "", "/admin/documents/");
+   }catch(error){notify(error.message,true);}finally{save.disabled=false;}
+ });
  async function docAction(id,action){
+  if(action==="edit")return editDraft(id);
   if(action==="pdf")return download(id);
   if(action==="send"){
     if(!confirm("Send this PDF document to the client email address?"))return;
@@ -246,7 +322,11 @@ if(screen==="documents"){
  $("docKind").addEventListener("change",kindView);
  $("docRefresh").addEventListener("click",()=>loadDocuments().catch(e=>notify(e.message,true)));
  newLine();kindView();calc();
- Promise.all([loadClients(),loadDocuments()]).then(()=>notify("Documents and clients loaded."))
+ Promise.all([loadClients(),loadDocuments()]).then(async()=>{
+   notify("Documents and clients loaded.");
+   const editId=params.get("edit");
+   if(editId)await editDraft(editId);
+  })
   .catch(error=>notify(error.message,true));
 }
 })();
