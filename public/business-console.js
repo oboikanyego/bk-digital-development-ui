@@ -24,8 +24,8 @@ if(screen==="crm"){
  let page=1,total=0,selected="";
  const stageOptions=["lead","qualified","proposal","active","on_hold","completed","closed"];
  async function load(){
-  const q=$("crmSearch").value.trim(),status=$("crmStage").value;
-  const request=new URLSearchParams({q,status,page:String(page)});
+  const q=$("crmSearch").value.trim(),status=$("crmStage").value,source=$("crmSource").value;
+  const request=new URLSearchParams({q,status,source,page:String(page)});
   const [res,due,summary]=await Promise.all([
     api("/crm/clients?"+request),api("/crm/follow-ups"),api("/crm/metrics")
   ]);
@@ -36,11 +36,11 @@ if(screen==="crm"){
   $("crmPrev").disabled=page<=1;$("crmNext").disabled=page*25>=res.total;
   $("crmRows").innerHTML=res.items.length?res.items.map(c=>
     "<tr><td><strong>"+escape(c.name||c.email)+"</strong><small>"+escape(c.email)+"</small></td><td>"+
-    escape(c.businessName||"—")+"</td><td><span class='business-status'>"+
+    escape(c.businessName||"—")+"</td><td>"+(c.lastLeadSource==="ai_advisor"?"<span class='business-status'>✦ AI Advisor</span>":"Website")+"</td><td><span class='business-status'>"+
     escape(c.projectStatus||"lead").replace("_"," ")+"</span></td><td>"+
     escape(c.followUpDate||"Not scheduled")+"</td><td><button class='button secondary' type='button' data-client='"+
     escape(c._id)+"'>Open profile</button></td></tr>"
-  ).join(""):"<tr><td colspan='5'>No matching clients yet.</td></tr>";
+  ).join(""):"<tr><td colspan='6'>No matching clients yet.</td></tr>";
   $("crmDueList").innerHTML=due.items.length?due.items.map(c=>
     "<div class='business-due'><strong>"+escape(c.name||c.email)+"</strong><span>Follow-up: "+
     escape(c.followUpDate)+"</span><span>"+escape(c.projectStatus||"lead")+"</span>"+
@@ -58,11 +58,27 @@ if(screen==="crm"){
     form.elements[name].value=c[name]|| (name==="projectStatus"?"lead":name==="priority"?"normal":"");
   }
   $("clientDocumentLink").href="/admin/documents/?client="+encodeURIComponent(email);
-  $("clientEnquiries").innerHTML=res.enquiries.length?res.enquiries.map(v=>
-    "<div><strong>"+escape(v.projectType||"Project enquiry")+"</strong> · "+
-    escape(v.status||"new")+"<small>"+escape(date(v.createdAt))+" · "+
-    escape(v.message||"").slice(0,400)+"</small></div>"
-  ).join(""):"<p>No enquiries available.</p>";
+  $("clientEnquiries").innerHTML=res.enquiries.length?res.enquiries.map(v=>{
+    const ai=v.source==="ai_advisor" && v.aiBrief;
+    const brief=ai?v.aiBrief:null;
+    const features=Array.isArray(brief?.features)?brief.features:[];
+    const question=Array.isArray(brief?.openQuestions)?brief.openQuestions:[];
+    const transcript=Array.isArray(v.aiTranscript)&&v.aiTranscriptConsent?v.aiTranscript:[];
+    return "<div class='ai-crm-enquiry'><strong>"+escape(brief?.title||v.projectType||"Project enquiry")+
+      "</strong> · "+escape(v.status||"new")+
+      (ai?" <span class='business-status'>✦ AI Advisor</span>":"")+
+      "<small>"+escape(date(v.createdAt))+" · "+escape(brief?.description||v.message||"").slice(0,600)+"</small>"+
+      (ai?"<details class='ai-crm-brief'><summary>View customer-reviewed AI brief</summary>"+
+        (brief.summary?"<p><b>AI recommendation:</b> "+escape(brief.summary)+"</p>":"")+
+        "<p><b>Requested features:</b></p><ul>"+features.map(item=>"<li>"+escape(item)+"</li>").join("")+"</ul>"+
+        "<p><b>Budget:</b> "+escape(brief.budget||"Not sure")+" · <b>Timeline:</b> "+escape(brief.timeline||"Flexible")+"</p>"+
+        (brief.notes?"<p><b>Notes:</b> "+escape(brief.notes)+"</p>":"")+
+        (question.length?"<p><b>Still to clarify:</b> "+question.map(escape).join("; ")+"</p>":"")+
+        (transcript.length?"<details><summary>Consented AI conversation</summary>"+
+          transcript.map(x=>"<p><b>"+escape(x.role)+"</b>: "+escape(x.content)+"</p>").join("")+"</details>":"")+
+        "</details><button type='button' class='button primary ai-crm-quote' data-ai-quote-id='"+escape(v._id)+
+          "'>Prepare AI quotation draft</button>":"")+"</div>";
+  }).join(""):"<p>No enquiries available.</p>";
   $("clientDocuments").innerHTML=res.documents.length?res.documents.map(v=>
     "<div><strong>"+escape(v.number)+"</strong> · "+escape(v.kind)+" · "+
     escape(v.status)+" · "+escape(money(v.totalCents))+"</div>"
@@ -84,6 +100,21 @@ if(screen==="crm"){
   }catch(error){notify(error.message,true);}
  });
  $("clientClose").addEventListener("click",()=>$("clientDialog").close());
+ $("clientEnquiries").addEventListener("click",async event=>{
+   const btn=event.target.closest("[data-ai-quote-id]");
+   if(!btn)return;
+   btn.disabled=true;
+   try {
+     const result=await api("/ai/leads/"+encodeURIComponent(btn.dataset.aiQuoteId)+"/quotation-draft",{
+       method:"POST",body:"{}"
+     });
+     notify(result.message||"Quotation draft prepared.");
+     location.href="/admin/documents/?edit="+encodeURIComponent(result.document._id);
+   }catch(error){
+     notify(error.message,true);
+     btn.disabled=false;
+   }
+ });
  $("crmFilters").addEventListener("submit",event=>{event.preventDefault();page=1;load().catch(e=>notify(e.message,true));});
  $("crmRefresh").addEventListener("click",()=>load().catch(e=>notify(e.message,true)));
  $("crmPrev").addEventListener("click",()=>{page--;load().catch(e=>notify(e.message,true));});
