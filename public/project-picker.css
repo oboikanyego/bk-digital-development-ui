@@ -1,0 +1,294 @@
+/* Project type chooser — progressive enhancement of the native contact select. */
+.contact-form .project-type-field {
+  position: relative;
+  min-width: 0;
+  margin: 0 0 15px;
+  align-self: start;
+  color: #243b4f;
+}
+.contact-form .project-type-field .project-type-label {
+  display: block;
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 730;
+  margin: 0 0 8px;
+  color: #2d4051;
+}
+.contact-form .project-type-field:not(.is-enhanced) select { width: 100%; }
+.contact-form .project-type-field.is-enhanced #projectTypeNative {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 1px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  opacity: 0;
+  pointer-events: none;
+  clip-path: inset(50%);
+  overflow: hidden;
+}
+.contact-form .project-picker-trigger {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1e2eb;
+  background: #f9fcfe;
+  text-align: left;
+  cursor: pointer;
+  color: #16364c;
+  box-shadow: 0 1px 2px rgba(10, 47, 74, .025);
+  transition: border-color .18s, box-shadow .18s, background .18s;
+}
+.contact-form .project-picker-trigger[hidden] { display: none!important; }
+.contact-form .project-picker-trigger:hover,
+.contact-form .project-type-field.is-open .project-picker-trigger {
+  border-color: #1494ba;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(14, 147, 183, .09);
+}
+.contact-form .project-picker-trigger:focus-visible,
+.contact-form .project-picker-close:focus-visible,
+.contact-form .project-picker-option:focus-visible,
+.contact-form #projectTypeSearch:focus-visible {
+  outline: 3px solid #0c9ebd;
+  outline-offset: 2px;
+}
+.contact-form .project-picker-trigger[aria-invalid="true"] { border-color: #bf4444; }
+.project-picker-leading {
+  display: grid;
+  place-items: center;
+  background: #e7f6fb;
+  color: #0f7392;
+  border-radius: 7px;
+  height: 30px;
+  flex: 0 0 30px;
+  font-size: 17px;
+  font-weight: 830;
+}
+.project-picker-selection {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 710;
+}
+.project-picker-placeholder { color: #58758b; font-weight: 550; }
+.project-picker-chevron {
+  font-size: 23px;
+  line-height: 1;
+  color: #3c677a;
+  transition: transform .18s;
+}
+.project-type-field.is-open .project-picker-chevron { transform: rotate(180deg); }
+.project-picker-error {
+  font-size: 12px;
+  line-height: 1.4;
+  margin: 7px 0 0;
+  color: #a33131;
+}
+.project-picker-backdrop[hidden], .project-picker-panel[hidden], .project-picker-option[hidden], .project-picker-empty[hidden] { display: none!important; }
+.project-picker-backdrop { display: none; }
+.contact-form .project-picker-panel {
+  position: absolute;
+  top: calc(100% + 9px);
+  right: 0;
+  width: min(465px, calc(100vw - 30px));
+  max-height: 470px;
+  min-width: 290px;
+  z-index: 130;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 20px 18px 0;
+  border-radius: 15px;
+  border: 1px solid #d8e8ef;
+  background: #fff;
+  box-shadow: 0 25px 70px rgba(5, 32, 53, .20);
+  color: #193449;
+}
+.project-picker-grabber { display: none; }
+.project-picker-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  justify-content: space-between;
+  margin-bottom: 13px;
+}
+.project-picker-heading>div { min-width: 0; }
+.project-picker-overline {
+  margin: 0 0 6px;
+  font-size: 9px;
+  color: #0a7898;
+  font-weight: 820;
+  letter-spacing: .12em;
+}
+.contact-form .project-picker-heading h4 {
+  margin: 0 0 4px;
+  color: #0f2c44;
+  font-size: 21px;
+  line-height: 1.2;
+  letter-spacing: -.035em;
+}
+.project-picker-intro { margin: 0; color: #60798a; font-size: 12px; line-height: 1.45; }
+.contact-form .project-picker-close {
+  border: 1px solid #d8e7ed;
+  border-radius: 9px;
+  background: #f3f8fa;
+  color: #264c62;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font-size: 25px;
+  line-height: 1;
+  cursor: pointer;
+}
+.project-picker-search-wrap { position: relative; margin-bottom: 11px; }
+.project-picker-search-wrap>span {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 12px;
+  font-size: 25px;
+  color: #567a8d;
+  line-height: 1;
+  pointer-events: none;
+}
+.contact-form .project-picker-search-wrap input {
+  width: 100%;
+  min-height: 46px;
+  border: 1px solid #cddfe7;
+  border-radius: 9px;
+  background: #f6fafc;
+  padding: 11px 12px 11px 43px;
+  color: #183d53;
+  font-size: 14px;
+}
+.contact-form .project-picker-search-wrap input::placeholder { color: #698294; opacity: 1; }
+.project-picker-options {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  min-height: 0;
+  padding: 0 2px 8px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #adcdd9 transparent;
+}
+.contact-form .project-picker-option {
+  display: flex;
+  text-align: left;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid transparent;
+  border-bottom: 1px solid #eef3f6;
+  border-radius: 9px;
+  background: #fff;
+  padding: 11px 9px;
+  color: #1b3d53;
+  cursor: pointer;
+  min-height: 62px;
+}
+.contact-form .project-picker-option:hover,
+.contact-form .project-picker-option:focus-visible {
+  background: #ecf8fc;
+  border-color: #c6e7f0;
+}
+.contact-form .project-picker-option[aria-selected="true"] {
+  background: #e8f7fb;
+  border-color: #a9d9e8;
+}
+.project-picker-icon {
+  flex: 0 0 41px;
+  height: 41px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  background: #eaf4fa;
+  font-size: 19px;
+}
+.project-picker-copy { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.project-picker-copy strong { font-size: 13px; font-weight: 780; line-height: 1.3; }
+.project-picker-copy small { font-size: 11px; color: #4e6473; line-height: 1.4; }
+.project-picker-check { color: #0b819b; font-size: 17px; opacity: 0; font-weight: 900; }
+.project-picker-option[aria-selected="true"] .project-picker-check { opacity: 1; }
+.project-picker-empty { color: #5f7385; font-size: 12px; padding: 24px 12px; text-align: center; }
+.project-picker-footer {
+  flex-shrink: 0;
+  background: #f5f9fb;
+  border-top: 1px solid #e1ebf0;
+  margin: 0 -18px;
+  padding: 12px 18px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 10px;
+  color: #4f6b7b;
+}
+.project-picker-footer span:first-child { font-weight: 780; color: #1d4f69; }
+@media (max-width:700px) {
+  body.project-picker-dialog-open { overflow: hidden; }
+  .project-picker-backdrop:not([hidden]) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 140;
+    background: rgba(3, 20, 36, .60);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+  }
+  .contact-form .project-picker-panel {
+    position: fixed;
+    z-index: 141;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    min-width: 0;
+    max-height: calc(100dvh - 16px);
+    height: min(78dvh, 680px);
+    border-radius: 23px 23px 0 0;
+    border: 0;
+    padding: 15px 18px 0;
+    box-shadow: 0 -12px 55px rgba(2, 22, 39, .25);
+  }
+  .project-picker-grabber {
+    display: block;
+    width: 41px;
+    height: 5px;
+    border-radius: 100px;
+    background: #c6d9e2;
+    margin: 0 auto 16px;
+    flex-shrink: 0;
+  }
+  .project-picker-heading { margin-bottom: 17px; }
+  .contact-form .project-picker-heading h4 { font-size: 23px; }
+  .project-picker-options { flex: 1; overflow-y: auto; }
+  .contact-form .project-picker-option { min-height: 68px; padding: 12px 8px; }
+  .project-picker-footer {
+    padding: 14px 18px calc(16px + env(safe-area-inset-bottom));
+    margin: 0 -18px;
+    line-height: 1.5;
+  }
+}
+@media (max-width:380px) {
+  .contact-form .project-picker-panel { padding: 12px 14px 0; }
+  .project-picker-footer { margin: 0 -14px; padding-left: 14px; padding-right: 14px; }
+  .contact-form .project-picker-option { min-height: 60px; }
+  .project-picker-copy small { font-size: 10px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .project-picker-chevron, .project-picker-trigger { transition: none!important; }
+}
+
+/* Contact page AA contrast corrections surfaced by the project-selector browser audit. */
+.contact-copy>p:nth-of-type(2) { color: #445c6e; }
+.contact-links small { color: #455f70; }
+.contact-copy blockquote { color: #465e70; }

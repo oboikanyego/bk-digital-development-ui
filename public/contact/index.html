@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#07172b"><meta name="description" content="Get a quote or request a meeting for your next web or app project."><link rel="canonical" href="https://mzansi-digital-ventures.netlify.app/contact/"><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/page-layout.css"><link rel="stylesheet" href="/brand.css"><link rel="stylesheet" href="/studio.css"><link rel="stylesheet" href="/site-view.css"><link rel="stylesheet" href="/meeting.css"><title>Contact & Meeting Requests | Mzansi Digital Ventures (Pty) Ltd</title><link rel="icon" type="image/svg+xml" href="/brand-mark.svg"><meta name="color-scheme" content="light"></head><body><header class="site-header"><div class="container nav-wrap"><a class="brand" href="/"><img class="brand-mark" src="/brand-mark.svg" width="40" height="40" alt="" loading="eager"><span><strong>Mzansi Digital</strong><small>Ventures</small></span></a><button class="nav-toggle" type="button" aria-label="Open navigation" aria-controls="primaryNav" aria-expanded="false"><span class="menu-lines" aria-hidden="true"></span><span class="menu-label">Menu</span></button><nav id="primaryNav" class="nav-links" aria-label="Primary navigation"><a class="mobile-admin-access" href="/admin/login/">Admin sign in</a><a href="/services/">Services</a><a href="/portfolio/">Portfolio</a><a href="/about/">About</a><a href="/pricing/">Pricing</a><a href="/process/">How it works</a><a href="/contact/" aria-current="page">Contact</a></nav><a class="btn btn-small btn-outline header-cta" href="/contact/">Start a project <span aria-hidden="true">↗</span></a><a class="admin-access" href="/admin/login/" aria-label="Admin sign in">Admin sign in</a></div></header><main id="top"><section id="contact" class="contact-section">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#07172b"><meta name="description" content="Get a quote or request a meeting for your next web or app project."><link rel="canonical" href="https://mzansi-digital-ventures.netlify.app/contact/"><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/page-layout.css"><link rel="stylesheet" href="/brand.css"><link rel="stylesheet" href="/studio.css"><link rel="stylesheet" href="/site-view.css"><link rel="stylesheet" href="/meeting.css"><link rel="stylesheet" href="/project-picker.css"><title>Contact & Meeting Requests | Mzansi Digital Ventures (Pty) Ltd</title><link rel="icon" type="image/svg+xml" href="/brand-mark.svg"><meta name="color-scheme" content="light"></head><body><header class="site-header"><div class="container nav-wrap"><a class="brand" href="/"><img class="brand-mark" src="/brand-mark.svg" width="40" height="40" alt="" loading="eager"><span><strong>Mzansi Digital</strong><small>Ventures</small></span></a><button class="nav-toggle" type="button" aria-label="Open navigation" aria-controls="primaryNav" aria-expanded="false"><span class="menu-lines" aria-hidden="true"></span><span class="menu-label">Navigation</span></button><nav id="primaryNav" class="nav-links" aria-label="Primary navigation"><a class="mobile-admin-access" href="/admin/login/">Admin sign in</a><a href="/services/">Services</a><a href="/portfolio/">Portfolio</a><a href="/about/">About</a><a href="/pricing/">Pricing</a><a href="/process/">How it works</a><a href="/contact/" aria-current="page">Contact</a></nav><a class="btn btn-small btn-outline header-cta" href="/contact/">Start a project <span aria-hidden="true">↗</span></a><a class="admin-access" href="/admin/login/" aria-label="Admin sign in">Admin sign in</a></div></header><main id="top"><section id="contact" class="contact-section">
     <div class="container contact-grid">
       <div class="contact-copy">
         <p class="eyebrow">LET'S GET YOUR IDEA ONLINE</p>
@@ -21,12 +21,34 @@
           <label>Email address *<input name="email" type="email" required autocomplete="email" placeholder="you@example.com"></label>
           <label>WhatsApp / phone<input name="phone" autocomplete="tel" placeholder="e.g. 079 123 4567"></label>
           <label>Business name<input name="businessName" autocomplete="organization" placeholder="Your business"></label>
-          <label>What do you need? *
-            <select name="projectType" required>
+          <div class="project-type-field" id="projectTypeField">
+            <label id="projectTypeLabel" class="project-type-label" for="projectTypeNative">What do you need? *</label>
+            <select id="projectTypeNative" name="projectType" required>
               <option value="">Select a project type</option>
               <option>Starter website</option><option>Business website</option><option>Booking website/system</option><option>Online store</option><option>Mobile app</option><option>Hosting and domain setup</option><option>Website maintenance</option><option>Database or API integration</option><option>Custom business system</option><option>Existing site improvements</option><option>Not sure yet</option>
             </select>
-          </label>
+            <button id="projectTypeTrigger" class="project-picker-trigger" type="button" aria-haspopup="dialog" aria-controls="projectTypePanel" aria-expanded="false" aria-labelledby="projectTypeLabel projectTypeSelected" hidden>
+              <span class="project-picker-leading" aria-hidden="true">⌘</span>
+              <span id="projectTypeSelected" class="project-picker-selection project-picker-placeholder">Select a project type</span>
+              <span class="project-picker-chevron" aria-hidden="true">⌄</span>
+            </button>
+            <p id="projectTypeError" class="project-picker-error" role="alert" hidden>Please select a project type.</p>
+            <div id="projectTypeBackdrop" class="project-picker-backdrop" hidden></div>
+            <div id="projectTypePanel" class="project-picker-panel" role="dialog" aria-modal="false" aria-labelledby="projectTypePanelTitle" hidden>
+              <div class="project-picker-grabber" aria-hidden="true"></div>
+              <div class="project-picker-heading">
+                <div><p class="project-picker-overline">LET'S FIND THE RIGHT SOLUTION</p><h4 id="projectTypePanelTitle">What are you building?</h4><p class="project-picker-intro">Select what best describes your project.</p></div>
+                <button id="projectTypeClose" class="project-picker-close" type="button" aria-label="Close project selection">×</button>
+              </div>
+              <div class="project-picker-search-wrap">
+                <span aria-hidden="true">⌕</span>
+                <input id="projectTypeSearch" type="search" autocomplete="off" placeholder="Search project types…" aria-label="Search project types">
+              </div>
+              <div id="projectTypeOptions" class="project-picker-options" role="listbox" aria-label="Project types"></div>
+              <p id="projectTypeEmpty" class="project-picker-empty" hidden>No matching project types. Try another search.</p>
+              <div class="project-picker-footer"><span>Not sure what you need?</span><span>Choose “Not sure yet” — we'll guide you.</span></div>
+            </div>
+          </div>
           <label>Budget range
             <select name="budget">
               <option value="">Select budget</option>
@@ -47,4 +69,4 @@
         <p id="formStatus" class="form-status" role="status" aria-live="polite"></p>
       </form>
     </div>
-  </section></main><footer><div class="container footer-grid"><a class="brand" href="/"><img class="brand-mark" src="/brand-mark.svg" width="40" height="40" alt="" loading="eager"><span><strong>Mzansi Digital</strong><small>Ventures</small></span></a><p>Websites, mobile apps and digital solutions for South African businesses.</p><div><strong>Explore</strong><a href="/services/">Services</a><a href="/portfolio/">Portfolio</a><a href="/about/">About</a><a href="/pricing/">Pricing</a></div><div><strong>Get in touch</strong><a class="footer-admin-access" href="/admin/login/">Admin sign in</a><a href="/about/">About us</a><a href="/contact/">Project enquiry</a><a href="mailto:kanyiradipabe@gmail.com">Email</a></div></div><div class="container footer-bottom">© <span id="year"></span> Mzansi Digital Ventures (Pty) Ltd · Gauteng, South Africa.</div></footer><script src="/service-health.js" defer></script><script src="/site-view.js" defer></script><script src="/app.js" defer></script></body></html>
+  </section></main><footer><div class="container footer-grid"><a class="brand" href="/"><img class="brand-mark" src="/brand-mark.svg" width="40" height="40" alt="" loading="eager"><span><strong>Mzansi Digital</strong><small>Ventures</small></span></a><p>Websites, mobile apps and digital solutions for South African businesses.</p><div><strong>Explore</strong><a href="/services/">Services</a><a href="/portfolio/">Portfolio</a><a href="/about/">About</a><a href="/pricing/">Pricing</a></div><div><strong>Get in touch</strong><a class="footer-admin-access" href="/admin/login/">Admin sign in</a><a href="/about/">About us</a><a href="/contact/">Project enquiry</a><a href="mailto:kanyiradipabe@gmail.com">Email</a></div></div><div class="container footer-bottom">© <span id="year"></span> Mzansi Digital Ventures (Pty) Ltd · Gauteng, South Africa.</div></footer><script src="/service-health.js" defer></script><script src="/site-view.js" defer></script><script src="/project-picker.js" defer></script><script src="/app.js" defer></script></body></html>
