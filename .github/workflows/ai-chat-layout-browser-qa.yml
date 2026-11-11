@@ -1,0 +1,33 @@
+name: AI chat scroll and modal browser QA
+on:
+  push:
+    branches: [fix/ai-chat-scroll-layout-20261111]
+    paths:
+      - scripts/ai-chat-layout-browser-qa.mjs
+      - .github/workflows/ai-chat-layout-browser-qa.yml
+      - public/ai-advisor.css
+      - public/ai-advisor.js
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --no-save --no-audit --no-fund playwright @axe-core/playwright
+      - run: npx playwright install --with-deps chromium
+      - name: Validate one scroll area, pinned composer, long replies, mobile and a11y
+        env:
+          PREVIEW_URL: https://6af43e86ffcad1c281e7749b--mzansi-digital-ventures.netlify.app
+        run: node scripts/ai-chat-layout-browser-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ai-chat-redesign-viewport-screenshots
+          path: qa-screenshots/*.png
+          if-no-files-found: ignore
