@@ -157,5 +157,30 @@ try{
   console.log("ADMIN CRM + QUOTE EDIT PASS");
   await ctx.close();
  }
+ // Nested modal: the floating chatbot remains open underneath the brief wizard.
+ {
+  const ctx=await browser.newContext({viewport:{width:390,height:844}});
+  const page=await ctx.newPage();await common(page);
+  await page.route("**/api/ai/events",r=>r.fulfill({status:202,contentType:"application/json",body:'{"ok":true}'}));
+  await page.goto(root+"/contact/",{waitUntil:"domcontentloaded",timeout:90000});
+  const launcher=page.locator(".ai-advisor-launcher");
+  await launcher.click();
+  const chat=page.getByRole("dialog",{name:"Mzansi AI Consultant"});
+  await chat.waitFor({state:"visible"});
+  await chat.locator(".ai-input-form textarea").fill("I sell and rent mascots for events and need an online booking website.");
+  await chat.locator(".ai-input-form button[type=submit]").click();
+  await chat.locator("[data-ai-review]").waitFor({state:"visible"});
+  await chat.locator("[data-ai-review]").click();
+  const wizard=page.getByRole("dialog",{name:"Review and submit your AI project brief"});
+  await wizard.waitFor({state:"visible"});
+  assert.equal(await chat.evaluate(el=>el.open),true);
+  assert.equal(await wizard.evaluate(el=>el.open),true);
+  await wizard.getByRole("button",{name:"Close project brief"}).click();
+  assert.equal(await chat.isVisible(),true);
+  assert.equal(await wizard.count(),0,"wizard is torn down when closed");
+  await chat.locator(".ai-widget-close").click();
+  console.log("FLOATING CHAT → NESTED BRIEF PASS");
+  await ctx.close();
+ }
  assert.deepEqual(errors,[]);
 }finally{await browser.close();}
