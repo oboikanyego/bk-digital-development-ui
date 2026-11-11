@@ -23,7 +23,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Validate homepage preview desktop, mobile and accessibility
         env:
-          PREVIEW_URL: https://6af41bafabdf03495063cd97--mzansi-digital-ventures.netlify.app
+          PREVIEW_URL: https://6af41c7183d74f0b9aa2b80c--mzansi-digital-ventures.netlify.app
         run: node scripts/homepage-browser-qa.mjs
       - uses: actions/upload-artifact@v4
         if: always()
