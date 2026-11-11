@@ -384,7 +384,7 @@ body.ai-chat-modal-open { overflow: hidden; }
    The fixed-height single-scroll layout remains scoped to .ai-advisor-dialog
    for the floating assistant. Without this, overscroll-behavior:contain traps
    wheel/touch events whenever the pointer is inside the main chat card. */
-#aiAdvisorApp .ai-advisor-panel {
+#aiAdvisorApp.ai-advisor-panel {
   height: auto;
   min-height: 0;
   overflow: hidden; /* rounded card edges only; no independent scrollbar */
