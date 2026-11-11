@@ -16,7 +16,7 @@
     '<div class="ai-panel-header"><span class="ai-panel-icon" aria-hidden="true">✦</span>',
     '<div><p class="ai-panel-overline">YOUR DIGITAL PROJECT PARTNER</p><h2>Mzansi AI Consultant</h2></div>',
     '<span class="ai-panel-availability" data-ai-status>Checking…</span></div>',
-    '<div class="ai-conversation" role="log" aria-label="AI project conversation" aria-live="polite" aria-relevant="additions">',
+    '<div class="ai-conversation" role="log" tabindex="0" aria-label="AI project conversation" aria-live="polite" aria-relevant="additions">',
     '<div class="ai-bubble ai-bubble-assistant"><span class="ai-bubble-label">MZANSI AI</span>',
     '<p>Hi! Tell me about your business or app idea. I’ll suggest a practical digital solution, useful features and where to start.</p></div></div>',
     '<div class="ai-result" hidden><div class="ai-result-title"><span aria-hidden="true">✧</span>',
