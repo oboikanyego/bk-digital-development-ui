@@ -39,11 +39,13 @@ try {
   ]) {
     const ctx=await browser.newContext({viewport:v,deviceScaleFactor:1,reducedMotion:"reduce"});
     const page=await ctx.newPage();
+    page.setDefaultTimeout(12000);
     const spy=await mock(page);
     const response=await page.goto(base+"/contact/",{waitUntil:"domcontentloaded",timeout:90000});
     assert.equal(response.status(),200);
     await page.waitForFunction(()=>window.MDVService?.isReady(),{timeout:15000});
-    const launcher=page.getByRole("button",{name:"Ask Mzansi AI Consultant"});
+    const launcher=page.locator(".ai-advisor-launcher");
+    assert.equal(await launcher.getAttribute("aria-label"),"Ask Mzansi AI Consultant");
     await launcher.click();
     const dialog=page.getByRole("dialog",{name:"Mzansi AI Consultant"});
     await dialog.waitFor({state:"visible"});
