@@ -1,0 +1,163 @@
+/* Shared Render connection and mutation feedback — both public site and admin UI. */
+:root {
+  --mdv-loader-night: #071b31;
+  --mdv-loader-cyan: #3dd8f2;
+  --mdv-loader-text: #e6f6fd;
+}
+.service-connection {
+  border-radius: 13px!important;
+  border: 1px solid #c7dee9!important;
+  background: #fff!important;
+  box-shadow: 0 18px 48px rgba(5, 31, 53, .17)!important;
+  padding: 15px 17px!important;
+  color: #173449!important;
+  gap: 13px!important;
+  max-width: min(420px, calc(100vw - 28px))!important;
+  z-index: 9997!important;
+}
+.service-connection[hidden],.mdv-request-overlay[hidden] { display: none!important }
+.service-connection .service-message { font-size: 12px; line-height: 1.6; flex: 1; font-weight: 600; }
+.service-connection[data-status="waking"] .service-indicator {
+  border: 2px solid #d7edf5!important;
+  border-top-color: #0b8fb4!important;
+  background: transparent!important;
+  animation: mdv-spin .85s linear infinite!important;
+  width: 18px!important; height: 18px!important; flex: 0 0 18px!important;
+}
+.service-connection[data-status="ready"] .service-indicator {
+  background: #209c79!important;
+  width: 16px!important; height: 16px!important; flex: 0 0 16px!important;
+  border: none!important; animation: none!important;
+}
+.service-connection[data-status="offline"] .service-indicator {
+  background: #c16b48!important;
+  width: 16px!important; height: 16px!important; flex: 0 0 16px!important;
+  border: none!important; animation: none!important;
+}
+.service-connection .service-retry {
+  cursor: pointer;
+  min-height: 36px;
+  border: 1px solid #b9d9e6!important;
+  border-radius: 7px;
+  background: #eefaff!important;
+  color: #075e80!important;
+  padding: 6px 10px!important;
+  font-size: 12px!important;
+  font-weight: 780;
+}
+.service-connection .service-retry[hidden] { display: none!important }
+.service-connection .service-retry:focus-visible{outline: 3px solid #15a9d4;outline-offset:2px}
+
+.mdv-request-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(6, 20, 36, .55);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.mdv-request-card {
+  width: min(430px, 100%);
+  padding: clamp(26px, 4vw, 40px);
+  background: linear-gradient(155deg, #102e49 0%, var(--mdv-loader-night) 100%);
+  border: 1px solid rgba(115, 220, 249, .35);
+  box-shadow: 0 30px 95px rgba(0, 11, 28, .36);
+  border-radius: 19px;
+  text-align: center;
+  color: var(--mdv-loader-text);
+}
+.mdv-request-mark {
+  width: 74px;
+  height: 74px;
+  margin: 0 auto 20px;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.mdv-request-spinner {
+  position: absolute;
+  inset: 0;
+  border: 3px solid rgba(128, 225, 250, .16);
+  border-top-color: var(--mdv-loader-cyan);
+  border-right-color: rgba(61, 216, 242, .65);
+  border-radius: 50%;
+  animation: mdv-spin .95s linear infinite;
+}
+.mdv-request-logo {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(31, 177, 217, .14);
+  color: #8cecff;
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: -.05em;
+}
+.mdv-request-kicker {
+  margin: 0 0 11px;
+  color: #71daf0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .17em;
+}
+.mdv-request-title {
+  margin: 0 0 10px;
+  color: #f5fdff;
+  font-size: clamp(22px, 4.6vw, 29px);
+  line-height: 1.15;
+  letter-spacing: -.04em;
+  font-weight: 800;
+}
+.mdv-request-description {
+  min-height: 40px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: #c4dfec;
+}
+.mdv-request-progress {
+  width: 100%;
+  height: 5px;
+  margin: 21px auto 17px;
+  overflow: hidden;
+  border-radius: 100px;
+  background: rgba(173, 218, 239, .18);
+}
+.mdv-request-progress>span {
+  display: block;
+  height: 100%;
+  width: 38%;
+  border-radius: inherit;
+  background: linear-gradient(90deg,#2badd2,#83edfb);
+  animation: mdv-progress 1.8s ease-in-out infinite alternate;
+}
+.mdv-request-note {
+  color: #9fbed0;
+  font-size: 11px;
+  line-height: 1.65;
+  margin: 0;
+}
+@keyframes mdv-spin { to { transform: rotate(360deg) } }
+@keyframes mdv-progress {
+  from { transform: translateX(-105%); }
+  to { transform: translateX(260%); }
+}
+@media (max-width: 500px) {
+  .service-connection {
+    right: 14px!important;
+    left: 14px!important;
+    bottom: 14px!important;
+    max-width: none!important;
+  }
+  .mdv-request-card { padding: 29px 22px; border-radius: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .service-connection .service-indicator,
+  .mdv-request-spinner,
+  .mdv-request-progress>span { animation: none!important; }
+}

@@ -1,0 +1,25 @@
+name: Render loader browser QA
+on:
+  push:
+    branches: [feature/render-wakeup-and-post-loader]
+    paths:
+      - scripts/service-loader-browser-qa.mjs
+      - .github/workflows/render-loader-browser-qa.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --no-audit --no-fund playwright @axe-core/playwright
+      - run: npx playwright install --with-deps chromium
+      - name: Test cold start, idle re-wake and safe POST progress at desktop and mobile
+        env:
+          PREVIEW_URL: https://6af41f15bdd3b63f19b63854--mzansi-digital-ventures.netlify.app
+        run: node scripts/service-loader-browser-qa.mjs
