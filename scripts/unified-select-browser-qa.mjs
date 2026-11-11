@@ -13,7 +13,14 @@ async function contextAt(width){
   page.on("pageerror",e=>violations.push({width,message:e.message}));
   await page.route("**/api/health",route=>route.fulfill({status:200,contentType:"application/json",body:'{"status":"ok"}'}));
   await page.route("**/api/site",route=>route.fulfill({status:503,contentType:"application/json",body:'{"message":"CMS temporarily offline"}'}));
-  await page.route("**/api/admin/**",route=>route.fulfill({status:200,contentType:"application/json",body:'{"email":"qa@example.test","role":"admin","items":[],"clients":[],"data":[],"templates":[]}'}));
+  await page.route("**/api/admin/**",route=>{
+    const path=new URL(route.request().url()).pathname;
+    const result=path.endsWith("/auth/me")
+      ? {authenticated:true,email:"qa@example.test",role:"admin"}
+      : {email:"qa@example.test",role:"admin",items:[],clients:[],data:[],templates:[],
+        enquiries:[],meetings:[],total:0,summary:[],stats:{},configured:true};
+    return route.fulfill({status:200,contentType:"application/json",body:JSON.stringify(result)});
+  });
   return {ctx,page};
 }
 function triggerFor(page,selector){
