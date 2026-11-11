@@ -5,6 +5,8 @@ on:
     paths:
       - scripts/ai-advisor-browser-qa.mjs
       - .github/workflows/ai-advisor-browser-qa.yml
+      - public/ai-advisor.js
+      - public/ai-advisor.css
   workflow_dispatch:
 permissions:
   contents: read
@@ -21,7 +23,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Audit AI advisor, quote handoff and mobile floating widget
         env:
-          PREVIEW_URL: https://6af438d5616c943581fdba2f--mzansi-digital-ventures.netlify.app
+          PREVIEW_URL: https://6af4396d91e46f47ab826f3d--mzansi-digital-ventures.netlify.app
         run: node scripts/ai-advisor-browser-qa.mjs
       - uses: actions/upload-artifact@v4
         if: always()
