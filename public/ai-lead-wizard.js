@@ -84,6 +84,8 @@
     const intro=make("p","aiw-intro","");
     const progress=make("div","aiw-progress");
     const body=make("section","aiw-body");
+    body.tabIndex=0;
+    body.setAttribute("aria-label","Scrollable project brief and contact form");
     body.setAttribute("aria-live","polite");
     const feedback=make("p","aiw-feedback");
     feedback.setAttribute("role","status");
