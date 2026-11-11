@@ -287,3 +287,8 @@
 @media (prefers-reduced-motion:reduce) {
   .project-picker-chevron, .project-picker-trigger { transition: none!important; }
 }
+
+/* Contact page AA contrast corrections surfaced by the project-selector browser audit. */
+.contact-copy>p:nth-of-type(2) { color: #445c6e; }
+.contact-links small { color: #455f70; }
+.contact-copy blockquote { color: #465e70; }
