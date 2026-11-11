@@ -1,0 +1,24 @@
+.ai-crm-enquiry{padding:14px 0!important;border-bottom:1px solid #dbe9ef;line-height:1.5}
+.ai-crm-enquiry>strong{color:#123e56}
+.ai-crm-enquiry small{display:block;color:#577283;font-size:11px;margin-top:7px;white-space:pre-wrap;overflow-wrap:anywhere}
+.ai-crm-brief{margin:14px 0;border:1px solid #c8e1ea;border-radius:10px;padding:13px;background:#f0f9fc;color:#245065}
+.ai-crm-brief summary{cursor:pointer;font-weight:800;font-size:13px}
+.ai-crm-brief p,.ai-crm-brief li{font-size:12px;line-height:1.65;color:#30556a;white-space:pre-wrap;overflow-wrap:anywhere}
+.ai-crm-brief ul{padding-left:20px}
+.ai-crm-quote{margin-top:10px}
+.ai-admin-analytics{margin:22px 0}
+.ai-admin-analytics .delivery-metric strong{font-variant-numeric:tabular-nums}
+.ai-admin-lead-brief{padding:16px;background:#ebf8fa;border:1px solid #c6e6ed;border-radius:13px;margin:15px 0;color:#17485e}
+.ai-admin-lead-brief[hidden]{display:none!important}
+.ai-admin-lead-brief h3{margin:0 0 9px;font-size:17px}
+.ai-admin-lead-brief p,.ai-admin-lead-brief li{font-size:12px;line-height:1.65;overflow-wrap:anywhere}
+.ai-admin-lead-brief ul{padding-left:20px}
+.ai-doc-editor{max-width:min(900px,calc(100vw - 26px));width:min(900px,calc(100vw - 26px));max-height:85dvh;overflow:auto}
+.ai-doc-editor .business-table-wrap{overflow-x:auto}
+.ai-doc-editor table{min-width:630px}
+.ai-doc-editor input[data-edit-description]{width:100%;min-width:230px}
+.ai-doc-editor input[data-edit-qty]{min-width:70px;max-width:95px}
+.ai-doc-editor input[data-edit-price]{min-width:120px;max-width:160px}
+.ai-doc-editor .business-totals{font-weight:830;text-align:right;color:#0b5872;font-size:16px}
+.ai-doc-editor .business-dialog-actions{position:sticky;bottom:0;background:#fff;z-index:1;padding:13px 0}
+@media(max-width:650px){.ai-doc-editor{max-height:94dvh;width:100vw;max-width:100vw;border-radius:16px 16px 0 0;margin:auto 0 0}.ai-doc-editor .business-table-wrap{max-width:calc(100vw - 38px)}.ai-admin-analytics{margin:16px 0}}
