@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import {mkdir} from "node:fs/promises";
 
 const root=process.env.PREVIEW_URL||"https://6af461617efac61cdbabe965--mzansi-digital-ventures.netlify.app";
-const browser=await chromium.launch({headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
+const browser=await chromium.launch({channel:"chrome",headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
 await mkdir("qa-screenshots",{recursive:true});
 const errors=[];
 const aiReply={
@@ -152,6 +152,10 @@ try{
   await dialog.locator('input[name=businessName]').fill(client.businessName);
   await dialog.locator('input[name=email]').fill(client.email);
   assert.equal(leadPosts,0,"still no CRM submission until consented");
+  assert.equal(await dialog.locator('input[name=website]').inputValue(),"","honeypot is empty for legitimate visitor");
+  assert.equal(await dialog.locator('input[name=website]').getAttribute("tabindex"),"-1");
+  assert.match(await dialog.innerText(),/Shared messages stop appearing in admin views after 30 days/);
+  assert.match(await dialog.innerText(),/contact details are kept for business follow-up/);
   await dialog.locator('input[name=consent]').check();
   if(width===1440)await dialog.locator('input[name=shareTranscript]').check();
   await dialog.getByRole("button",{name:/Review submission/}).click();
@@ -171,6 +175,7 @@ try{
   await dialog.getByText("Your project brief has been received").waitFor();
   assert.equal(leadPosts,1);
   assert.equal(lastPayload.consent,true);
+  assert.equal(lastPayload.website,"","legitimate visitors send a blank trap");
   assert.equal(lastPayload.brief.projectType,"Booking website/system");
   assert.match(lastPayload.brief.description,/Weekend rentals are essential/);
   assert.equal(lastPayload.contact.email,client.email);
