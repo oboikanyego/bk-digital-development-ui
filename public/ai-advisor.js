@@ -23,7 +23,8 @@
     '<strong data-ai-result-title>Suggested solution</strong></div>',
     '<p class="ai-result-caption">A starting point you can explore with our team</p>',
     '<div class="ai-feature-list" data-ai-features></div>',
-    '<a class="ai-quote-link" href="/contact/?from=ai-advisor" data-ai-quote>Request a tailored quote <span aria-hidden="true">↗</span></a></div>',
+    '<button type="button" class="ai-review-lead" data-ai-review>Review project brief & submit →</button>',
+    '<a class="ai-quote-link" href="/contact/?from=ai-advisor" data-ai-quote>Or use the standard enquiry form <span aria-hidden="true">↗</span></a></div>',
     '<div class="ai-suggestions"><p>START WITH AN IDEA</p><div class="ai-suggestion-grid">',
     ...suggestions.map(([emoji,text],i)=>'<button type="button" class="ai-suggestion" data-ai-example="'+i+'"><span aria-hidden="true">'+emoji+'</span>'+text+'</button>'),
     '</div></div></div>',
@@ -63,8 +64,13 @@
     const status=container.querySelector("[data-ai-status]");
     const count=container.querySelector("[data-ai-count]");
     const history=[];
+    const conversation=[];
     const projectAnswers=[];
-    let lastSuggestion=null, busy=false;
+    let lastSuggestion=null,lastReply="",busy=false;
+    const track=event=>{
+      try{void fetch("/api/ai/events",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({event}),keepalive:true}).catch(()=>{});}
+      catch{/* Metrics are always best effort. */}
+    };
 
     async function health() {
       try {
@@ -109,6 +115,7 @@
       showMessage("Creating a recommendation for your business…");
       suggestionsPanel.hidden=true;
       appendBubble(container,"user",message);
+      conversation.push({role:"user",content:message});
       textarea.value="";
       textarea.dispatchEvent(new Event("input",{bubbles:true}));
       try{
@@ -124,6 +131,10 @@
         const reply=typeof data.reply==="string"?data.reply.trim():"";
         if(!reply)throw Error("No recommendation received. Please try again.");
         appendBubble(container,"assistant",reply);
+        conversation.push({role:"assistant",content:reply});
+        if(conversation.length>12)conversation.splice(0,conversation.length-12);
+        track("idea_submitted");
+        lastReply=reply;
         history.push({role:"user",content:message},{role:"assistant",content:reply.slice(0,900)});
         textarea.minLength=2; // Short follow-up answers like "both" are valid.
         if(history.length>12)history.splice(2,history.length-12);
@@ -157,6 +168,13 @@
       }
     }
     form.addEventListener("submit",submit);
+    container.querySelector("[data-ai-review]").addEventListener("click",()=>{
+      if(!lastSuggestion || !projectAnswers.length)return;
+      window.dispatchEvent(new CustomEvent("mdv-ai-project-brief",{detail:{
+        solution:lastSuggestion,answers:[...projectAnswers],
+        transcript:[...conversation],reply:lastReply
+      }}));
+    });
     container.querySelector("[data-ai-quote]").addEventListener("click",()=>{
       if(!lastSuggestion||!projectAnswers.length)return;
       const brief=[
@@ -179,6 +197,7 @@
 
   if(pageHost){
     createPanel(pageHost);
+    try{void fetch("/api/ai/events",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({event:"opened"}),keepalive:true}).catch(()=>{});}catch{}
     return;
   }
   // Floating launchers appear on public marketing pages only.
@@ -205,6 +224,7 @@
   launcher.setAttribute("aria-expanded","false");
   dialog.id="mzansiAiChatDialog";
   launcher.addEventListener("click",()=>{
+    try{void fetch("/api/ai/events",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({event:"opened"}),keepalive:true}).catch(()=>{});}catch{}
     document.body.classList.add("ai-chat-modal-open");
     dialog.showModal();
     launcher.setAttribute("aria-expanded","true");
