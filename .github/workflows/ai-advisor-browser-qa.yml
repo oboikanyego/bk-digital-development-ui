@@ -23,7 +23,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Audit AI advisor, quote handoff and mobile floating widget
         env:
-          PREVIEW_URL: https://6af439c304e713ce4a506df9--mzansi-digital-ventures.netlify.app
+          PREVIEW_URL: https://6af43a24b620470d82227ea0--mzansi-digital-ventures.netlify.app
         run: node scripts/ai-advisor-browser-qa.mjs
       - uses: actions/upload-artifact@v4
         if: always()
