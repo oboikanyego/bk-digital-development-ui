@@ -4,7 +4,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { mkdir } from "node:fs/promises";
 
 const preview=process.env.PREVIEW_URL||"https://6af471e0b2479f6db37fa609--mzansi-digital-ventures.netlify.app";
-const browser=await chromium.launch({headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
+const browser=await chromium.launch({channel:process.env.PLAYWRIGHT_USE_SYSTEM_CHROME?"chrome":undefined,headless:true,args:["--no-sandbox","--disable-dev-shm-usage"]});
 const errors=[];
 await mkdir("qa-screenshots",{recursive:true});
 const answer={
