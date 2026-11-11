@@ -1,4 +1,19 @@
 /* AI project brief review and CRM lead submission wizard */
+/* Keep the underlying marketing page stationary while the modal is open.
+   The wizard restores its original scroll position on close. */
+html.aiw-page-locked{
+  overflow:hidden!important;
+  overscroll-behavior:none;
+}
+body.aiw-page-locked{
+  position:fixed!important;
+  top:var(--aiw-page-top,0px)!important;
+  left:0!important;
+  right:0!important;
+  width:100%!important;
+  overflow:hidden!important;
+}
+
 .aiw-overlay{
   position:fixed!important;inset:0!important;margin:auto!important;
   width:min(920px,calc(100vw - 24px))!important;
@@ -24,14 +39,22 @@
 .aiw-progress-step{display:flex;align-items:center;border:1px solid #dce7eb;background:#eef4f7;color:#5c7584;border-radius:50px;font-size:10px;font-weight:800;padding:7px 11px}
 .aiw-progress-step.current{color:#0c526e;background:#ddf5fb;border-color:#a3d9e6}
 .aiw-progress-step.done{color:#17644c;background:#e4f7ef;border-color:#afdfcb}
-.aiw-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:23px 24px;scrollbar-width:thin;scrollbar-color:#a5cbd9 transparent}
+.aiw-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding:23px 24px;scrollbar-width:thin;scrollbar-color:#a5cbd9 transparent}
 .aiw-body:focus-visible{outline:3px solid #24a2c0;outline-offset:-3px}
 .aiw-form{display:grid;gap:18px}
 .aiw-field{display:flex;flex-direction:column;gap:7px;min-width:0}
 .aiw-field-title{font-size:12px;font-weight:750;color:#16415b}
 .aiw-input{width:100%;min-width:0;min-height:46px;border:1px solid #bdd5e1!important;border-radius:10px!important;background:#fff!important;color:#193c51!important;padding:11px 12px!important;font:500 13px/1.5 Inter,system-ui,sans-serif!important;box-shadow:none!important}
 .aiw-input:focus-visible{outline:3px solid #9edceb;outline-offset:1px;border-color:#0c8daf!important}
-textarea.aiw-input{min-height:100px;resize:vertical}
+/* Editable answers grow to show every line. Only .aiw-body scrolls. */
+.aiw-overlay .aiw-body textarea.aiw-input{
+  min-height:100px;
+  max-height:none!important;
+  height:auto;
+  box-sizing:border-box;
+  overflow:hidden!important;
+  resize:none!important;
+}
 .aiw-feature-box,.aiw-summary{border:1px solid #d5e5ed;border-radius:13px;background:#fff;padding:18px}
 .aiw-feature-box h3,.aiw-summary h3{font-size:17px;color:#15394c;margin:0 0 6px;font-weight:800}
 .aiw-summary h4{font-size:12px;margin:14px 0 8px;color:#12465d}

@@ -45,8 +45,13 @@
   function open({solution,answers=[],transcript=[],reply=""}={}) {
     if(!solution?.title || !Array.isArray(solution.features) || !solution.features.length) return;
     const original=document.activeElement;
-    const previous=document.querySelector(".aiw-overlay");
-    if(previous)previous.remove();
+    const previous=document.querySelector(".aiw-overlay[open]");
+    if(previous){
+      // Do not tear down an active, consent-sensitive draft by reopening it.
+      previous.querySelector(".aiw-body")?.focus({preventScroll:true});
+      return;
+    }
+    const pageX=window.scrollX,pageY=window.scrollY;
 
     const context=answers.join(" ").toLowerCase();
     const mascot=context.includes("mascot");
@@ -84,6 +89,7 @@
     const intro=make("p","aiw-intro","");
     const progress=make("div","aiw-progress");
     const body=make("section","aiw-body");
+    // A single scrolling form surface replaces nested textarea and page scroll.
     body.tabIndex=0;
     body.setAttribute("aria-label","Scrollable project brief and contact form");
     body.setAttribute("aria-live","polite");
@@ -93,7 +99,27 @@
     const actions=make("footer","aiw-actions");
     shell.append(header,title,intro,progress,body,feedback,actions);
     dialog.append(shell);document.body.append(dialog);
+    // Native showModal() makes the page inert but does not lock the page
+    // scrollbar. Preserve the exact scroll offset while the wizard is open.
+    document.body.style.setProperty("--aiw-page-top",-pageY+"px");
+    document.documentElement.classList.add("aiw-page-locked");
+    document.body.classList.add("aiw-page-locked");
     const steps=["Review brief","Your details","Confirm","Complete"];
+    function fitTextarea(el){
+      if(!el?.isConnected)return;
+      // CSS uses border-box sizing. scrollHeight includes padding, but not
+      // borders; add the border widths so no inner scrollbar ever appears.
+      el.style.height="auto";
+      const borderHeight=el.offsetHeight-el.clientHeight;
+      el.style.height=Math.max(100,el.scrollHeight+borderHeight+2)+"px";
+    }
+    function resizeTextareas(){
+      body.querySelectorAll("textarea.aiw-input").forEach(fitTextarea);
+    }
+    body.addEventListener("input",event=>{
+      if(event.target.matches("textarea.aiw-input"))fitTextarea(event.target);
+    });
+    window.addEventListener("resize",resizeTextareas,{passive:true});
 
     const error=message=>{
       feedback.textContent=message||"";
@@ -282,11 +308,25 @@
       else if(stage===1)drawContact();
       else if(stage===2)drawConfirmation();
       else drawSuccess(receipt);
+      body.scrollTop=0;
+      // After fields are attached and laid out, fit the full AI answer.
+      // Subsequent editing and viewport resizing keep textareas in sync.
+      resizeTextareas();
+      requestAnimationFrame(resizeTextareas);
       const focus=body.querySelector("input,textarea,button")||actions.querySelector("button");
       focus?.focus({preventScroll:true});
     }
     dialog.addEventListener("close",()=>{
+      window.removeEventListener("resize",resizeTextareas);
       dialog.remove();
+      document.documentElement.classList.remove("aiw-page-locked");
+      document.body.classList.remove("aiw-page-locked");
+      document.body.style.removeProperty("--aiw-page-top");
+      // Restore the exact original page position without smooth-scroll jumps.
+      const priorBehavior=document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior="auto";
+      window.scrollTo(pageX,pageY);
+      document.documentElement.style.scrollBehavior=priorBehavior;
       if(original?.isConnected)original.focus({preventScroll:true});
     });
     dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close();});
