@@ -42,7 +42,7 @@ function open({solution={},projectAnswers=[],history=[]}={}) {
         <span data-pill="2">03 <b>Confirm</b></span>
       </nav>
       <div class="mdv-brief-content">
-        <main class="mdv-brief-main">
+        <div class="mdv-brief-main" role="region" aria-label="Project brief review steps" tabindex="0">
           <section data-stage="0" class="mdv-brief-step">
             <div class="mdv-brief-step-heading"><span>STEP 1 OF 3</span><h3>Review your project brief</h3>
               <p>Edit anything the AI misunderstood. We'll use the requirements you approve.</p></div>
@@ -96,7 +96,7 @@ function open({solution={},projectAnswers=[],history=[]}={}) {
               <p data-delivery>Notifications are queued for processing.</p></div>
             <p>We'll review your requirements before preparing a tailored quotation.</p>
           </section>
-        </main>
+        </div>
         <aside class="mdv-brief-aside">
           <span>AI-ASSISTED PROJECT <b>✧</b></span>
           <h3 data-preview-title></h3><p data-preview-description></p>
