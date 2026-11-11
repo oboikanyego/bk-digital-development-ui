@@ -23,5 +23,5 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - name: Test AI CRM profiles, generated quotation pricing and analytics
         env:
-          PREVIEW_URL: https://6af4540ad9fee5cd23bbd03d--mzansi-digital-ventures.netlify.app
+          PREVIEW_URL: https://6af4552521000eaeca4810a3--mzansi-digital-ventures.netlify.app
         run: node scripts/ai-admin-conversion-browser-qa.mjs
