@@ -16,7 +16,7 @@
     '<div class="ai-panel-header"><span class="ai-panel-icon" aria-hidden="true">✦</span>',
     '<div><p class="ai-panel-overline">YOUR DIGITAL PROJECT PARTNER</p><h2>Mzansi AI Consultant</h2></div>',
     '<span class="ai-panel-availability" data-ai-status>Checking…</span></div>',
-    '<div class="ai-conversation" role="log" tabindex="0" aria-label="AI project conversation" aria-live="polite" aria-relevant="additions">',
+    '<div class="ai-chat-scroll" tabindex="0" aria-label="Conversation and recommendations"><div class="ai-conversation" role="log" aria-label="AI project conversation" aria-live="polite" aria-relevant="additions">',
     '<div class="ai-bubble ai-bubble-assistant"><span class="ai-bubble-label">MZANSI AI</span>',
     '<p>Hi! Tell me about your business or app idea. I’ll suggest a practical digital solution, useful features and where to start.</p></div></div>',
     '<div class="ai-result" hidden><div class="ai-result-title"><span aria-hidden="true">✧</span>',
@@ -26,7 +26,7 @@
     '<a class="ai-quote-link" href="/contact/?from=ai-advisor" data-ai-quote>Request a tailored quote <span aria-hidden="true">↗</span></a></div>',
     '<div class="ai-suggestions"><p>START WITH AN IDEA</p><div class="ai-suggestion-grid">',
     ...suggestions.map(([emoji,text],i)=>'<button type="button" class="ai-suggestion" data-ai-example="'+i+'"><span aria-hidden="true">'+emoji+'</span>'+text+'</button>'),
-    '</div></div>',
+    '</div></div></div>',
     '<form class="ai-input-form"><label for="aiIdeaInput">What would you like to build?</label>',
     '<textarea id="aiIdeaInput" name="idea" rows="3" required minlength="15" maxlength="1200" placeholder="Describe your business, challenge or app idea…" aria-describedby="aiAdvicePrivacy"></textarea>',
     '<div class="ai-submit-row"><span class="ai-count" data-ai-count>0 / 1200</span>',
@@ -46,7 +46,8 @@
     content.textContent=text;
     bubble.append(label,content);
     convo.appendChild(bubble);
-    convo.scrollTop=convo.scrollHeight;
+    const scroller=panel.querySelector(".ai-chat-scroll");
+    if (scroller) scroller.scrollTop=scroller.scrollHeight;
   }
 
   function createPanel(container) {
@@ -57,6 +58,8 @@
     const button=form.querySelector("button[type='submit']");
     const feedback=form.querySelector(".ai-feedback");
     const result=container.querySelector(".ai-result");
+    const scrollArea=container.querySelector(".ai-chat-scroll");
+    const suggestionsPanel=container.querySelector(".ai-suggestions");
     const status=container.querySelector("[data-ai-status]");
     const count=container.querySelector("[data-ai-count]");
     const history=[];
@@ -102,6 +105,7 @@
       button.disabled=true;
       button.textContent="Thinking…";
       showMessage("Creating a recommendation for your business…");
+      suggestionsPanel.hidden=true;
       appendBubble(container,"user",message);
       textarea.value="";
       textarea.dispatchEvent(new Event("input",{bubbles:true}));
@@ -131,6 +135,7 @@
             target.appendChild(chip);
           });
         }
+        scrollArea.scrollTop=scrollArea.scrollHeight;
         status.textContent=data.mode==="ai"?"AI READY":"GUIDED MODE";
         showMessage(data.notice||"You can ask another question or request a quote.");
       }catch(error){
@@ -179,10 +184,30 @@
   const dialog=document.createElement("dialog");
   dialog.className="ai-advisor-dialog";
   dialog.setAttribute("aria-label","Mzansi AI Consultant");
-  dialog.innerHTML='<div class="ai-widget-top"><span>Free digital project advice</span><button type="button" class="ai-widget-close" aria-label="Close AI consultant">×</button></div><div class="ai-widget-content"></div><a class="ai-widget-full" href="/ai-advisor/">Open full AI playground ↗</a>';
+  dialog.innerHTML='<div class="ai-widget-content"></div><a class="ai-widget-full" href="/ai-advisor/">Open full AI playground <span aria-hidden="true">↗</span></a>';
   document.body.append(launcher,dialog);
   createPanel(dialog.querySelector(".ai-widget-content"));
-  launcher.addEventListener("click",()=>dialog.showModal());
-  dialog.querySelector(".ai-widget-close").addEventListener("click",()=>dialog.close());
+  const closeButton=document.createElement("button");
+  closeButton.className="ai-widget-close";
+  closeButton.type="button";
+  closeButton.setAttribute("aria-label","Close AI consultant");
+  closeButton.textContent="×";
+  dialog.querySelector(".ai-panel-header").appendChild(closeButton);
+  launcher.setAttribute("aria-controls","mzansiAiChatDialog");
+  launcher.setAttribute("aria-expanded","false");
+  dialog.id="mzansiAiChatDialog";
+  launcher.addEventListener("click",()=>{
+    document.body.classList.add("ai-chat-modal-open");
+    dialog.showModal();
+    launcher.setAttribute("aria-expanded","true");
+    // Focus the scrollable chat surface rather than opening the phone keyboard.
+    dialog.querySelector(".ai-chat-scroll").focus({preventScroll:true});
+  });
+  closeButton.addEventListener("click",()=>dialog.close());
   dialog.addEventListener("click",event=>{if(event.target===dialog)dialog.close();});
+  dialog.addEventListener("close",()=>{
+    launcher.setAttribute("aria-expanded","false");
+    document.body.classList.remove("ai-chat-modal-open");
+    launcher.focus({preventScroll:true});
+  });
 })();
