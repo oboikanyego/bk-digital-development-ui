@@ -80,3 +80,8 @@ td{color:#334a5c}
 .ops-check b{font-size:12px}
 .ops-check small{font-size:10px;font-weight:690;margin-top:4px}
 .ops-check.ready small{color:#196749}.ops-check.warning{background:#fff5e9}.ops-check.warning small{color:#a45c24}
+
+@media (max-width: 900px) {
+  .topbar { flex-wrap: wrap; }
+  .topbar .top-actions { min-width: 0; flex-wrap: wrap; gap: 8px; }
+}
