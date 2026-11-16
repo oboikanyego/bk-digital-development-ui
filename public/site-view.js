@@ -54,7 +54,7 @@
     const name = company.shortName.split(/\s+/);
     const tail = name.length > 1 ? name.pop() : "";
     all(".site-header .brand").forEach(node=>node.removeAttribute("aria-label"));
-    all(".site-header .brand,.home-mast .brand,.footer-grid .brand").forEach(node => {
+    all(".site-header .brand,.footer-grid .brand").forEach(node => {
       const strong = node.querySelector("strong"), small = node.querySelector("small");
       if (strong) strong.textContent = name.join(" ");
       if (small) small.textContent = tail;
@@ -80,11 +80,7 @@
     setTitle(".studio-hero h1", site.home.heading, site.home.highlight);
     setText(".studio-hero .hero-lead", site.home.description);
     const cta = $(".studio-hero .hero-actions .btn-primary");
-    if (cta) {
-      const arrow = cta.querySelector(".home-arrow");
-      cta.textContent = site.home.buttonText;
-      if (arrow) cta.append(arrow);
-    }
+    if (cta) cta.textContent = site.home.buttonText + " ↗";
 
     const featured = site.projects.filter(p => p.homeFeatured && p.visible);
     const list = featured.length ? featured : site.projects.filter(p => p.featured && p.visible);

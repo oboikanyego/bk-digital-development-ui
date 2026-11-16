@@ -68,35 +68,113 @@ body.cms-managed .eyebrow.dark,body.cms-managed .text-link{color:#075773}
 /* Accessible testimonial attribution: not a site footer; avoid inherited dark footer styles. */
 .cms-testimonial-grid blockquote cite{display:block;font-style:normal;color:#315366;background:transparent;font-weight:700;font-size:12px}
 
-/* Shared colors and surfaces for the public interior pages. */
-body:not(.home-next) {
-  --mdv-public-ink: #282033;
-  --mdv-public-violet: #593391;
-  --mdv-public-pastel:
-    radial-gradient(ellipse at 14% 0%, #fbe5ba, transparent 59%),
-    radial-gradient(ellipse at 79% 5%, #deeee5, transparent 55%),
-    linear-gradient(115deg, #fbefe7, #ede2f8);
+/* Public navigation sits above the page without covering the AI launcher. */
+html:has(.site-header #primaryNav) {
+  scroll-padding-bottom: calc(92px + env(safe-area-inset-bottom));
 }
 
-body:not(.home-next) .site-header {
-  background: #fffaf6;
-  border-bottom-color: #e8dce6;
+body:has(.site-header #primaryNav) {
+  padding-bottom: calc(86px + env(safe-area-inset-bottom));
 }
 
-body:not(.home-next) .site-header .nav-links a:is(:hover, [aria-current="page"]),
-body:not(.home-next) .site-header .admin-access {
-  color: var(--mdv-public-violet);
+.site-header:has(#primaryNav) {
+  position: fixed;
+  inset: auto 0 calc(16px + env(safe-area-inset-bottom));
+  z-index: 110;
+  pointer-events: none;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  color: #fff;
 }
 
-body:not(.home-next) .site-header .header-cta {
-  background: var(--mdv-public-violet);
-  border-color: var(--mdv-public-violet);
-  border-radius: 11px;
+.site-header:has(#primaryNav) .nav-wrap {
+  position: relative;
+  pointer-events: auto;
+  width: max-content;
+  max-width: calc(100% - 28px);
+  height: auto;
+  min-height: 60px;
+  gap: 15px;
+  padding: 7px 12px;
+  border: 1px solid #31546c;
+  border-radius: 17px;
+  background: #091d32;
+  box-shadow: 0 12px 32px #06182b48;
 }
 
-body:not(.home-next) .site-header .header-cta:hover { background: #442775; }
+.site-header:has(#primaryNav) .brand {
+  min-width: 0;
+  flex: none;
+}
 
-body:not(.home-next) main > :is(.portfolio-intro, .about-hero, #pricing, #process, #contact, #services) {
-  background: var(--mdv-public-pastel);
-  color: var(--mdv-public-ink);
+.site-header:has(#primaryNav) .brand > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.site-header:has(#primaryNav) .brand .brand-mark { width: 36px; height: 36px; }
+.site-header:has(#primaryNav) .nav-links { margin: 0; gap: clamp(10px, 1.2vw, 22px); }
+.site-header:has(#primaryNav) .nav-links a { color: #ebf6fc; font-size: 13px; }
+.site-header:has(#primaryNav) .nav-links a:is(:hover, [aria-current="page"]) { color: #79e8ff; }
+.site-header:has(#primaryNav) .admin-access { color: #c6e1ee; }
+.site-header:has(#primaryNav) .header-cta {
+  min-height: 42px;
+  margin: 0;
+  border: 1px solid #35d7f4;
+  border-radius: 10px;
+  background: #35d7f4;
+  color: #05213b !important;
+  white-space: nowrap;
+}
+.site-header:has(#primaryNav) .header-cta:hover { background: #83ebff; }
+.site-header:has(#primaryNav) :focus-visible { outline: 2px solid #8be8ff; outline-offset: 3px; }
+
+@media (max-width: 1100px) {
+  .site-header:has(#primaryNav) { inset-inline: 14px auto; }
+  .site-header:has(#primaryNav) .nav-wrap { margin: 0; max-width: calc(100vw - 28px); }
+  .site-header:has(#primaryNav) .nav-toggle {
+    display: flex;
+    min-height: 44px;
+    margin: 0;
+    color: #ebf6fc;
+  }
+  .site-header:has(#primaryNav) .nav-links {
+    display: none;
+    position: absolute;
+    inset: auto auto calc(100% + 8px) 0;
+    width: min(310px, calc(100vw - 28px));
+    max-height: 65dvh;
+    overflow: auto;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    padding: 8px;
+    border: 1px solid #31546c;
+    border-radius: 15px;
+    background: #091d32;
+    box-shadow: 0 12px 32px #06182b48;
+  }
+  .site-header:has(#primaryNav) .nav-links.open { display: flex; }
+  .site-header:has(#primaryNav) .nav-links a { padding: 12px 10px; }
+  .site-header:has(#primaryNav) .nav-links .mobile-admin-access {
+    display: block;
+    order: 1;
+    margin: 0;
+    border-top: 1px solid #31546c;
+    color: #c6e1ee;
+  }
+  .site-header:has(#primaryNav) .admin-access { display: none; }
+}
+
+@media (max-width: 600px) {
+  .site-header:has(#primaryNav) { bottom: calc(13px + env(safe-area-inset-bottom)); }
+  .site-header:has(#primaryNav) .nav-wrap { min-height: 49px; gap: 8px; padding: 3px 9px; border-radius: 14px; }
+  .site-header:has(#primaryNav) .brand .brand-mark { width: 29px; height: 29px; }
+  .site-header:has(#primaryNav) .header-cta { display: none; }
 }

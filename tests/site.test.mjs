@@ -23,7 +23,7 @@ test("Mzansi Digital Ventures branding is present on all public pages",()=>{
   assert.match(html,/Mzansi Digital Ventures/);
   assert.doesNotMatch(html,/BK Digital Development/);
  }
- assert.match(read("index.html"),/class="home-preview-tile home-product-preview home-primary-shot"/);
+ assert.match(read("index.html"),/class="product-preview home-product-preview"/);
  assert.match(read("services/index.html"),/Database/);
  assert.match(read("services/index.html"),/Hosting/);
  assert.match(read("sitemap.xml"),/\/about\//);
@@ -46,9 +46,9 @@ test("brand-domain migration updates public canonical links and sitemap",()=>{
 
 test("homepage retains the accessible studio foundation and showcases real products",()=>{
   const home=read("index.html"),css=read("studio.css");
-  assert.match(home,/Build the next thing/);
-  assert.match(home,/class="home-preview-tile home-product-preview home-primary-shot"/);
-  assert.match(home,/aria-label="Selected projects"/);
+  assert.match(home,/Software that helps your business/);
+  assert.match(home,/class="product-preview home-product-preview"/);
+  assert.match(home,/Real product screenshots/);
   assert.match(home,/class="case-grid"/);
   assert.match(css,/@media\(prefers-reduced-motion:reduce\)/);
   assert.doesNotMatch(home,/floating-note|browser-card/);
