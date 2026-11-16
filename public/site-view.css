@@ -75,14 +75,35 @@ body.cms-managed .eyebrow.dark,body.cms-managed .text-link{color:#075773}
   padding: calc(8px + env(safe-area-inset-top)) 0 8px;
   z-index: 110;
   pointer-events: none;
-  background: #fff;
+  background: var(--public-page-top, #fff);
   border: 0;
   box-shadow: none;
   backdrop-filter: none;
   color: #fff;
 }
 
-.home-next .site-header:has(#primaryNav) { background: #071627; }
+/* Match the area around the navigation to the first section on each page. */
+body:has(main > .about-hero:first-child) { --public-page-top: #f8fafb; }
+body:has(main > .contact-section:first-child) { --public-page-top: #f5f8f9; }
+body:has(main > .portfolio-intro:first-child) { --public-page-top: #f7f9fa; }
+body:has(main > :is(.pricing-section, .process-section):first-child) {
+  --public-page-top: #f6f8f9;
+}
+
+body.home-next { --public-page-top: linear-gradient(90deg, #081729 3%, #092039 52%, #071628); }
+body:has(main > .ai-hero:first-child) {
+  --public-page-top: linear-gradient(90deg, #071b2f, #103d59);
+}
+
+body.home-next .hero.home-hero {
+  background: radial-gradient(ellipse 34% 48% at 81% 48%, rgba(15,112,172,.25), transparent),
+    var(--public-page-top);
+}
+
+body main > .ai-hero:first-child {
+  background: radial-gradient(ellipse 39% 48% at 78% 48%, rgba(34,197,233,.18), transparent),
+    var(--public-page-top);
+}
 
 .site-header:has(#primaryNav) .nav-wrap {
   position: relative;
