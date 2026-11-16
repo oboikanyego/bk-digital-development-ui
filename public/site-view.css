@@ -67,3 +67,36 @@ body.cms-managed .eyebrow.dark,body.cms-managed .text-link{color:#075773}
 
 /* Accessible testimonial attribution: not a site footer; avoid inherited dark footer styles. */
 .cms-testimonial-grid blockquote cite{display:block;font-style:normal;color:#315366;background:transparent;font-weight:700;font-size:12px}
+
+/* Shared colors and surfaces for the public interior pages. */
+body:not(.home-next) {
+  --mdv-public-ink: #282033;
+  --mdv-public-violet: #593391;
+  --mdv-public-pastel:
+    radial-gradient(ellipse at 14% 0%, #fbe5ba, transparent 59%),
+    radial-gradient(ellipse at 79% 5%, #deeee5, transparent 55%),
+    linear-gradient(115deg, #fbefe7, #ede2f8);
+}
+
+body:not(.home-next) .site-header {
+  background: #fffaf6;
+  border-bottom-color: #e8dce6;
+}
+
+body:not(.home-next) .site-header .nav-links a:is(:hover, [aria-current="page"]),
+body:not(.home-next) .site-header .admin-access {
+  color: var(--mdv-public-violet);
+}
+
+body:not(.home-next) .site-header .header-cta {
+  background: var(--mdv-public-violet);
+  border-color: var(--mdv-public-violet);
+  border-radius: 11px;
+}
+
+body:not(.home-next) .site-header .header-cta:hover { background: #442775; }
+
+body:not(.home-next) main > :is(.portfolio-intro, .about-hero, #pricing, #process, #contact, #services) {
+  background: var(--mdv-public-pastel);
+  color: var(--mdv-public-ink);
+}
