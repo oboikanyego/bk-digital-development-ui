@@ -13,7 +13,11 @@ navToggle?.addEventListener("click", () => {
 });
 nav?.querySelectorAll("a").forEach(link => link.addEventListener("click", closeNavigation));
 document.addEventListener("keydown", event => {
-  if (event.key === "Escape") closeNavigation();
+  if (event.key === "Escape" && nav?.classList.contains("open")) {
+    const focusWasInMenu = nav.contains(document.activeElement);
+    closeNavigation();
+    if (focusWasInMenu) navToggle?.focus();
+  }
 });
 document.addEventListener("pointerdown", event => {
   if (nav?.classList.contains("open") && !event.target.closest(".nav-wrap")) closeNavigation();
