@@ -80,7 +80,11 @@
     setTitle(".studio-hero h1", site.home.heading, site.home.highlight);
     setText(".studio-hero .hero-lead", site.home.description);
     const cta = $(".studio-hero .hero-actions .btn-primary");
-    if (cta) cta.textContent = site.home.buttonText + " ↗";
+    if (cta) {
+      const arrow = cta.querySelector(".home-arrow");
+      cta.textContent = site.home.buttonText;
+      if (arrow) cta.append(arrow);
+    }
 
     const featured = site.projects.filter(p => p.homeFeatured && p.visible);
     const list = featured.length ? featured : site.projects.filter(p => p.featured && p.visible);

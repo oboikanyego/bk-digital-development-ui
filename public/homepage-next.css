@@ -22,6 +22,7 @@ body.home-next {
   background: transparent;
   border: 0;
   box-shadow: none;
+  backdrop-filter: none;
 }
 
 .home-next .site-header .nav-wrap {
@@ -99,13 +100,35 @@ body.home-next {
 }
 .home-mast-contact:hover { background: #fff; }
 
+.home-arrow {
+  position: relative;
+  display: inline-block;
+  flex: 0 0 .7em;
+  width: .7em;
+  height: .7em;
+  border-top: .11em solid currentColor;
+  border-right: .11em solid currentColor;
+  vertical-align: .05em;
+}
+.home-arrow::after {
+  position: absolute;
+  content: "";
+  top: -.055em;
+  right: -.055em;
+  width: .86em;
+  height: .11em;
+  background: currentColor;
+  transform: rotate(-45deg);
+  transform-origin: right center;
+}
+
 .home-next .home-hero .home-hero-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: clamp(28px, 3.8vw, 56px);
   min-height: 0;
   width: 100%;
-  padding: clamp(31px, 4.3vw, 65px) 0 0;
+  padding: clamp(29px, 3.35vw, 53px) 0 0;
 }
 
 .home-next .home-hero .home-hero-copy {
@@ -117,6 +140,7 @@ body.home-next {
 }
 
 .home-next .home-hero .eyebrow {
+  justify-content: center;
   margin: 0 0 16px;
   color: #564162;
   font-weight: 760;
@@ -138,7 +162,7 @@ body.home-next {
 .home-next .home-hero h1 span,
 .home-next.cms-managed .home-hero h1 span { color: var(--mdv-violet); }
 .home-next .home-hero .hero-lead {
-  max-width: 39ch;
+  max-width: 48ch;
   margin: clamp(18px, 2.2vw, 31px) auto 22px;
   color: #453a4c;
   font-size: clamp(15px, 1.65vw, 20px);
@@ -184,6 +208,8 @@ body.home-next {
   align-items: center;
   animation: none;
 }
+.home-next .home-showcase::after { content: none; }
+
 .home-next .home-preview-tile {
   position: relative;
   display: block;
